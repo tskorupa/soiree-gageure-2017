@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/tskorupa/soiree-gageure-2017/tree/master.svg?style=svg)](https://circleci.com/gh/tskorupa/soiree-gageure-2017/tree/master)
+
 # README
 
 This README would normally document whatever steps are necessary to get the
