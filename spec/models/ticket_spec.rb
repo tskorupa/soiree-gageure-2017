@@ -23,6 +23,24 @@ RSpec.describe(Ticket, type: :model) do
   end
 
   describe('#valid?') do
+    it ('requires a lottery') do
+      new_ticket = Ticket.new
+      expect(new_ticket).not_to be_valid
+      expect(new_ticket.errors[:lottery]).to include("must exist")
+    end
+
+    it ('requires a seller') do
+      new_ticket = Ticket.new
+      expect(new_ticket).not_to be_valid
+      expect(new_ticket.errors[:seller]).to include("must exist")
+    end
+
+    it ('requires a guest') do
+      new_ticket = Ticket.new
+      expect(new_ticket).not_to be_valid
+      expect(new_ticket.errors[:guest]).to include("must exist")
+    end
+
     it('requires :number to be a number') do
       new_ticket = Ticket.new
       expect(new_ticket).not_to be_valid

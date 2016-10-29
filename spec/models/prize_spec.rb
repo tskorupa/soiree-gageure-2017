@@ -14,6 +14,12 @@ RSpec.describe(Prize, type: :model) do
   end
 
   describe('#valid?') do
+    it ('requires a lottery') do
+      new_prize = Prize.new
+      expect(new_prize).not_to be_valid
+      expect(new_prize.errors[:lottery]).to include("must exist")
+    end
+
     it('requires :draw_order to be a number') do
       new_prize = Prize.new
       expect(new_prize).not_to be_valid

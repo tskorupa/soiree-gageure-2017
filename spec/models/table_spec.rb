@@ -14,6 +14,12 @@ RSpec.describe(Table, type: :model) do
   end
 
   describe('#valid?') do
+    it ('requires a lottery') do
+      new_table = Table.new
+      expect(new_table).not_to be_valid
+      expect(new_table.errors[:lottery]).to include("must exist")
+    end
+
     it('requires :number to be a number') do
       new_table = Table.new
       expect(new_table).not_to be_valid
