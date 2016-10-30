@@ -6,11 +6,6 @@ RSpec.describe(LotteriesController, type: :controller) do
   end
 
   describe('GET #index') do
-    before(:each) do
-      Lottery.create!(event_date: Date.today)
-      Lottery.create!(event_date: 1.year.from_now.to_date)
-    end
-
     it('returns all lotteries') do
       get :index
       expect(response).to have_http_status(:success)
