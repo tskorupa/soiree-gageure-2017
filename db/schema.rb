@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161028022832) do
+ActiveRecord::Schema.define(version: 20161101022255) do
 
   create_table "guests", force: :cascade do |t|
     t.string "full_name", null: false
@@ -50,7 +50,7 @@ ActiveRecord::Schema.define(version: 20161028022832) do
   create_table "tickets", force: :cascade do |t|
     t.integer  "lottery_id", null: false
     t.integer  "seller_id",  null: false
-    t.integer  "guest_id",   null: false
+    t.integer  "guest_id"
     t.integer  "number",     null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

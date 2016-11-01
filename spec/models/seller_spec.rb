@@ -19,7 +19,6 @@ RSpec.describe(Seller, type: :model) do
         number: 1,
         lottery: Lottery.create!(event_date: Date.today),
         seller: seller,
-        guest: Guest.create!(full_name: 'Bubbles'),
       )
     end
 

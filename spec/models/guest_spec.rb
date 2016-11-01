@@ -14,17 +14,14 @@ RSpec.describe(Guest, type: :model) do
   end
 
   describe('#tickets') do
-    before(:each) do
-      Ticket.create!(
+    it('returns the tickets belonging to the guest') do
+      ticket = Ticket.create!(
         number: 1,
         lottery: Lottery.create!(event_date: Date.today),
         seller: Seller.create!(full_name: 'Gonzo'),
         guest: guest,
       )
-    end
-
-    it('returns the tickets belonging to the guest') do
-      expect(guest.tickets).to eq(Ticket.where(guest_id: guest.id))
+      expect(guest.tickets).to eq([ticket])
     end
   end
 end

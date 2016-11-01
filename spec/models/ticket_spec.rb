@@ -9,15 +9,10 @@ RSpec.describe(Ticket, type: :model) do
     Seller.create!(full_name: 'Gonzo')
   end
 
-  let(:guest) do
-    Guest.create!(full_name: 'Bubbles')
-  end
-
   let(:ticket) do
     Ticket.create!(
       lottery: lottery,
       seller: seller,
-      guest: guest,
       number: 1,
     )
   end
@@ -35,10 +30,10 @@ RSpec.describe(Ticket, type: :model) do
       expect(new_ticket.errors[:seller]).to include("must exist")
     end
 
-    it ('requires a guest') do
+    it ('has an optional guest') do
       new_ticket = Ticket.new
-      expect(new_ticket).not_to be_valid
-      expect(new_ticket.errors[:guest]).to include("must exist")
+      new_ticket.valid?
+      expect(new_ticket.errors[:guest]).to be_empty
     end
 
     it('requires :number to be a number') do
@@ -63,7 +58,6 @@ RSpec.describe(Ticket, type: :model) do
       new_ticket = Ticket.new(
         lottery: lottery,
         seller: seller,
-        guest: guest,
         number: ticket.number,
       )
       expect(new_ticket).not_to be_valid
@@ -85,7 +79,10 @@ RSpec.describe(Ticket, type: :model) do
   end
 
   describe('#guest') do
-    it('returns the parent guest') do
+    it('can be assigned and retrieved') do
+      guest = Guest.create!(full_name: 'Bubbles')
+      ticket.guest = guest
+      ticket.save!
       expect(ticket.guest).to eq(guest)
     end
   end

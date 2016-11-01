@@ -9,15 +9,10 @@ RSpec.describe(TicketsController, type: :controller) do
     Seller.create!(full_name: 'Gonzo')
   end
 
-  let(:guest) do
-    Guest.create!(full_name: 'Bubbles')
-  end
-
   let(:ticket) do
     Ticket.create!(
       lottery: lottery,
       seller: seller,
-      guest: guest,
       number: 1,
     )
   end
@@ -43,13 +38,13 @@ RSpec.describe(TicketsController, type: :controller) do
   describe('POST #create') do
     it('redirects to the ticket_path when the ticket was successfully created') do
       expect do
-        post(:create, params: { lottery_id: lottery.id, ticket: { seller_id: seller.id, guest_id: guest.id, number: 1 } })
+        post(:create, params: { lottery_id: lottery.id, ticket: { seller_id: seller.id, number: 1 } })
       end.to change { Ticket.count }.by(1)
       expect(response).to redirect_to(lottery_tickets_path(lottery))
     end
 
     it('renders :new when the ticket could not be persisted') do
-      post(:create, params: { lottery_id: lottery.id, ticket: { seller_id: seller.id, guest_id: guest.id, number: nil } })
+      post(:create, params: { lottery_id: lottery.id, ticket: { seller_id: seller.id, number: nil } })
       expect(response).to have_http_status(:success)
       expect(assigns(:ticket)).to be_a_new(Ticket)
       expect(response).to render_template(:new)
@@ -82,9 +77,9 @@ RSpec.describe(TicketsController, type: :controller) do
     end
 
     it('redirects to lottery_tickets_path when :guest_id is updated') do
-      other_guest = Guest.create!(full_name: 'George')
-      patch(:update, params: { lottery_id: lottery.id, id: ticket.id, ticket: { guest_id: other_guest.id } })
-      expect(ticket.reload.guest).to eq(other_guest)
+      guest = Guest.create!(full_name: 'Bubbles')
+      patch(:update, params: { lottery_id: lottery.id, id: ticket.id, ticket: { guest_id: guest.id } })
+      expect(ticket.reload.guest).to eq(guest)
       expect(response).to redirect_to(lottery_tickets_path(lottery))
     end
 
