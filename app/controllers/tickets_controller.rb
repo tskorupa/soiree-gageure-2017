@@ -1,35 +1,41 @@
 class TicketsController < ApplicationController
+  before_action :find_lottery
+
   def index
-    @tickets = Lottery.find(params[:lottery_id]).tickets
+    @tickets = @lottery.tickets
   end
 
   def new
-    @ticket = Lottery.find(params[:lottery_id]).tickets.new
+    @ticket = @lottery.tickets.new
   end
 
   def create
-    @ticket = Lottery.find(params[:lottery_id]).tickets.new(ticket_params)
+    @ticket = @lottery.tickets.new(ticket_params)
     return(
-      redirect_to(lottery_tickets_path(@ticket.lottery))
+      redirect_to(lottery_tickets_path(@lottery))
     ) if @ticket.save
 
     render(:new)
   end
 
   def edit
-    @ticket = Lottery.find(params[:lottery_id]).tickets.find(params[:id])
+    @ticket = @lottery.tickets.find(params[:id])
   end
 
   def update
-    @ticket = Lottery.find(params[:lottery_id]).tickets.find(params[:id])
+    @ticket = @lottery.tickets.find(params[:id])
     return(
-      redirect_to(lottery_tickets_path(@ticket.lottery))
+      redirect_to(lottery_tickets_path(@lottery))
     ) if @ticket.update(ticket_params)
 
     render(:edit)
   end
 
   private
+
+  def find_lottery
+    @lottery = Lottery.find(params[:lottery_id])
+  end
 
   def ticket_params
     params.require(:ticket).permit(:seller_id, :guest_id, :number)

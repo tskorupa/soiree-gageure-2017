@@ -1,0 +1,55 @@
+<%- model_class = Lottery -%>
+<div class='page-header'>
+  <h1><%= t(
+    '.title',
+    default: model_class.model_name.human.pluralize.titleize,
+  ) %></h1>
+</div>
+<table class='table table-striped'>
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:event_date) %></th>
+      <th><%= model_class.human_attribute_name(:meal_voucher_price) %></th>
+      <th><%= model_class.human_attribute_name(:ticket_price) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%= t(
+        '.actions',
+        default: t('helpers.actions'),
+      ) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @lotteries.each do |lottery| %>
+      <tr>
+        <td><%= link_to(lottery.id, lottery_tickets_path(lottery)) %></td>
+        <td><%= lottery.event_date %></td>
+        <td><%= lottery.meal_voucher_price %></td>
+        <td><%= lottery.ticket_price %></td>
+        <td><%=l lottery.created_at %></td>
+        <td>
+          <%= link_to(
+            t('.edit', default: t('helpers.links.edit')),
+            edit_lottery_path(lottery),
+            class: 'btn btn-default btn-xs',
+          ) %>
+          <%= link_to(
+            t('.destroy', default: t('helpers.links.destroy')),
+            lottery_path(lottery),
+            method: :delete,
+            data: {
+              confirm: t('.confirm', default: t('helpers.links.confirm', default: 'Are you sure?')),
+            },
+            class: 'btn btn-xs btn-danger',
+          ) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to(
+  t('.new', default: t('helpers.links.new')),
+  new_lottery_path,
+  class: 'btn btn-primary',
+) %>

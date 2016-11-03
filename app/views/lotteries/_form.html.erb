@@ -1,0 +1,49 @@
+<%= form_for(@lottery, html: { class: 'form-horizontal lottery' }) do |f| %>
+  <% if @lottery.errors.any? %>
+    <div id='error_expl' class='panel panel-danger'>
+      <div class='panel-heading'>
+        <h3 class='panel-title'><%= pluralize(@lottery.errors.count, 'error') %> prohibited this lottery from being saved:</h3>
+      </div>
+      <div class='panel-body'>
+        <ul>
+        <% @lottery.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class='form-group'>
+    <%= f.label(:event_date, class: 'control-label col-lg-2') %>
+    <div class='col-lg-10'>
+      <%= f.text_field(:event_date, class: 'form-control') %>
+    </div>
+    <%=f.error_span(:event_date) %>
+  </div>
+  <div class='form-group'>
+    <%= f.label(:meal_voucher_price, class: 'control-label col-lg-2') %>
+    <div class='col-lg-10'>
+      <%= f.text_field(:meal_voucher_price, class: 'form-control') %>
+    </div>
+    <%=f.error_span(:meal_voucher_price) %>
+  </div>
+  <div class='form-group'>
+    <%= f.label(:ticket_price, class: 'control-label col-lg-2') %>
+    <div class='col-lg-10'>
+      <%= f.text_field(:ticket_price, class: 'form-control') %>
+    </div>
+    <%=f.error_span(:ticket_price) %>
+  </div>
+
+  <div class='form-group'>
+    <div class='col-lg-offset-2 col-lg-10'>
+      <%= f.submit(nil, class: 'btn btn-primary') %>
+      <%= link_to(
+        t('.cancel', default: t('helpers.links.cancel')),
+        lotteries_path,
+        class: 'btn btn-default',
+      ) %>
+    </div>
+  </div>
+<% end %>

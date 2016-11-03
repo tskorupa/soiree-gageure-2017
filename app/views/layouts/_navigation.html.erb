@@ -1,3 +1,10 @@
 <%= nav_bar(static: :top, responsive: true) do %>
-  <%= image_tag('lions_international.gif', size: '53x50') %>
+  <%= menu_group do %>
+    <%= image_tag('lions_international.gif', size: '53x50') %>
+  <% end %>
+  <%= menu_group do %>
+    <%= menu_item('Lotteries', lotteries_path) %>
+    <%= menu_item('Sellers', sellers_path) %>
+    <%= menu_item('Guests', guests_path) %>
+  <% end %>
 <% end %>
