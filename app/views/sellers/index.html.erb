@@ -22,21 +22,12 @@
       <tr>
         <td><%= link_to(seller.id, seller_path(seller)) %></td>
         <td><%= seller.full_name %></td>
-        <td><%=l seller.created_at %></td>
+        <td><%= l(seller.created_at) %></td>
         <td>
           <%= link_to(
             t('.edit', default: t('helpers.links.edit')),
             edit_seller_path(seller),
             class: 'btn btn-default btn-xs',
-          ) %>
-          <%= link_to(
-              t('.destroy', default: t('helpers.links.destroy')),
-              seller_path(seller),
-              method: :delete,
-              data: {
-                confirm: t('.confirm', default: t('helpers.links.confirm', default: 'Are you sure?')),
-              },
-              class: 'btn btn-xs btn-danger',
           ) %>
         </td>
       </tr>

@@ -17,7 +17,7 @@
   <tbody>
     <% @guests.each do |guest| %>
       <tr>
-        <td><%= link_to(guest.id, guest_path(guest)) %></td>
+        <td><%= guest.id %></td>
         <td><%= guest.full_name %></td>
         <td><%= l(guest.created_at) %></td>
         <td>
@@ -25,15 +25,6 @@
             t('.edit', default: t('helpers.links.edit')),
             edit_guest_path(guest),
             class: 'btn btn-default btn-xs',
-          ) %>
-          <%= link_to(
-            t('.destroy', default: t('helpers.links.destroy')),
-            guest_path(guest),
-            method: :delete,
-            data: {
-              confirm: t('.confirm', default: t('helpers.links.confirm', default: 'Are you sure?')),
-            },
-            class: 'btn btn-xs btn-danger',
           ) %>
         </td>
       </tr>

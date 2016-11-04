@@ -23,26 +23,17 @@
   <tbody>
     <% @tickets.each do |ticket| %>
       <tr>
-        <td><%= link_to(ticket.id, lottery_ticket_path(@lottery, ticket)) %></td>
+        <td><%= ticket.id %></td>
         <td><%= ticket.lottery_id %></td>
         <td><%= ticket.seller_id %></td>
         <td><%= ticket.guest_id %></td>
         <td><%= ticket.number %></td>
-        <td><%=l ticket.created_at %></td>
+        <td><%= l(ticket.created_at) %></td>
         <td>
           <%= link_to(
             t('.edit', default: t('helpers.links.edit')),
             edit_lottery_ticket_path(@lottery, ticket),
             class: 'btn btn-default btn-xs',
-          ) %>
-          <%= link_to(
-            t('.destroy', default: t('helpers.links.destroy')),
-            lottery_ticket_path(@lottery, ticket),
-            method: :delete,
-            data: {
-              confirm: t('.confirm', default: t('helpers.links.confirm', default: 'Are you sure?')),
-            },
-            class: 'btn btn-xs btn-danger',
           ) %>
         </td>
       </tr>
