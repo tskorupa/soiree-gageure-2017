@@ -22,7 +22,7 @@ RSpec.describe(TicketsController, type: :controller) do
       get(:index, params: { lottery_id: lottery.id })
       expect(response).to have_http_status(:success)
       expect(assigns(:tickets)).to eq(Ticket.all)
-      expect(response).to render_template(:index)
+      expect(response).to render_template('lotteries/lottery_child_index')
     end
   end
 

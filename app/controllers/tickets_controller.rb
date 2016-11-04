@@ -3,6 +3,10 @@ class TicketsController < ApplicationController
 
   def index
     @tickets = @lottery.tickets
+    render(
+      'lotteries/lottery_child_index',
+      locals: { main_partial: 'tickets/index' },
+    )
   end
 
   def new
