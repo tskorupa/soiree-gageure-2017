@@ -1,14 +1,20 @@
 class TablesController < ApplicationController
+  before_action :find_lottery
+
   def index
-    @tables = Lottery.find(params[:lottery_id]).tables
+    @tables = @lottery.tables
+    render(
+      'lotteries/lottery_child_index',
+      locals: { main_partial: 'tables/index' },
+    )
   end
 
   def new
-    @table = Lottery.find(params[:lottery_id]).tables.new
+    @table = @lottery.tables.new
   end
 
   def create
-    @table = Lottery.find(params[:lottery_id]).tables.new(table_params)
+    @table = @lottery.tables.new(table_params)
     return(
       redirect_to(lottery_tables_path(@table.lottery))
     ) if @table.save
@@ -17,11 +23,11 @@ class TablesController < ApplicationController
   end
 
   def edit
-    @table = Lottery.find(params[:lottery_id]).tables.find(params[:id])
+    @table = @lottery.tables.find(params[:id])
   end
 
   def update
-    @table = Lottery.find(params[:lottery_id]).tables.find(params[:id])
+    @table = @lottery.tables.find(params[:id])
     return(
       redirect_to(lottery_tables_path(@table.lottery))
     ) if @table.update(table_params)
@@ -31,8 +37,11 @@ class TablesController < ApplicationController
 
   private
 
+  def find_lottery
+    @lottery = Lottery.find(params[:lottery_id])
+  end
+
   def table_params
-    params.require(:table)
-      .permit(:number, :capacity)
+    params.require(:table).permit(:number, :capacity)
   end
 end

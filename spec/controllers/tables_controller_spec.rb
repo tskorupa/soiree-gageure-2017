@@ -18,7 +18,7 @@ RSpec.describe(TablesController, type: :controller) do
       get(:index, params: { lottery_id: lottery.id })
       expect(response).to have_http_status(:success)
       expect(assigns(:tables)).to eq(Table.all)
-      expect(response).to render_template(:index)
+      expect(response).to render_template('lotteries/lottery_child_index')
     end
   end
 
