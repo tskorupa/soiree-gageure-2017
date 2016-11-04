@@ -1,14 +1,20 @@
 class PrizesController < ApplicationController
+  before_action :find_lottery
+
   def index
-    @prizes = Lottery.find(params[:lottery_id]).prizes
+    @prizes = @lottery.prizes
+    render(
+      'lotteries/lottery_child_index',
+      locals: { main_partial: 'prizes/index' },
+    )
   end
 
   def new
-    @prize = Lottery.find(params[:lottery_id]).prizes.new
+    @prize = @lottery.prizes.new
   end
 
   def create
-    @prize = Lottery.find(params[:lottery_id]).prizes.new(prize_params)
+    @prize = @lottery.prizes.new(prize_params)
     return(
       redirect_to(lottery_prizes_path(@prize.lottery))
     ) if @prize.save
@@ -17,11 +23,11 @@ class PrizesController < ApplicationController
   end
 
   def edit
-    @prize = Lottery.find(params[:lottery_id]).prizes.find(params[:id])
+    @prize = @lottery.prizes.find(params[:id])
   end
 
   def update
-    @prize = Lottery.find(params[:lottery_id]).prizes.find(params[:id])
+    @prize = @lottery.prizes.find(params[:id])
     return(
       redirect_to(lottery_prizes_path(@prize.lottery))
     ) if @prize.update(prize_params)
@@ -31,8 +37,11 @@ class PrizesController < ApplicationController
 
   private
 
+  def find_lottery
+    @lottery = Lottery.find(params[:lottery_id])
+  end
+
   def prize_params
-    params.require(:prize)
-      .permit(:draw_order, :amount)
+    params.require(:prize).permit(:draw_order, :amount)
   end
 end
