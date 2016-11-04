@@ -30,10 +30,16 @@ RSpec.describe(Ticket, type: :model) do
       expect(new_ticket.errors[:seller]).to include("must exist")
     end
 
-    it ('has an optional guest') do
+    it ('allows for an optional guest') do
       new_ticket = Ticket.new
       new_ticket.valid?
       expect(new_ticket.errors[:guest]).to be_empty
+    end
+
+    it ('allows for an optional sponsor') do
+      new_ticket = Ticket.new
+      new_ticket.valid?
+      expect(new_ticket.errors[:sponsor]).to be_empty
     end
 
     it('requires :number to be a number') do
@@ -84,6 +90,15 @@ RSpec.describe(Ticket, type: :model) do
       ticket.guest = guest
       ticket.save!
       expect(ticket.guest).to eq(guest)
+    end
+  end
+
+  describe('#sponsor') do
+    it('can be assigned and retrieved') do
+      sponsor = Sponsor.create!(full_name: 'Clyde')
+      ticket.sponsor = sponsor
+      ticket.save!
+      expect(ticket.sponsor).to eq(sponsor)
     end
   end
 end

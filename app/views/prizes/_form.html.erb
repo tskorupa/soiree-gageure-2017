@@ -1,6 +1,5 @@
 <%= form_for(
-  @prize,
-  url: lottery_prizes_path(@lottery),
+  [@lottery, @prize],
   html: { class: 'form-horizontal prize' },
 ) do |f| %>
   <% if @prize.errors.any? %>

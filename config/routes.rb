@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   end
   resources(:sellers, only: [:index, :new, :create, :edit, :update])
   resources(:guests, only: [:index, :new, :create, :edit, :update])
+  resources(:sponsors, only: [:index, :new, :create, :edit, :update])
 
   root 'lotteries#index'
 end

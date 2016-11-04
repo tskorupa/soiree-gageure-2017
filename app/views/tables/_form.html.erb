@@ -1,6 +1,5 @@
 <%= form_for(
-  @table,
-  url: lottery_tables_path(@lottery),
+  [@lottery, @table],
   html: { class: 'form-horizontal table' },
 ) do |f| %>
   <% if @table.errors.any? %>

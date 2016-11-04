@@ -83,6 +83,13 @@ RSpec.describe(TicketsController, type: :controller) do
       expect(response).to redirect_to(lottery_tickets_path(lottery))
     end
 
+    it('redirects to lottery_tickets_path when :sponsor_id is updated') do
+      sponsor = Sponsor.create!(full_name: 'Clyde')
+      patch(:update, params: { lottery_id: lottery.id, id: ticket.id, ticket: { sponsor_id: sponsor.id } })
+      expect(ticket.reload.sponsor).to eq(sponsor)
+      expect(response).to redirect_to(lottery_tickets_path(lottery))
+    end
+
     it('redirects to lottery_tickets_path when :number is updated') do
       patch(:update, params: { lottery_id: lottery.id, id: ticket.id, ticket: { number: 2 } })
       expect(ticket.reload.number).to eq(2)

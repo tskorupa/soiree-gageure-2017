@@ -1,6 +1,5 @@
 <%= form_for(
-  @ticket,
-  url: lottery_tickets_path(@lottery),
+  [@lottery, @ticket],
   html: { class: 'form-horizontal ticket' },
 ) do |f| %>
   <% if @ticket.errors.any? %>
@@ -38,6 +37,13 @@
       <%= f.text_field(:guest_id, class: 'form-control') %>
     </div>
     <%=f.error_span(:guest_id) %>
+  </div>
+  <div class='form-group'>
+    <%= f.label(:sponsor_id, class: 'control-label col-lg-2') %>
+    <div class='col-lg-10'>
+      <%= f.text_field(:sponsor_id, class: 'form-control') %>
+    </div>
+    <%=f.error_span(:sponsor_id) %>
   </div>
   <div class='form-group'>
     <%= f.label(:number, class: 'control-label col-lg-2') %>
