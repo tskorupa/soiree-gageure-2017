@@ -12,7 +12,6 @@
       <th><%= model_class.human_attribute_name(:lottery_id) %></th>
       <th><%= model_class.human_attribute_name(:draw_order) %></th>
       <th><%= model_class.human_attribute_name(:amount) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%= t('.actions', default: t('helpers.actions')) %></th>
     </tr>
   </thead>
@@ -23,7 +22,6 @@
         <td><%= prize.lottery_id %></td>
         <td><%= prize.draw_order %></td>
         <td><%= prize.amount %></td>
-        <td><%= l(prize.created_at) %></td>
         <td>
           <%= link_to(
             t('.edit', default: t('helpers.links.edit')),

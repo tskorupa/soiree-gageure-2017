@@ -14,7 +14,6 @@
       <th><%= model_class.human_attribute_name(:guest_id) %></th>
       <th><%= model_class.human_attribute_name(:sponsor_id) %></th>
       <th><%= model_class.human_attribute_name(:number) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t(
         '.actions',
         default: t('helpers.actions'),
@@ -30,7 +29,6 @@
         <td><%= ticket.guest_id %></td>
         <td><%= ticket.sponsor_id %></td>
         <td><%= ticket.number %></td>
-        <td><%= l(ticket.created_at) %></td>
         <td>
           <%= link_to(
             t('.edit', default: t('helpers.links.edit')),
