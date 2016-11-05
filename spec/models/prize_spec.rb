@@ -14,8 +14,14 @@ RSpec.describe(Prize, type: :model) do
   end
 
   describe('#draw_order') do
-    it('is indexed') do
-      expect(ActiveRecord::Base.connection.index_exists?(:prizes, :draw_order)).to be(true)
+    it('is indexed and unique per lottery') do
+      expect(
+        ActiveRecord::Base.connection.index_exists?(
+          :prizes,
+          [:lottery_id, :draw_order],
+          unique: true,
+        ),
+      ).to be(true)
     end
   end
 
@@ -42,6 +48,17 @@ RSpec.describe(Prize, type: :model) do
       new_prize = Prize.new(draw_order: 0)
       expect(new_prize).not_to be_valid
       expect(new_prize.errors[:draw_order]).to include('must be greater than 0')
+    end
+
+    it('requires :draw_number to be unique per lottery') do
+      new_prize = Prize.new(
+        lottery: lottery,
+        draw_order: prize.draw_order,
+        amount: 100,
+      )
+      expect(new_prize).not_to be_valid
+      expect(new_prize.errors[:draw_order]).to include('has already been taken')
+      expect{ new_prize.save(validate: false) }.to raise_error(ActiveRecord::RecordNotUnique)
     end
 
     it('requires :amount to be a number') do
