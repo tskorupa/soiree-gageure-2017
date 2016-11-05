@@ -19,7 +19,19 @@ RSpec.describe(Ticket, type: :model) do
 
   describe('#number') do
     it('is indexed') do
-      expect(ActiveRecord::Base.connection.index_exists?(:tickets, :number)).to be(true)
+      expect(
+        ActiveRecord::Base.connection.index_exists?(:tickets, :number),
+      ).to be(true)
+    end
+
+    it('is unique per lottery') do
+      expect(
+        ActiveRecord::Base.connection.index_exists?(
+          :tickets,
+          [:lottery_id, :number],
+          unique: true,
+        ),
+      ).to be(true)
     end
   end
 
@@ -74,7 +86,6 @@ RSpec.describe(Ticket, type: :model) do
       )
       expect(new_ticket).not_to be_valid
       expect(new_ticket.errors[:number]).to include('has already been taken')
-      expect{ new_ticket.save(validate: false) }.to raise_error(ActiveRecord::RecordNotUnique)
     end
   end
 

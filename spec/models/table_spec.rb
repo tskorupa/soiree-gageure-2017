@@ -15,7 +15,19 @@ RSpec.describe(Table, type: :model) do
 
   describe('#number') do
     it('is indexed') do
-      expect(ActiveRecord::Base.connection.index_exists?(:tables, :number)).to be(true)
+      expect(
+        ActiveRecord::Base.connection.index_exists?(:tables, :number),
+      ).to be(true)
+    end
+
+    it('is unique per lottery') do
+      expect(
+        ActiveRecord::Base.connection.index_exists?(
+          :tables,
+          [:lottery_id, :number],
+          unique: true,
+        ),
+      ).to be(true)
     end
   end
 
@@ -52,7 +64,6 @@ RSpec.describe(Table, type: :model) do
       )
       expect(new_table).not_to be_valid
       expect(new_table.errors[:number]).to include('has already been taken')
-      expect{ new_table.save(validate: false) }.to raise_error(ActiveRecord::RecordNotUnique)
     end
 
     it('requires :capacity to be a capacity') do
