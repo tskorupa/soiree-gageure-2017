@@ -6,10 +6,14 @@ RSpec.describe(LotteriesController, type: :controller) do
   end
 
   describe('GET #index') do
-    it('returns all lotteries') do
+    it('returns all lotteries ordered by event_date: :desc') do
+      lottery_1 = Lottery.create!(event_date: Date.yesterday)
+      lottery_2 = Lottery.create!(event_date: Date.tomorrow)
+      lottery_3 = Lottery.create!(event_date: Date.today)
+
       get :index
       expect(response).to have_http_status(:success)
-      expect(assigns(:lotteries)).to eq(Lottery.all)
+      expect(assigns(:lotteries)).to eq([lottery_2, lottery_3, lottery_1])
       expect(response).to render_template(:index)
     end
   end

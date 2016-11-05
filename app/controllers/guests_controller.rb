@@ -1,6 +1,6 @@
 class GuestsController < ApplicationController
   def index
-    @guests = Guest.all
+    @guests = Guest.order('LOWER(full_name) ASC')
   end
 
   def new

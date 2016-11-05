@@ -8,7 +8,6 @@
 <table class='table table-striped'>
   <thead>
     <tr>
-      <th><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:event_date) %></th>
       <th><%= model_class.human_attribute_name(:meal_voucher_price) %></th>
       <th><%= model_class.human_attribute_name(:ticket_price) %></th>
@@ -21,8 +20,7 @@
   <tbody>
     <% @lotteries.each do |lottery| %>
       <tr>
-        <td><%= link_to(lottery.id, lottery_tickets_path(lottery)) %></td>
-        <td><%= lottery.event_date %></td>
+        <td><%= link_to(lottery.event_date, lottery_tickets_path(lottery)) %></td>
         <td><%= lottery.meal_voucher_price %></td>
         <td><%= lottery.ticket_price %></td>
         <td>

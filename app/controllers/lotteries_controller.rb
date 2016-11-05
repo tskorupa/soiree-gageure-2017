@@ -1,6 +1,6 @@
 class LotteriesController < ApplicationController
   def index
-    @lotteries = Lottery.all
+    @lotteries = Lottery.order(event_date: :desc)
   end
 
   def new

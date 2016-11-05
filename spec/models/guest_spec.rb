@@ -5,6 +5,12 @@ RSpec.describe(Guest, type: :model) do
     Guest.create!(full_name: 'Bubbles')
   end
 
+  describe('#full_name') do
+    it('is indexed') do
+      expect(ActiveRecord::Base.connection.index_exists?(:guests, :full_name)).to be(true)
+    end
+  end
+
   describe('#valid?') do
     it('requires :full_name to be present') do
       new_guest = Guest.new

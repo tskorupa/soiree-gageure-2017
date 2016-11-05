@@ -2,7 +2,7 @@ class PrizesController < ApplicationController
   before_action :find_lottery
 
   def index
-    @prizes = @lottery.prizes
+    @prizes = @lottery.prizes.order(:draw_order)
     render(
       'lotteries/lottery_child_index',
       locals: { main_partial: 'prizes/index' },

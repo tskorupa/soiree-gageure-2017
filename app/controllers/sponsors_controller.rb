@@ -1,6 +1,6 @@
 class SponsorsController < ApplicationController
   def index
-    @sponsors = Sponsor.all
+    @sponsors = Sponsor.order('LOWER(full_name) ASC')
   end
 
   def new

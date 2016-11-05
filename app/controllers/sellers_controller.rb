@@ -1,6 +1,6 @@
 class SellersController < ApplicationController
   def index
-    @sellers = Seller.all
+    @sellers = Seller.order('LOWER(full_name) ASC')
   end
 
   def new

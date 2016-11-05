@@ -8,8 +8,6 @@
 <table class='table table-striped'>
   <thead>
     <tr>
-      <th><%= model_class.human_attribute_name(:id) %></th>
-      <th><%= model_class.human_attribute_name(:lottery_id) %></th>
       <th><%= model_class.human_attribute_name(:draw_order) %></th>
       <th><%= model_class.human_attribute_name(:amount) %></th>
       <th><%= t('.actions', default: t('helpers.actions')) %></th>
@@ -18,8 +16,6 @@
   <tbody>
     <% @prizes.each do |prize| %>
       <tr>
-        <td><%= prize.id %></td>
-        <td><%= prize.lottery_id %></td>
         <td><%= prize.draw_order %></td>
         <td><%= prize.amount %></td>
         <td>

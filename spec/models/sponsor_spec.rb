@@ -5,6 +5,12 @@ RSpec.describe(Sponsor, type: :model) do
     Sponsor.create!(full_name: 'Clyde')
   end
 
+  describe('#full_name') do
+    it('is indexed') do
+      expect(ActiveRecord::Base.connection.index_exists?(:sponsors, :full_name)).to be(true)
+    end
+  end
+
   describe('#valid?') do
     it('requires :full_name to be present') do
       new_sponsor = Sponsor.new

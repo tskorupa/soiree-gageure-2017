@@ -6,10 +6,15 @@ RSpec.describe(SellersController, type: :controller) do
   end
 
   describe('GET #index') do
-    it('returns all sellers') do
+    it('returns all sellers ordered by LOWER(full_name)') do
+      seller_1 = Seller.create!(full_name: 'z')
+      seller_2 = Seller.create!(full_name: 'a')
+      seller_3 = Seller.create!(full_name: '1')
+      seller_4 = Seller.create!(full_name: 'A')
+
       get :index
       expect(response).to have_http_status(:success)
-      expect(assigns(:sellers)).to eq(Seller.all)
+      expect(assigns(:sellers)).to eq([seller_3, seller_2, seller_4, seller_1])
       expect(response).to render_template(:index)
     end
   end

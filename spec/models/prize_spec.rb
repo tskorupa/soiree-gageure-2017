@@ -13,6 +13,12 @@ RSpec.describe(Prize, type: :model) do
     )
   end
 
+  describe('#draw_order') do
+    it('is indexed') do
+      expect(ActiveRecord::Base.connection.index_exists?(:prizes, :draw_order)).to be(true)
+    end
+  end
+
   describe('#valid?') do
     it ('requires a lottery') do
       new_prize = Prize.new

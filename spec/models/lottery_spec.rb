@@ -5,6 +5,12 @@ RSpec.describe(Lottery, type: :model) do
     Lottery.create!(event_date: Date.today)
   end
 
+  describe('#event_date') do
+    it('is indexed') do
+      expect(ActiveRecord::Base.connection.index_exists?(:lotteries, :event_date)).to be(true)
+    end
+  end
+
   describe('#valid?') do
     it('requires :event_date to be present') do
       new_lottery = Lottery.new

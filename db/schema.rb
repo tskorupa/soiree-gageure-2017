@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161104194708) do
+ActiveRecord::Schema.define(version: 20161105153125) do
 
   create_table "guests", force: :cascade do |t|
     t.string   "full_name",  null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["full_name"], name: "index_guests_on_full_name"
   end
 
   create_table "lotteries", force: :cascade do |t|
@@ -24,6 +25,7 @@ ActiveRecord::Schema.define(version: 20161104194708) do
     t.decimal  "ticket_price",       precision: 5, scale: 2
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
+    t.index ["event_date"], name: "index_lotteries_on_event_date"
   end
 
   create_table "prizes", force: :cascade do |t|
@@ -32,6 +34,7 @@ ActiveRecord::Schema.define(version: 20161104194708) do
     t.decimal  "amount",     precision: 5, scale: 2, null: false
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
+    t.index ["draw_order"], name: "index_prizes_on_draw_order"
     t.index ["lottery_id"], name: "index_prizes_on_lottery_id"
   end
 
@@ -39,12 +42,14 @@ ActiveRecord::Schema.define(version: 20161104194708) do
     t.string   "full_name",  null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["full_name"], name: "index_sellers_on_full_name"
   end
 
   create_table "sponsors", force: :cascade do |t|
     t.string   "full_name",  null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["full_name"], name: "index_sponsors_on_full_name"
   end
 
   create_table "tables", force: :cascade do |t|
@@ -55,6 +60,7 @@ ActiveRecord::Schema.define(version: 20161104194708) do
     t.datetime "updated_at", null: false
     t.index ["lottery_id", "number"], name: "index_tables_on_lottery_id_and_number", unique: true
     t.index ["lottery_id"], name: "index_tables_on_lottery_id"
+    t.index ["number"], name: "index_tables_on_number"
   end
 
   create_table "tickets", force: :cascade do |t|
@@ -68,6 +74,7 @@ ActiveRecord::Schema.define(version: 20161104194708) do
     t.index ["guest_id"], name: "index_tickets_on_guest_id"
     t.index ["lottery_id", "number"], name: "index_tickets_on_lottery_id_and_number", unique: true
     t.index ["lottery_id"], name: "index_tickets_on_lottery_id"
+    t.index ["number"], name: "index_tickets_on_number"
     t.index ["seller_id"], name: "index_tickets_on_seller_id"
     t.index ["sponsor_id"], name: "index_tickets_on_sponsor_id"
   end

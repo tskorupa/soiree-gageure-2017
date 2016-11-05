@@ -17,6 +17,12 @@ RSpec.describe(Ticket, type: :model) do
     )
   end
 
+  describe('#number') do
+    it('is indexed') do
+      expect(ActiveRecord::Base.connection.index_exists?(:tickets, :number)).to be(true)
+    end
+  end
+
   describe('#valid?') do
     it ('requires a lottery') do
       new_ticket = Ticket.new

@@ -5,6 +5,12 @@ RSpec.describe(Seller, type: :model) do
     Seller.create!(full_name: 'Gonzo')
   end
 
+  describe('#full_name') do
+    it('is indexed') do
+      expect(ActiveRecord::Base.connection.index_exists?(:sellers, :full_name)).to be(true)
+    end
+  end
+
   describe('#valid?') do
     it('requires :full_name to be present') do
       new_seller = Seller.new

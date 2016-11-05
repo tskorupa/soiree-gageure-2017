@@ -18,10 +18,26 @@ RSpec.describe(TicketsController, type: :controller) do
   end
 
   describe('GET #index') do
-    it('returns all tickets') do
+    it('returns all tickets ordered by :number') do
+      ticket_1 = Ticket.create!(
+        lottery: lottery,
+        seller: seller,
+        number: 3,
+      )
+      ticket_2 = Ticket.create!(
+        lottery: lottery,
+        seller: seller,
+        number: 1,
+      )
+      ticket_3 = Ticket.create!(
+        lottery: lottery,
+        seller: seller,
+        number: 2,
+      )
+
       get(:index, params: { lottery_id: lottery.id })
       expect(response).to have_http_status(:success)
-      expect(assigns(:tickets)).to eq(Ticket.all)
+      expect(assigns(:tickets)).to eq([ticket_2, ticket_3, ticket_1])
       expect(response).to render_template('lotteries/lottery_child_index')
     end
   end

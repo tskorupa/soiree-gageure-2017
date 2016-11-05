@@ -13,6 +13,12 @@ RSpec.describe(Table, type: :model) do
     )
   end
 
+  describe('#number') do
+    it('is indexed') do
+      expect(ActiveRecord::Base.connection.index_exists?(:tables, :number)).to be(true)
+    end
+  end
+
   describe('#valid?') do
     it ('requires a lottery') do
       new_table = Table.new

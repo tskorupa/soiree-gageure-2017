@@ -6,10 +6,15 @@ RSpec.describe(GuestsController, type: :controller) do
   end
 
   describe('GET #index') do
-    it('returns all guests') do
+    it('returns all guests ordered by LOWER(full_name)') do
+      guest_1 = Guest.create!(full_name: 'z')
+      guest_2 = Guest.create!(full_name: 'a')
+      guest_3 = Guest.create!(full_name: '1')
+      guest_4 = Guest.create!(full_name: 'A')
+
       get :index
       expect(response).to have_http_status(:success)
-      expect(assigns(:guests)).to eq(Guest.all)
+      expect(assigns(:guests)).to eq([guest_3, guest_2, guest_4, guest_1])
       expect(response).to render_template(:index)
     end
   end

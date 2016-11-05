@@ -6,10 +6,15 @@ RSpec.describe(SponsorsController, type: :controller) do
   end
 
   describe('GET #index') do
-    it('returns all sponsors') do
+    it('returns all sponsors ordered by LOWER(full_name)') do
+      sponsor_1 = Sponsor.create!(full_name: 'z')
+      sponsor_2 = Sponsor.create!(full_name: 'a')
+      sponsor_3 = Sponsor.create!(full_name: '1')
+      sponsor_4 = Sponsor.create!(full_name: 'A')
+
       get :index
       expect(response).to have_http_status(:success)
-      expect(assigns(:sponsors)).to eq(Sponsor.all)
+      expect(assigns(:sponsors)).to eq([sponsor_3, sponsor_2, sponsor_4, sponsor_1])
       expect(response).to render_template(:index)
     end
   end

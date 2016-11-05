@@ -14,10 +14,26 @@ RSpec.describe(TablesController, type: :controller) do
   end
 
   describe('GET #index') do
-    it('returns all tables') do
+    it('returns all tables ordered by :number') do
+      table_1 = Table.create!(
+        lottery: lottery,
+        number: 3,
+        capacity: 6,
+      )
+      table_2 = Table.create!(
+        lottery: lottery,
+        number: 1,
+        capacity: 6,
+      )
+      table_3 = Table.create!(
+        lottery: lottery,
+        number: 2,
+        capacity: 6,
+      )
+
       get(:index, params: { lottery_id: lottery.id })
       expect(response).to have_http_status(:success)
-      expect(assigns(:tables)).to eq(Table.all)
+      expect(assigns(:tables)).to eq([table_2, table_3, table_1])
       expect(response).to render_template('lotteries/lottery_child_index')
     end
   end

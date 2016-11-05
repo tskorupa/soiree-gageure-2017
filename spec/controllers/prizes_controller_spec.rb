@@ -14,10 +14,25 @@ RSpec.describe(PrizesController, type: :controller) do
   end
 
   describe('GET #index') do
-    it('returns all prizes') do
+    it('returns all prizes ordered by :draw_order') do
+      prize_1 = Prize.create!(
+        lottery: lottery,
+        draw_order: 3,
+        amount: 100.00,
+      )
+      prize_2 = Prize.create!(
+        lottery: lottery,
+        draw_order: 1,
+        amount: 100.00,
+      )
+      prize_3 = Prize.create!(
+        lottery: lottery,
+        draw_order: 2,
+        amount: 100.00,
+      )
       get(:index, params: { lottery_id: lottery.id })
       expect(response).to have_http_status(:success)
-      expect(assigns(:prizes)).to eq(Prize.all)
+      expect(assigns(:prizes)).to eq([prize_2, prize_3, prize_1])
       expect(response).to render_template('lotteries/lottery_child_index')
     end
   end

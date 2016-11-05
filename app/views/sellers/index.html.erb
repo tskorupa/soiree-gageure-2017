@@ -8,7 +8,6 @@
 <table class='table table-striped'>
   <thead>
     <tr>
-      <th><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:full_name) %></th>
       <th><%= t(
         '.actions',
@@ -19,7 +18,6 @@
   <tbody>
     <% @sellers.each do |seller| %>
       <tr>
-        <td><%= link_to(seller.id, seller_path(seller)) %></td>
         <td><%= seller.full_name %></td>
         <td>
           <%= link_to(

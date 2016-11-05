@@ -8,12 +8,10 @@
 <table class='table table-striped'>
   <thead>
     <tr>
-      <th><%= model_class.human_attribute_name(:id) %></th>
-      <th><%= model_class.human_attribute_name(:lottery_id) %></th>
+      <th><%= model_class.human_attribute_name(:number) %></th>
       <th><%= model_class.human_attribute_name(:seller_id) %></th>
       <th><%= model_class.human_attribute_name(:guest_id) %></th>
       <th><%= model_class.human_attribute_name(:sponsor_id) %></th>
-      <th><%= model_class.human_attribute_name(:number) %></th>
       <th><%=t(
         '.actions',
         default: t('helpers.actions'),
@@ -23,12 +21,10 @@
   <tbody>
     <% @tickets.each do |ticket| %>
       <tr>
-        <td><%= ticket.id %></td>
-        <td><%= ticket.lottery_id %></td>
+        <td><%= ticket.number %></td>
         <td><%= ticket.seller_id %></td>
         <td><%= ticket.guest_id %></td>
         <td><%= ticket.sponsor_id %></td>
-        <td><%= ticket.number %></td>
         <td>
           <%= link_to(
             t('.edit', default: t('helpers.links.edit')),
