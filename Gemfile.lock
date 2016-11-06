@@ -39,7 +39,6 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     arel (7.1.4)
-    bootstrap_form (2.5.2)
     builder (3.2.2)
     coderay (1.1.1)
     coffee-rails (4.2.1)
@@ -197,7 +196,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bootstrap_form
   coffee-rails (~> 4.2)
   jbuilder (~> 2.5)
   jquery-rails
