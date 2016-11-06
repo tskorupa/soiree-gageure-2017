@@ -13,6 +13,15 @@ RSpec.describe(Table, type: :model) do
     )
   end
 
+  describe('#lottery_id') do
+    it('is read-only') do
+      other_lottery = Lottery.create!(event_date: Date.tomorrow)
+      expect do
+        table.update!(lottery_id: other_lottery.id)
+      end.not_to change { table.reload.lottery_id }
+    end
+  end
+
   describe('#number') do
     it('is indexed') do
       expect(

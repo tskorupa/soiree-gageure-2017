@@ -13,6 +13,15 @@ RSpec.describe(Prize, type: :model) do
     )
   end
 
+  describe('#lottery_id') do
+    it('is read-only') do
+      other_lottery = Lottery.create!(event_date: Date.tomorrow)
+      expect do
+        prize.update!(lottery_id: other_lottery.id)
+      end.not_to change { prize.reload.lottery_id }
+    end
+  end
+
   describe('#draw_order') do
     it('is indexed') do
       expect(
