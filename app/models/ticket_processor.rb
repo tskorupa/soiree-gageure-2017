@@ -9,6 +9,7 @@ class TicketProcessor
         ticket = Ticket.find_or_initialize_by(
           lottery: lottery,
           number: number,
+          state: 'reserved',
         )
         next if ticket.seller_id == seller.id
 

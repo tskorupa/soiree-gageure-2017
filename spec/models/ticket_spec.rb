@@ -14,7 +14,21 @@ RSpec.describe(Ticket, type: :model) do
       lottery: lottery,
       seller: seller,
       number: 1,
+      state: 'reserved',
     )
+  end
+
+  describe('::STATES') do
+    it('defines a list of allowed states') do
+      expect(Ticket::STATES).to eq(%w( reserved authorized sold ))
+    end
+
+    it('returns a frozen array of frozen strings') do
+      expect(Ticket::STATES).to be_frozen
+      Ticket::STATES.each do |state|
+        expect(state).to be_frozen
+      end
+    end
   end
 
   describe('#lottery_id') do
@@ -41,6 +55,16 @@ RSpec.describe(Ticket, type: :model) do
           unique: true,
         ),
       ).to be(true)
+    end
+  end
+
+  describe('#state') do
+    it('can be any value in Ticket::STATES') do
+      Ticket::STATES.each do |state|
+        new_ticket = Ticket.new(state: state)
+        new_ticket.valid?
+        expect(new_ticket.errors[:state]).to be_empty
+      end
     end
   end
 
@@ -95,6 +119,12 @@ RSpec.describe(Ticket, type: :model) do
       )
       expect(new_ticket).not_to be_valid
       expect(new_ticket.errors[:number]).to include('has already been taken')
+    end
+
+    it('requires :state to be present') do
+      new_ticket = Ticket.new
+      expect(new_ticket).not_to be_valid
+      expect(new_ticket.errors[:state]).to include("is not included in the list")
     end
   end
 

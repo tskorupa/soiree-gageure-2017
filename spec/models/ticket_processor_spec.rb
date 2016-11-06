@@ -14,16 +14,16 @@ RSpec.describe(TicketProcessor, type: :model) do
   end
 
   describe('#reserve') do
-    it('creates tickets for all numbers that do not exist') do
+    it('creates tickets with state:reserved for all numbers that do not exist') do
       expect do
         ticket_processor.reserve(numbers: 1..10, seller: seller)
-      end.to change { Ticket.where(seller_id: seller.id).count }.by(10)
+      end.to change { Ticket.where(seller_id: seller.id, state: 'reserved').count }.by(10)
     end
 
-    it('assigns tickets for all numbers to the seller') do
+    it('assigns tickets with state:reserved for all numbers to the seller') do
       expect do
         ticket_processor.reserve(numbers: [1], seller: seller)
-      end.to change { Ticket.where(number: 1, seller_id: seller.id).exists? }.from(false).to(true)
+      end.to change { Ticket.where(number: 1, seller_id: seller.id, state: 'reserved').exists? }.from(false).to(true)
     end
 
     it('does not re-assign a ticket number to the same seller') do
@@ -31,6 +31,7 @@ RSpec.describe(TicketProcessor, type: :model) do
         lottery: lottery,
         seller: seller,
         number: 1,
+        state: 'reserved',
       )
       expect do
         ticket_processor.reserve(numbers: [1], seller: seller)
@@ -42,6 +43,7 @@ RSpec.describe(TicketProcessor, type: :model) do
         lottery: lottery,
         seller: seller,
         number: 1,
+        state: 'reserved',
       )
       new_seller = Seller.create!(full_name: 'George')
       expect do

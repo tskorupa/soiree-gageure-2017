@@ -26,6 +26,7 @@ RSpec.describe(Sponsor, type: :model) do
         lottery: Lottery.create!(event_date: Date.today),
         seller: Seller.create!(full_name: 'Gonzo'),
         sponsor: sponsor,
+        state: 'reserved',
       )
       expect(sponsor.tickets).to include(ticket)
     end

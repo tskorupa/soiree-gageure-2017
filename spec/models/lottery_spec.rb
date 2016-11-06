@@ -77,6 +77,7 @@ RSpec.describe(Lottery, type: :model) do
         number: 1,
         lottery: lottery,
         seller: Seller.create!(full_name: 'Gonzo'),
+        state: 'reserved',
       )
     end
 
