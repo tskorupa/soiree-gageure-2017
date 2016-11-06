@@ -17,7 +17,7 @@
     <% @prizes.each do |prize| %>
       <tr>
         <td><%= prize.draw_order %></td>
-        <td><%= prize.amount %></td>
+        <td><%= number_to_currency(prize.amount) %></td>
         <td>
           <%= link_to(
             t('.edit', default: t('helpers.links.edit')),

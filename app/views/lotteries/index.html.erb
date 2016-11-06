@@ -21,8 +21,8 @@
     <% @lotteries.each do |lottery| %>
       <tr>
         <td><%= link_to(lottery.event_date, lottery_tickets_path(lottery)) %></td>
-        <td><%= lottery.meal_voucher_price %></td>
-        <td><%= lottery.ticket_price %></td>
+        <td><%= number_to_currency(lottery.meal_voucher_price) %></td>
+        <td><%= number_to_currency(lottery.ticket_price) %></td>
         <td>
           <%= link_to(
             t('.edit', default: t('helpers.links.edit')),
