@@ -17,7 +17,7 @@
   <div class='form-group'>
     <%= f.label(:full_name, class: 'control-label col-lg-2') %>
     <div class='col-lg-10'>
-      <%= f.text_field(:full_name, class: 'form-control') %>
+      <%= f.text_field(:full_name, class: 'form-control', autofocus: true) %>
     </div>
     <%=f.error_span(:full_name) %>
   </div>
