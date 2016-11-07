@@ -1,0 +1,28 @@
+fr:
+  breadcrumbs:
+    application:
+      root: 'Index'
+    pages:
+      pages: 'Pages'
+  helpers:
+    actions: 'Actions'
+    links:
+      cancel: 'Annuler'
+      new: 'Nouveau'
+      edit: 'Modifier'
+    titles:
+      edit: 'Modifier le %{model}'
+      new: 'Nouveau %{model}'
+    submit:
+      create: 'Créer'
+      update: 'Mettre à jour'
+  guests:
+    new:
+      title: 'Nouvel %{model}'
+    edit:
+      title: "Modifier l'%{model}"
+  tables:
+    new:
+      title: 'Nouvelle %{model}'
+    edit:
+      title: 'Modifier la %{model}'

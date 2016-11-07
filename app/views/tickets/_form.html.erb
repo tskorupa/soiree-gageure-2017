@@ -5,7 +5,12 @@
   <% if @ticket.errors.any? %>
     <div id='error_expl' class='panel panel-danger'>
       <div class='panel-heading'>
-        <h3 class='panel-title'><%= pluralize(@ticket.errors.count, 'error') %> prohibited this ticket from being saved:</h3>
+        <h3 class='panel-title'><%= t(
+          'activerecord.errors.models.ticket.errors.header',
+          count: @ticket.errors.count,
+          model: Ticket.model_name.human.downcase,
+          default: :'activerecord.errors.template.header',
+        ) %></h3>
       </div>
       <div class='panel-body'>
         <ul>
@@ -21,36 +26,36 @@
     <%= f.label(:number, class: 'control-label col-lg-2') %>
     <div class='col-lg-10'>
       <%= f.text_field(:number, class: 'form-control', autofocus: true) %>
+      <%= f.error_span(:number) %>
     </div>
-    <%=f.error_span(:number) %>
   </div>
   <div class='form-group'>
     <%= f.label(:seller_id, class: 'control-label col-lg-2') %>
     <div class='col-lg-10'>
       <%= f.text_field(:seller_id, class: 'form-control') %>
+      <%= f.error_span(:seller_id) %>
     </div>
-    <%=f.error_span(:seller_id) %>
   </div>
   <div class='form-group'>
     <%= f.label(:guest_id, class: 'control-label col-lg-2') %>
     <div class='col-lg-10'>
       <%= f.text_field(:guest_id, class: 'form-control') %>
+      <%= f.error_span(:guest_id) %>
     </div>
-    <%=f.error_span(:guest_id) %>
   </div>
   <div class='form-group'>
     <%= f.label(:sponsor_id, class: 'control-label col-lg-2') %>
     <div class='col-lg-10'>
       <%= f.text_field(:sponsor_id, class: 'form-control') %>
+      <%= f.error_span(:sponsor_id) %>
     </div>
-    <%=f.error_span(:sponsor_id) %>
   </div>
   <div class='form-group'>
     <%= f.label(:state, class: 'control-label col-lg-2') %>
     <div class='col-lg-10'>
-      <%= f.select(:state, Ticket::STATES, {}, class: 'form-control') %>
+      <%= f.select(:state, options_for_state_select, {}, class: 'form-control') %>
+      <%= f.error_span(:select) %>
     </div>
-    <%=f.error_span(:select) %>
   </div>
 
   <div class='form-group'>

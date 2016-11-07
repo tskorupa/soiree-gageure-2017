@@ -5,9 +5,9 @@
   brand: image_tag('lions_international.gif', size: '53x50'),
 ) do %>
   <%= menu_group do %>
-    <%= menu_item('Lotteries', lotteries_path) %>
-    <%= menu_item('Sellers', sellers_path) %>
-    <%= menu_item('Guests', guests_path) %>
-    <%= menu_item('Sponsors', sponsors_path) %>
+    <%= menu_item(Lottery.model_name.human.pluralize, lotteries_path) %>
+    <%= menu_item(Seller.model_name.human.pluralize, sellers_path) %>
+    <%= menu_item(Guest.model_name.human.pluralize, guests_path) %>
+    <%= menu_item(Sponsor.model_name.human.pluralize, sponsors_path) %>
   <% end %>
 <% end %>

@@ -2,7 +2,12 @@
   <% if @seller.errors.any? %>
     <div id='error_expl' class='panel panel-danger'>
       <div class='panel-heading'>
-        <h3 class='panel-title'><%= pluralize(@seller.errors.count, 'error') %> prohibited this seller from being saved:</h3>
+        <h3 class='panel-title'><%= t(
+          'activerecord.errors.models.seller.errors.header',
+          count: @seller.errors.count,
+          model: Seller.model_name.human.downcase,
+          default: :'activerecord.errors.template.header',
+        ) %></h3>
       </div>
       <div class='panel-body'>
         <ul>
@@ -18,8 +23,8 @@
     <%= f.label(:full_name, class: 'control-label col-lg-2') %>
     <div class='col-lg-10'>
       <%= f.text_field(:full_name, class: 'form-control', autofocus: true) %>
+      <%= f.error_span(:full_name) %>
     </div>
-    <%=f.error_span(:full_name) %>
   </div>
 
   <div class='form-group'>

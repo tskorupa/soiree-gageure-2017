@@ -1,12 +1,21 @@
 <div class='row'>
   <div class='col-sm-2 sidebar'>
     <ul class='nav nav-sidebar'>
-      <%= menu_item('Tickets', lottery_tickets_path(@lottery)) %>
-      <%= menu_item('New ticket', new_lottery_ticket_path(@lottery)) %>
-      <%= menu_item('Tables', lottery_tables_path(@lottery)) %>
-      <%= menu_item('New table', new_lottery_table_path(@lottery)) %>
-      <%= menu_item('Prizes', lottery_prizes_path(@lottery)) %>
-      <%= menu_item('New prize', new_lottery_prize_path(@lottery)) %>
+      <%= menu_item(Ticket.model_name.human.pluralize, lottery_tickets_path(@lottery)) %>
+      <%= menu_item(
+        t('ticket.new.title', default: [:'helpers.titles.new', 'New %{model}'], model: Ticket.model_name.human.downcase),
+        new_lottery_ticket_path(@lottery),
+      ) %>
+      <%= menu_item(Table.model_name.human.pluralize, lottery_tables_path(@lottery)) %>
+      <%= menu_item(
+        t('tables.new.title', default: [:'helpers.titles.new', 'New %{model}'], model: Table.model_name.human.downcase),
+        new_lottery_table_path(@lottery),
+      ) %>
+      <%= menu_item(Prize.model_name.human.pluralize(I18n.locale), lottery_prizes_path(@lottery)) %>
+      <%= menu_item(
+        t('prize.new.title', default: [:'helpers.titles.new', 'New %{model}'], model: Prize.model_name.human.downcase),
+        new_lottery_prize_path(@lottery),
+      ) %>
     </ul>
   </div>
   <div class='col-sm-10 col-sm-offset-2 main'>

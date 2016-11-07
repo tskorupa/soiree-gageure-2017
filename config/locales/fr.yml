@@ -1,0 +1,62 @@
+fr:
+  layouts:
+    application:
+      title: 'Soirée gageure 2017'
+  activerecord:
+    errors:
+      messages:
+        blank: 'ne peut pas être vide'
+        greater_than: 'doit être supérieur à 0'
+        not_a_number: 'doit être un chiffre'
+        required: 'doit être spécifié'
+        taken: 'a déjà été assigné'
+      template:
+        header:
+          one: "1 erreur empêche la sauvegarde de ce %{model}:"
+          other: "%{count} erreurs empêchent la sauvegarde de ce %{model}:"
+      models:
+        guest:
+          errors:
+            header:
+              one: "1 erreur empêche la sauvegarde de cet %{model}:"
+              other: "%{count} erreurs empêchent la sauvegarde de cet %{model}:"
+        table:
+          errors:
+            header:
+              one: "1 erreur empêche la sauvegarde de cette %{model}:"
+              other: "%{count} erreurs empêchent la sauvegarde de cette %{model}:"
+    models:
+      lottery: Tirage
+      seller: Vendeur
+      guest: Invité
+      sponsor: Commanditaire
+      ticket: Billet
+      prize: Prix
+    attributes:
+      lottery:
+        event_date: "La date de l'événement"
+        meal_voucher_price: "Le prix d'un billet de souper"
+        ticket_price: "Le prix d'un billet de tirage"
+      seller:
+        full_name: 'Le nom complet'
+      guest:
+        full_name: 'Le nom complet'
+      sponsor:
+        full_name: 'Le nom complet'
+      ticket/state:
+        reserved: 'Réservé'
+        authorized: 'Authorisé'
+        sold: 'Vendu'
+      ticket:
+        number: 'Le numéro'
+        state: "L'état"
+        seller: 'Le vendeur'
+        seller_id: 'Le vendeur'
+        guest_id: "L'invité"
+        sponsor_id: 'Le commanditaire'
+      table:
+        number: 'Le numéro'
+        capacity: 'La capacité'
+      prize:
+        draw_order: "L'order de pige"
+        amount: 'Le montant'
