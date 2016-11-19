@@ -63,5 +63,5 @@ fr:
         number: 'Le numéro'
         capacity: 'La capacité'
       prize:
-        draw_order: "L'order de pige"
+        draw_order: "L'ordre de pige"
         amount: 'Le montant'
