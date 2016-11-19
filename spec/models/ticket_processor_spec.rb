@@ -32,6 +32,7 @@ RSpec.describe(TicketProcessor, type: :model) do
         seller: seller,
         number: 1,
         state: 'reserved',
+        ticket_type: 'meal_and_lottery',
       )
       expect do
         ticket_processor.reserve(numbers: [1], seller: seller)
@@ -44,6 +45,7 @@ RSpec.describe(TicketProcessor, type: :model) do
         seller: seller,
         number: 1,
         state: 'reserved',
+        ticket_type: 'meal_and_lottery',
       )
       new_seller = Seller.create!(full_name: 'George')
       expect do

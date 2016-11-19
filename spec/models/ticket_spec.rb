@@ -15,6 +15,7 @@ RSpec.describe(Ticket, type: :model) do
       seller: seller,
       number: 1,
       state: 'reserved',
+      ticket_type: 'meal_and_lottery',
     )
   end
 
@@ -125,6 +126,12 @@ RSpec.describe(Ticket, type: :model) do
       new_ticket = Ticket.new
       expect(new_ticket).not_to be_valid
       expect(new_ticket.errors[:state]).to include("is not included in the list")
+    end
+
+    it('requires :ticket_type to be present') do
+      new_ticket = Ticket.new
+      expect(new_ticket).not_to be_valid
+      expect(new_ticket.errors[:ticket_type]).to include("is not included in the list")
     end
   end
 

@@ -49,6 +49,7 @@ class TicketsController < ApplicationController
         :sponsor_id,
         :number,
         :state,
+        :ticket_type,
       )
   end
 end

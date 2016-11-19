@@ -15,6 +15,7 @@ RSpec.describe(TicketsController, type: :controller) do
       seller: seller,
       number: 1,
       state: 'reserved',
+      ticket_type: 'meal_and_lottery',
     )
   end
 
@@ -25,18 +26,21 @@ RSpec.describe(TicketsController, type: :controller) do
         seller: seller,
         number: 3,
         state: 'reserved',
+        ticket_type: 'meal_and_lottery',
       )
       ticket_2 = Ticket.create!(
         lottery: lottery,
         seller: seller,
         number: 1,
         state: 'reserved',
+        ticket_type: 'meal_and_lottery',
       )
       ticket_3 = Ticket.create!(
         lottery: lottery,
         seller: seller,
         number: 2,
         state: 'reserved',
+        ticket_type: 'meal_and_lottery',
       )
 
       get(:index, params: { lottery_id: lottery.id })
@@ -62,7 +66,12 @@ RSpec.describe(TicketsController, type: :controller) do
           :create,
           params: {
             lottery_id: lottery.id,
-            ticket: { seller_id: seller.id, number: 1, state: 'reserved' },
+            ticket: {
+              seller_id: seller.id,
+              number: 1,
+              state: 'reserved',
+              ticket_type: 'meal_and_lottery',
+            },
           },
         )
       end.to change { Ticket.count }.by(1)
@@ -125,6 +134,12 @@ RSpec.describe(TicketsController, type: :controller) do
     it('redirects to lottery_tickets_path when :state is updated') do
       patch(:update, params: { lottery_id: lottery.id, id: ticket.id, ticket: { state: 'authorized' } })
       expect(ticket.reload.state).to eq('authorized')
+      expect(response).to redirect_to(lottery_tickets_path(lottery))
+    end
+
+    it('redirects to lottery_tickets_path when :ticket_type is updated') do
+      patch(:update, params: { lottery_id: lottery.id, id: ticket.id, ticket: { ticket_type: 'lottery_only' } })
+      expect(ticket.reload.ticket_type).to eq('lottery_only')
       expect(response).to redirect_to(lottery_tickets_path(lottery))
     end
 

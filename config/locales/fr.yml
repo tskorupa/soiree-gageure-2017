@@ -10,6 +10,7 @@ fr:
         not_a_number: 'doit être un chiffre'
         required: 'doit être spécifié'
         taken: 'a déjà été assigné'
+        inclusion: "n'est pas valide"
       template:
         header:
           one: "1 erreur empêche la sauvegarde de ce %{model}:"
@@ -47,6 +48,9 @@ fr:
         reserved: 'Réservé'
         authorized: 'Authorisé'
         sold: 'Vendu'
+      ticket/ticket_type:
+        meal_and_lottery: 'Souper et tirage'
+        lottery_only: 'Tirage seulement'
       ticket:
         number: 'Le numéro'
         state: "L'état"
@@ -54,6 +58,7 @@ fr:
         seller_id: 'Le vendeur'
         guest_id: "L'invité"
         sponsor_id: 'Le commanditaire'
+        ticket_type: 'Le type de billet'
       table:
         number: 'Le numéro'
         capacity: 'La capacité'

@@ -13,6 +13,7 @@
       <th><%= model_class.human_attribute_name(:guest_id) %></th>
       <th><%= model_class.human_attribute_name(:sponsor_id) %></th>
       <th><%= model_class.human_attribute_name(:state) %></th>
+      <th><%= model_class.human_attribute_name(:ticket_type) %></th>
       <th></th>
     </tr>
   </thead>
@@ -24,6 +25,7 @@
         <td><%= ticket.guest_id %></td>
         <td><%= ticket.sponsor_id %></td>
         <td><%= model_class.human_attribute_name('state.%s' % ticket.state) %></td>
+        <td><%= model_class.human_attribute_name('ticket_type.%s' % ticket.ticket_type) %></td>
         <td>
           <%= link_to(
             t('.edit', default: t('helpers.links.edit')),

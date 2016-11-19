@@ -10,6 +10,7 @@ class TicketProcessor
           lottery: lottery,
           number: number,
           state: 'reserved',
+          ticket_type: 'meal_and_lottery',
         )
         next if ticket.seller_id == seller.id
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161106173117) do
+ActiveRecord::Schema.define(version: 20161119025806) do
 
   create_table "guests", force: :cascade do |t|
     t.string   "full_name",  null: false
@@ -65,14 +65,15 @@ ActiveRecord::Schema.define(version: 20161106173117) do
   end
 
   create_table "tickets", force: :cascade do |t|
-    t.integer  "lottery_id", null: false
-    t.integer  "seller_id",  null: false
+    t.integer  "lottery_id",  null: false
+    t.integer  "seller_id",   null: false
     t.integer  "guest_id"
-    t.integer  "number",     null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "number",      null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
     t.integer  "sponsor_id"
-    t.string   "state",      null: false
+    t.string   "state",       null: false
+    t.string   "ticket_type", null: false
     t.index ["guest_id"], name: "index_tickets_on_guest_id"
     t.index ["lottery_id", "number"], name: "index_tickets_on_lottery_id_and_number", unique: true
     t.index ["lottery_id"], name: "index_tickets_on_lottery_id"

@@ -27,6 +27,7 @@ RSpec.describe(Guest, type: :model) do
         seller: Seller.create!(full_name: 'Gonzo'),
         guest: guest,
         state: 'reserved',
+        ticket_type: 'meal_and_lottery',
       )
       expect(guest.tickets).to eq([ticket])
     end

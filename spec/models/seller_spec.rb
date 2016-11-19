@@ -20,16 +20,14 @@ RSpec.describe(Seller, type: :model) do
   end
 
   describe('#tickets') do
-    before(:each) do
+    it('returns the tickets belonging to the seller') do
       Ticket.create!(
         number: 1,
         lottery: Lottery.create!(event_date: Date.today),
         seller: seller,
         state: 'reserved',
+        ticket_type: 'meal_and_lottery',
       )
-    end
-
-    it('returns the tickets belonging to the seller') do
       expect(seller.tickets).to eq(Ticket.where(seller_id: seller.id))
     end
   end
