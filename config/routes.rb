@@ -1,16 +1,20 @@
 Rails.application.routes.draw do
-  scope('(:locale)') do
+  scope(':locale') do
     devise_for(:users)
-    resources(:lotteries, only: [:index, :new, :create, :edit, :update]) do
-      resources(:prizes, only: [:index, :new, :create, :edit, :update])
-      resources(:tables, only: [:index, :new, :create, :edit, :update])
-      resources(:tickets, only: [:index, :new, :create, :edit, :update])
-    end
-    resources(:sellers, only: [:index, :new, :create, :edit, :update])
-    resources(:guests, only: [:index, :new, :create, :edit, :update])
-    resources(:sponsors, only: [:index, :new, :create, :edit, :update])
-  end
 
-  get '/:locale' => 'lotteries#index'
-  root 'lotteries#index'
+    with_options(
+      only: %i(index new create edit update),
+    ) do |actions|
+      actions.resources(:lotteries) do
+        actions.resources(:prizes)
+        actions.resources(:tables)
+        actions.resources(:tickets)
+      end
+      actions.resources(:sellers)
+      actions.resources(:guests)
+      actions.resources(:sponsors)
+    end
+
+    root 'lotteries#index'
+  end
 end
