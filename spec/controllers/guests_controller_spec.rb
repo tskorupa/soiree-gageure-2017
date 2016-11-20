@@ -5,6 +5,17 @@ RSpec.describe(GuestsController, type: :controller) do
     Guest.create!(full_name: 'Bubbles')
   end
 
+  let(:user) do
+    User.create!(
+      email: 'abc@def.com',
+      password: 'foobar',
+    )
+  end
+
+  before(:each) do
+    sign_in(user)
+  end
+
   describe('GET #index') do
     it('returns all guests ordered by LOWER(full_name)') do
       guest_1 = Guest.create!(full_name: 'z')

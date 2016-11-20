@@ -2,6 +2,8 @@ fr:
   layouts:
     application:
       title: 'Soirée gageure 2017'
+    navigation:
+      logout: 'Se déconnecter'
   activerecord:
     errors:
       messages:

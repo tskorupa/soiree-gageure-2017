@@ -13,6 +13,17 @@ RSpec.describe(PrizesController, type: :controller) do
     )
   end
 
+  let(:user) do
+    User.create!(
+      email: 'abc@def.com',
+      password: 'foobar',
+    )
+  end
+
+  before(:each) do
+    sign_in(user)
+  end
+
   describe('GET #index') do
     it('returns all prizes ordered by :draw_order') do
       prize_1 = Prize.create!(

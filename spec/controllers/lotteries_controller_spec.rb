@@ -5,6 +5,17 @@ RSpec.describe(LotteriesController, type: :controller) do
     Lottery.create!(event_date: Date.today)
   end
 
+  let(:user) do
+    User.create!(
+      email: 'abc@def.com',
+      password: 'foobar',
+    )
+  end
+
+  before(:each) do
+    sign_in(user)
+  end
+
   describe('GET #index') do
     it('returns all lotteries ordered by event_date: :desc') do
       lottery_1 = Lottery.create!(event_date: Date.yesterday)

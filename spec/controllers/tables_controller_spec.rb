@@ -13,6 +13,17 @@ RSpec.describe(TablesController, type: :controller) do
     )
   end
 
+  let(:user) do
+    User.create!(
+      email: 'abc@def.com',
+      password: 'foobar',
+    )
+  end
+
+  before(:each) do
+    sign_in(user)
+  end
+
   describe('GET #index') do
     it('returns all tables ordered by :number') do
       table_1 = Table.create!(

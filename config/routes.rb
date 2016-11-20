@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   scope('(:locale)') do
+    devise_for(:users)
     resources(:lotteries, only: [:index, :new, :create, :edit, :update]) do
       resources(:prizes, only: [:index, :new, :create, :edit, :update])
       resources(:tables, only: [:index, :new, :create, :edit, :update])

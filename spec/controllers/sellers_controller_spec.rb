@@ -5,6 +5,17 @@ RSpec.describe(SellersController, type: :controller) do
     Seller.create!(full_name: 'Gonzo')
   end
 
+  let(:user) do
+    User.create!(
+      email: 'abc@def.com',
+      password: 'foobar',
+    )
+  end
+
+  before(:each) do
+    sign_in(user)
+  end
+
   describe('GET #index') do
     it('returns all sellers ordered by LOWER(full_name)') do
       seller_1 = Seller.create!(full_name: 'z')

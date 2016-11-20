@@ -19,6 +19,17 @@ RSpec.describe(TicketsController, type: :controller) do
     )
   end
 
+  let(:user) do
+    User.create!(
+      email: 'abc@def.com',
+      password: 'foobar',
+    )
+  end
+
+  before(:each) do
+    sign_in(user)
+  end
+
   describe('GET #index') do
     it('returns all tickets ordered by :number') do
       ticket_1 = Ticket.create!(

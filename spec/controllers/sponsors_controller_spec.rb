@@ -5,6 +5,17 @@ RSpec.describe(SponsorsController, type: :controller) do
     Sponsor.create!(full_name: 'Clyde')
   end
 
+  let(:user) do
+    User.create!(
+      email: 'abc@def.com',
+      password: 'foobar',
+    )
+  end
+
+  before(:each) do
+    sign_in(user)
+  end
+
   describe('GET #index') do
     it('returns all sponsors ordered by LOWER(full_name)') do
       sponsor_1 = Sponsor.create!(full_name: 'z')
