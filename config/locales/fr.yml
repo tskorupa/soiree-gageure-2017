@@ -67,3 +67,6 @@ fr:
       prize:
         draw_order: "L'ordre de pige"
         amount: 'Le montant'
+      user:
+        email: 'Adresse courriel'
+        password: 'Mot de passe'
