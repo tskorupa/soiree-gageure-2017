@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       actions.resources(:sellers)
       actions.resources(:guests)
       actions.resources(:sponsors)
+      actions.resources(:users)
     end
 
     root 'lotteries#index'

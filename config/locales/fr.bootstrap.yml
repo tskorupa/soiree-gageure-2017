@@ -26,3 +26,8 @@ fr:
       title: 'Nouvelle %{model}'
     edit:
       title: 'Modifier la %{model}'
+  users:
+    new:
+      title: 'Nouvel %{model}'
+    edit:
+      title: "Modifier l'%{model}"

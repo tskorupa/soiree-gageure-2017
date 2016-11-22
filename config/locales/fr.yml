@@ -13,6 +13,7 @@ fr:
         required: 'doit être spécifié'
         taken: 'a déjà été assigné'
         inclusion: "n'est pas valide"
+        too_short: 'est trop court (minimum de %{count} charactères)'
       template:
         header:
           one: "1 erreur empêche la sauvegarde de ce %{model}:"
@@ -28,6 +29,11 @@ fr:
             header:
               one: "1 erreur empêche la sauvegarde de cette %{model}:"
               other: "%{count} erreurs empêchent la sauvegarde de cette %{model}:"
+        user:
+          errors:
+            header:
+              one: "1 erreur empêche la sauvegarde de cet %{model}:"
+              other: "%{count} erreurs empêchent la sauvegarde de cet %{model}:"
     models:
       lottery: Tirage
       seller: Vendeur
@@ -35,6 +41,7 @@ fr:
       sponsor: Commanditaire
       ticket: Billet
       prize: Prix
+      user: Utilisateur
     attributes:
       lottery:
         event_date: "La date de l'événement"
@@ -68,5 +75,5 @@ fr:
         draw_order: "L'ordre de pige"
         amount: 'Le montant'
       user:
-        email: 'Adresse courriel'
-        password: 'Mot de passe'
+        email: "L'adresse courriel"
+        password: 'Le mot de passe'
