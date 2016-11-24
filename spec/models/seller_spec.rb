@@ -9,6 +9,12 @@ RSpec.describe(Seller, type: :model) do
     it('is indexed') do
       expect(ActiveRecord::Base.connection.index_exists?(:sellers, :full_name)).to be(true)
     end
+
+    it('is #stripped #sqeezed and #titleized before validation') do
+      new_seller = Seller.new(full_name: ' gonzo   Chimp  ')
+      new_seller.valid?
+      expect(new_seller.full_name).to eq('Gonzo Chimp')
+    end
   end
 
   describe('#valid?') do

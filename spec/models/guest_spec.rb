@@ -9,6 +9,12 @@ RSpec.describe(Guest, type: :model) do
     it('is indexed') do
       expect(ActiveRecord::Base.connection.index_exists?(:guests, :full_name)).to be(true)
     end
+
+    it('is #stripped #sqeezed and #titleized before validation') do
+      new_guest = Guest.new(full_name: ' bubbles   Chimp  ')
+      new_guest.valid?
+      expect(new_guest.full_name).to eq('Bubbles Chimp')
+    end
   end
 
   describe('#valid?') do

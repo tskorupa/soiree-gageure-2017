@@ -9,6 +9,12 @@ RSpec.describe(Sponsor, type: :model) do
     it('is indexed') do
       expect(ActiveRecord::Base.connection.index_exists?(:sponsors, :full_name)).to be(true)
     end
+
+    it('is #stripped #sqeezed and #titleized before validation') do
+      new_sponsor = Sponsor.new(full_name: ' clyde   Chimp  ')
+      new_sponsor.valid?
+      expect(new_sponsor.full_name).to eq('Clyde Chimp')
+    end
   end
 
   describe('#valid?') do
