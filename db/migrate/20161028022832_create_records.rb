@@ -10,8 +10,8 @@ class CreateRecords < ActiveRecord::Migration[5.0]
 
     create_table(:lotteries) do |t|
       t.date(:event_date, null: false)
-      t.decimal(:meal_voucher_price, precision: 4, scale: 2)
-      t.decimal(:ticket_price, precision: 4, scale: 2)
+      t.decimal(:meal_voucher_price, precision: 6, scale: 2)
+      t.decimal(:ticket_price, precision: 6, scale: 2)
 
       t.timestamps(null: false)
     end
@@ -20,7 +20,7 @@ class CreateRecords < ActiveRecord::Migration[5.0]
       t.belongs_to(:lottery, null: false, index: true)
 
       t.integer(:draw_order, null: false)
-      t.decimal(:amount, null: false, precision: 4, scale: 2)
+      t.decimal(:amount, null: false, precision: 6, scale: 2)
 
       t.timestamps(null: false)
     end

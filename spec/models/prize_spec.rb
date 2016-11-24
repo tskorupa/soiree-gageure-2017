@@ -86,6 +86,12 @@ RSpec.describe(Prize, type: :model) do
       expect(new_prize).not_to be_valid
       expect(new_prize.errors[:amount]).to include('must be greater than 0')
     end
+
+    it('requires :amount to be less than 10_000') do
+      new_prize = Prize.new(amount: 10_000)
+      expect(new_prize).not_to be_valid
+      expect(new_prize.errors[:amount]).to include('must be less than 10000')
+    end
   end
 
   describe('#lottery') do

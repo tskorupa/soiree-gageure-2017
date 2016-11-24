@@ -12,45 +12,48 @@
 
 ActiveRecord::Schema.define(version: 20161119174839) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "guests", force: :cascade do |t|
     t.string   "full_name",  null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["full_name"], name: "index_guests_on_full_name"
+    t.index ["full_name"], name: "index_guests_on_full_name", using: :btree
   end
 
   create_table "lotteries", force: :cascade do |t|
     t.date     "event_date",                                 null: false
-    t.decimal  "meal_voucher_price", precision: 5, scale: 2
-    t.decimal  "ticket_price",       precision: 5, scale: 2
+    t.decimal  "meal_voucher_price", precision: 6, scale: 2
+    t.decimal  "ticket_price",       precision: 6, scale: 2
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
-    t.index ["event_date"], name: "index_lotteries_on_event_date"
+    t.index ["event_date"], name: "index_lotteries_on_event_date", order: {"event_date"=>:desc}, using: :btree
   end
 
   create_table "prizes", force: :cascade do |t|
     t.integer  "lottery_id",                         null: false
     t.integer  "draw_order",                         null: false
-    t.decimal  "amount",     precision: 5, scale: 2, null: false
+    t.decimal  "amount",     precision: 6, scale: 2, null: false
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
-    t.index ["draw_order"], name: "index_prizes_on_draw_order"
-    t.index ["lottery_id", "draw_order"], name: "index_prizes_on_lottery_id_and_draw_order", unique: true
-    t.index ["lottery_id"], name: "index_prizes_on_lottery_id"
+    t.index ["draw_order"], name: "index_prizes_on_draw_order", using: :btree
+    t.index ["lottery_id", "draw_order"], name: "index_prizes_on_lottery_id_and_draw_order", unique: true, using: :btree
+    t.index ["lottery_id"], name: "index_prizes_on_lottery_id", using: :btree
   end
 
   create_table "sellers", force: :cascade do |t|
     t.string   "full_name",  null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["full_name"], name: "index_sellers_on_full_name"
+    t.index ["full_name"], name: "index_sellers_on_full_name", using: :btree
   end
 
   create_table "sponsors", force: :cascade do |t|
     t.string   "full_name",  null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["full_name"], name: "index_sponsors_on_full_name"
+    t.index ["full_name"], name: "index_sponsors_on_full_name", using: :btree
   end
 
   create_table "tables", force: :cascade do |t|
@@ -59,9 +62,9 @@ ActiveRecord::Schema.define(version: 20161119174839) do
     t.integer  "capacity",   null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["lottery_id", "number"], name: "index_tables_on_lottery_id_and_number", unique: true
-    t.index ["lottery_id"], name: "index_tables_on_lottery_id"
-    t.index ["number"], name: "index_tables_on_number"
+    t.index ["lottery_id", "number"], name: "index_tables_on_lottery_id_and_number", unique: true, using: :btree
+    t.index ["lottery_id"], name: "index_tables_on_lottery_id", using: :btree
+    t.index ["number"], name: "index_tables_on_number", using: :btree
   end
 
   create_table "tickets", force: :cascade do |t|
@@ -74,12 +77,12 @@ ActiveRecord::Schema.define(version: 20161119174839) do
     t.integer  "sponsor_id"
     t.string   "state",       null: false
     t.string   "ticket_type", null: false
-    t.index ["guest_id"], name: "index_tickets_on_guest_id"
-    t.index ["lottery_id", "number"], name: "index_tickets_on_lottery_id_and_number", unique: true
-    t.index ["lottery_id"], name: "index_tickets_on_lottery_id"
-    t.index ["number"], name: "index_tickets_on_number"
-    t.index ["seller_id"], name: "index_tickets_on_seller_id"
-    t.index ["sponsor_id"], name: "index_tickets_on_sponsor_id"
+    t.index ["guest_id"], name: "index_tickets_on_guest_id", using: :btree
+    t.index ["lottery_id", "number"], name: "index_tickets_on_lottery_id_and_number", unique: true, using: :btree
+    t.index ["lottery_id"], name: "index_tickets_on_lottery_id", using: :btree
+    t.index ["number"], name: "index_tickets_on_number", using: :btree
+    t.index ["seller_id"], name: "index_tickets_on_seller_id", using: :btree
+    t.index ["sponsor_id"], name: "index_tickets_on_sponsor_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -87,7 +90,7 @@ ActiveRecord::Schema.define(version: 20161119174839) do
     t.string   "encrypted_password", null: false
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
-    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
   end
 
 end

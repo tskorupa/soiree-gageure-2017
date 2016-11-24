@@ -24,6 +24,12 @@ RSpec.describe(Lottery, type: :model) do
       expect(new_lottery.errors[:ticket_price]).to include("must be greater than 0")
     end
 
+    it('requires :ticket_price to be less than 10_000 when attribute present') do
+      new_lottery = Lottery.new(ticket_price: 10_000)
+      expect(new_lottery).not_to be_valid
+      expect(new_lottery.errors[:ticket_price]).to include("must be less than 10000")
+    end
+
     it('does not validate :ticket_price when attribute is nil') do
       new_lottery = Lottery.new(ticket_price: nil)
       new_lottery.valid?
@@ -34,6 +40,12 @@ RSpec.describe(Lottery, type: :model) do
       new_lottery = Lottery.new(meal_voucher_price: 0)
       expect(new_lottery).not_to be_valid
       expect(new_lottery.errors[:meal_voucher_price]).to include("must be greater than 0")
+    end
+
+    it('requires :meal_voucher_price to be less than 10_000 when attribute present') do
+      new_lottery = Lottery.new(meal_voucher_price: 10_000)
+      expect(new_lottery).not_to be_valid
+      expect(new_lottery.errors[:meal_voucher_price]).to include("must be less than 10000")
     end
 
     it('does not validate :meal_voucher_price when attribute is nil') do
