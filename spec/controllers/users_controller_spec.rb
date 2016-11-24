@@ -68,14 +68,12 @@ RSpec.describe(UsersController, type: :controller) do
 
     describe('GET #index') do
       it('returns all users ordered by LOWER(email)') do
-        user_1 = User.create!(email: 'z@a.com', password: 'foo')
-        user_2 = User.create!(email: 'a@a.com', password: 'foo')
-        user_3 = User.create!(email: '1@b.com', password: 'foo')
-        user_4 = User.create!(email: 'A@b.com', password: 'foo')
+        user_1 = User.create!(email: '1@a.com', password: 'foo')
+        user_2 = User.create!(email: 'def@a.com', password: 'foo')
 
         get(:index, params: { locale: I18n.locale })
         expect(response).to have_http_status(:success)
-        expect(assigns(:users)).to eq([user_3, user_2, user_4, user, user_1])
+        expect(assigns(:users)).to eq([user_1, user, user_2])
         expect(response).to render_template(:index)
       end
     end
