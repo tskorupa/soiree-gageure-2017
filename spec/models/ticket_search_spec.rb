@@ -5,9 +5,9 @@ RSpec.describe(TicketSearch, type: :model) do
     @lottery1 = Lottery.create!(event_date: Date.today)
     @ticket1 = Ticket.create!(
       lottery: @lottery1,
-      seller: Seller.create!(full_name: 'Jackson'),
-      guest: Guest.create!(full_name: 'Liam'),
-      sponsor: Sponsor.create!(full_name: 'Noah'),
+      seller_name: 'Jackson',
+      guest_name: 'Liam',
+      sponsor_name: 'Noah',
       number: 1,
       state: 'reserved',
       ticket_type: 'meal_and_lottery',
@@ -15,9 +15,9 @@ RSpec.describe(TicketSearch, type: :model) do
     @lottery2 = Lottery.create!(event_date: Date.yesterday)
     @ticket2 = Ticket.create!(
       lottery: @lottery2,
-      seller: Seller.create!(full_name: 'Jackson'),
-      guest: Guest.create!(full_name: 'Liam'),
-      sponsor: Sponsor.create!(full_name: 'Noah'),
+      seller_name: 'Jackson',
+      guest_name: 'Liam',
+      sponsor_name: 'Noah',
       number: 1,
       state: 'reserved',
       ticket_type: 'meal_and_lottery',

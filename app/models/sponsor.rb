@@ -1,6 +1,4 @@
 class Sponsor < ApplicationRecord
-  has_many :tickets
-
   before_validation(:clean_full_name)
   validates(:full_name, presence: true)
 

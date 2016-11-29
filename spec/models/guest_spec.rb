@@ -24,18 +24,4 @@ RSpec.describe(Guest, type: :model) do
       expect(new_guest.errors[:full_name]).to include("can't be blank")
     end
   end
-
-  describe('#tickets') do
-    it('returns the tickets belonging to the guest') do
-      ticket = Ticket.create!(
-        number: 1,
-        lottery: Lottery.create!(event_date: Date.today),
-        seller: Seller.create!(full_name: 'Gonzo'),
-        guest: guest,
-        state: 'reserved',
-        ticket_type: 'meal_and_lottery',
-      )
-      expect(guest.tickets).to eq([ticket])
-    end
-  end
 end

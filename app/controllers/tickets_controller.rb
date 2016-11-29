@@ -48,9 +48,9 @@ class TicketsController < ApplicationController
   def ticket_params
     params.require(:ticket)
       .permit(
-        :seller_id,
-        :guest_id,
-        :sponsor_id,
+        :seller_name,
+        :guest_name,
+        :sponsor_name,
         :number,
         :state,
         :ticket_type,

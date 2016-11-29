@@ -5,14 +5,9 @@ RSpec.describe(TicketsController, type: :controller) do
     Lottery.create!(event_date: Date.today)
   end
 
-  let(:seller) do
-    Seller.create!(full_name: 'Gonzo')
-  end
-
   let(:ticket) do
     Ticket.create!(
       lottery: lottery,
-      seller: seller,
       number: 1,
       state: 'reserved',
       ticket_type: 'meal_and_lottery',
@@ -49,7 +44,6 @@ RSpec.describe(TicketsController, type: :controller) do
             locale: I18n.locale,
             lottery_id: lottery.id,
             ticket: {
-              seller_id: seller.id,
               number: 1,
               state: 'reserved',
               ticket_type: 'meal_and_lottery',
@@ -77,7 +71,7 @@ RSpec.describe(TicketsController, type: :controller) do
 
     describe('PATCH #update') do
       it('redirects to the user log in') do
-        patch(:update, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id, ticket: { seller_id: seller.id } })
+        patch(:update, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id, ticket: { number: 1 } })
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -100,21 +94,18 @@ RSpec.describe(TicketsController, type: :controller) do
       it('returns all tickets ordered by :number') do
         ticket_1 = Ticket.create!(
           lottery: lottery,
-          seller: seller,
           number: 3,
           state: 'reserved',
           ticket_type: 'meal_and_lottery',
         )
         ticket_2 = Ticket.create!(
           lottery: lottery,
-          seller: seller,
           number: 1,
           state: 'reserved',
           ticket_type: 'meal_and_lottery',
         )
         ticket_3 = Ticket.create!(
           lottery: lottery,
-          seller: seller,
           number: 2,
           state: 'reserved',
           ticket_type: 'meal_and_lottery',
@@ -145,7 +136,6 @@ RSpec.describe(TicketsController, type: :controller) do
               locale: I18n.locale,
               lottery_id: lottery.id,
               ticket: {
-                seller_id: seller.id,
                 number: 1,
                 state: 'reserved',
                 ticket_type: 'meal_and_lottery',
@@ -157,7 +147,7 @@ RSpec.describe(TicketsController, type: :controller) do
       end
 
       it('renders :new when the ticket could not be persisted') do
-        post(:create, params: { locale: I18n.locale, lottery_id: lottery.id, ticket: { seller_id: seller.id, number: nil } })
+        post(:create, params: { locale: I18n.locale, lottery_id: lottery.id, ticket: { number: nil } })
         expect(response).to have_http_status(:success)
         expect(assigns(:ticket)).to be_a_new(Ticket)
         expect(response).to render_template(:new)
@@ -182,24 +172,51 @@ RSpec.describe(TicketsController, type: :controller) do
     end
 
     describe('PATCH #update') do
-      it('redirects to lottery_tickets_path when :seller_id is updated') do
-        other_seller = Seller.create!(full_name: 'Clyde')
-        patch(:update, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id, ticket: { seller_id: other_seller.id } })
-        expect(ticket.reload.seller).to eq(other_seller)
+      it('redirects to lottery_tickets_path when :seller_name is updated') do
+        patch(
+          :update,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            id: ticket.id,
+            ticket: {
+              seller_name: 'Clyde',
+            },
+          },
+        )
+        expect(ticket.reload.seller_name).to eq('Clyde')
         expect(response).to redirect_to(lottery_tickets_path(lottery))
       end
 
-      it('redirects to lottery_tickets_path when :guest_id is updated') do
-        guest = Guest.create!(full_name: 'Bubbles')
-        patch(:update, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id, ticket: { guest_id: guest.id } })
-        expect(ticket.reload.guest).to eq(guest)
+      it('redirects to lottery_tickets_path when :guest_name is updated') do
+        patch(
+          :update,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            id: ticket.id,
+            ticket: {
+              guest_name: 'Bubbles',
+            },
+          },
+        )
+        expect(ticket.reload.guest_name).to eq('Bubbles')
         expect(response).to redirect_to(lottery_tickets_path(lottery))
       end
 
-      it('redirects to lottery_tickets_path when :sponsor_id is updated') do
-        sponsor = Sponsor.create!(full_name: 'Clyde')
-        patch(:update, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id, ticket: { sponsor_id: sponsor.id } })
-        expect(ticket.reload.sponsor).to eq(sponsor)
+      it('redirects to lottery_tickets_path when :sponsor_name is updated') do
+        patch(
+          :update,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            id: ticket.id,
+            ticket: {
+              sponsor_name: 'Clyde',
+            },
+          },
+        )
+        expect(ticket.reload.sponsor_name).to eq('Clyde')
         expect(response).to redirect_to(lottery_tickets_path(lottery))
       end
 

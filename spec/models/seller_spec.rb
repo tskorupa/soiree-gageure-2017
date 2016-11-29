@@ -24,17 +24,4 @@ RSpec.describe(Seller, type: :model) do
       expect(new_seller.errors[:full_name]).to include("can't be blank")
     end
   end
-
-  describe('#tickets') do
-    it('returns the tickets belonging to the seller') do
-      Ticket.create!(
-        number: 1,
-        lottery: Lottery.create!(event_date: Date.today),
-        seller: seller,
-        state: 'reserved',
-        ticket_type: 'meal_and_lottery',
-      )
-      expect(seller.tickets).to eq(Ticket.where(seller_id: seller.id))
-    end
-  end
 end

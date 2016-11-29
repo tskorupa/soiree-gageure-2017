@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161129142640) do
+ActiveRecord::Schema.define(version: 20161129233542) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -75,15 +75,18 @@ ActiveRecord::Schema.define(version: 20161129142640) do
   end
 
   create_table "tickets", force: :cascade do |t|
-    t.integer  "lottery_id",  null: false
-    t.integer  "seller_id",   null: false
+    t.integer  "lottery_id",   null: false
+    t.integer  "seller_id"
     t.integer  "guest_id"
-    t.integer  "number",      null: false
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.integer  "number",       null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
     t.integer  "sponsor_id"
-    t.string   "state",       null: false
-    t.string   "ticket_type", null: false
+    t.string   "state",        null: false
+    t.string   "ticket_type",  null: false
+    t.string   "seller_name"
+    t.string   "guest_name"
+    t.string   "sponsor_name"
     t.index ["guest_id"], name: "index_tickets_on_guest_id", using: :btree
     t.index ["lottery_id", "number"], name: "index_tickets_on_lottery_id_and_number", unique: true, using: :btree
     t.index ["lottery_id"], name: "index_tickets_on_lottery_id", using: :btree
@@ -107,19 +110,16 @@ ActiveRecord::Schema.define(version: 20161129142640) do
      FROM tickets
   UNION
    SELECT tickets.id AS ticket_id,
-      sellers.full_name AS term
-     FROM (tickets
-       JOIN sellers ON ((tickets.seller_id = sellers.id)))
+      tickets.seller_name AS term
+     FROM tickets
   UNION
    SELECT tickets.id AS ticket_id,
-      guests.full_name AS term
-     FROM (tickets
-       JOIN guests ON ((tickets.guest_id = guests.id)))
+      tickets.guest_name AS term
+     FROM tickets
   UNION
    SELECT tickets.id AS ticket_id,
-      sponsors.full_name AS term
-     FROM (tickets
-       JOIN sponsors ON ((tickets.sponsor_id = sponsors.id)));
+      tickets.sponsor_name AS term
+     FROM tickets;
   SQL
 
 end

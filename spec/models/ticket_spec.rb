@@ -5,14 +5,9 @@ RSpec.describe(Ticket, type: :model) do
     Lottery.create!(event_date: Date.today)
   end
 
-  let(:seller) do
-    Seller.create!(full_name: 'Gonzo')
-  end
-
   let(:ticket) do
     Ticket.create!(
       lottery: lottery,
-      seller: seller,
       number: 1,
       state: 'reserved',
       ticket_type: 'meal_and_lottery',
@@ -76,22 +71,34 @@ RSpec.describe(Ticket, type: :model) do
       expect(new_ticket.errors[:lottery]).to include("must exist")
     end
 
-    it ('requires a seller') do
-      new_ticket = Ticket.new
-      expect(new_ticket).not_to be_valid
-      expect(new_ticket.errors[:seller]).to include("must exist")
+    it ('allows for an optional seller_name') do
+      new_ticket = Ticket.new(seller_name: 'Gonzo')
+      new_ticket.valid?
+      expect(new_ticket.errors[:seller_name]).to be_empty
+
+      new_ticket.seller_name = nil
+      new_ticket.valid?
+      expect(new_ticket.errors[:seller_name]).to be_empty
     end
 
-    it ('allows for an optional guest') do
-      new_ticket = Ticket.new
+    it ('allows for an optional guest_name') do
+      new_ticket = Ticket.new(guest_name: 'Gonzo')
       new_ticket.valid?
-      expect(new_ticket.errors[:guest]).to be_empty
+      expect(new_ticket.errors[:guest_name]).to be_empty
+
+      new_ticket.guest_name = nil
+      new_ticket.valid?
+      expect(new_ticket.errors[:guest_name]).to be_empty
     end
 
-    it ('allows for an optional sponsor') do
-      new_ticket = Ticket.new
+    it ('allows for an optional sponsor_name') do
+      new_ticket = Ticket.new(sponsor_name: 'Gonzo')
       new_ticket.valid?
-      expect(new_ticket.errors[:sponsor]).to be_empty
+      expect(new_ticket.errors[:sponsor_name]).to be_empty
+
+      new_ticket.sponsor_name = nil
+      new_ticket.valid?
+      expect(new_ticket.errors[:sponsor_name]).to be_empty
     end
 
     it('requires :number to be a number') do
@@ -115,7 +122,6 @@ RSpec.describe(Ticket, type: :model) do
     it('requires :number to be unique per lottery') do
       new_ticket = Ticket.new(
         lottery: lottery,
-        seller: seller,
         number: ticket.number,
       )
       expect(new_ticket).not_to be_valid
@@ -138,30 +144,6 @@ RSpec.describe(Ticket, type: :model) do
   describe('#lottery') do
     it('returns the parent lottery') do
       expect(ticket.lottery).to eq(lottery)
-    end
-  end
-
-  describe('#seller') do
-    it('returns the parent seller') do
-      expect(ticket.seller).to eq(seller)
-    end
-  end
-
-  describe('#guest') do
-    it('can be assigned and retrieved') do
-      guest = Guest.create!(full_name: 'Bubbles')
-      ticket.guest = guest
-      ticket.save!
-      expect(ticket.guest).to eq(guest)
-    end
-  end
-
-  describe('#sponsor') do
-    it('can be assigned and retrieved') do
-      sponsor = Sponsor.create!(full_name: 'Clyde')
-      ticket.sponsor = sponsor
-      ticket.save!
-      expect(ticket.sponsor).to eq(sponsor)
     end
   end
 end

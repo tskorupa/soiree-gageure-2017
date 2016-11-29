@@ -24,18 +24,4 @@ RSpec.describe(Sponsor, type: :model) do
       expect(new_sponsor.errors[:full_name]).to include("can't be blank")
     end
   end
-
-  describe('#tickets') do
-    it('returns the tickets belonging to the sponsor') do
-      ticket = Ticket.create!(
-        number: 1,
-        lottery: Lottery.create!(event_date: Date.today),
-        seller: Seller.create!(full_name: 'Gonzo'),
-        sponsor: sponsor,
-        state: 'reserved',
-        ticket_type: 'meal_and_lottery',
-      )
-      expect(sponsor.tickets).to include(ticket)
-    end
-  end
 end

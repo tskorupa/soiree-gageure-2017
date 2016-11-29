@@ -64,12 +64,9 @@ fr:
       ticket:
         number: 'Le numéro'
         state: "L'état"
-        seller: 'Le vendeur'
-        seller_id: 'Le vendeur'
-        guest: "L'invité"
-        guest_id: "L'invité"
-        sponsor: 'Le commanditaire'
-        sponsor_id: 'Le commanditaire'
+        seller_name: 'Nom du vendeur'
+        guest_name: "Nom de l'invité"
+        sponsor_name: 'Nom du commanditaire'
         ticket_type: 'Le type de billet'
       table:
         number: 'Le numéro'

@@ -10,8 +10,7 @@ class TicketSearch < ApplicationRecord
       where_attributes.merge!(id: ticket_ids)
     end
 
-    Ticket.includes(:seller, :guest, :sponsor)
-      .where(where_attributes)
+    Ticket.where(where_attributes)
   end
 
   private

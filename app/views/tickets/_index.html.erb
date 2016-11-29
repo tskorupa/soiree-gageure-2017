@@ -22,9 +22,9 @@
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:number) %></th>
-      <th><%= model_class.human_attribute_name(:seller) %></th>
-      <th><%= model_class.human_attribute_name(:guest) %></th>
-      <th><%= model_class.human_attribute_name(:sponsor) %></th>
+      <th><%= model_class.human_attribute_name(:seller_name) %></th>
+      <th><%= model_class.human_attribute_name(:guest_name) %></th>
+      <th><%= model_class.human_attribute_name(:sponsor_name) %></th>
       <th><%= model_class.human_attribute_name(:state) %></th>
       <th><%= model_class.human_attribute_name(:ticket_type) %></th>
       <th></th>
@@ -34,9 +34,9 @@
     <% @tickets.each do |ticket| %>
       <tr>
         <td><%= ticket.number %></td>
-        <td><%= ticket.seller.try!(:full_name) %></td>
-        <td><%= ticket.guest.try!(:full_name) %></td>
-        <td><%= ticket.sponsor.try!(:full_name) %></td>
+        <td><%= ticket.seller_name %></td>
+        <td><%= ticket.guest_name %></td>
+        <td><%= ticket.sponsor_name %></td>
         <td><%= model_class.human_attribute_name('state.%s' % ticket.state) %></td>
         <td><%= model_class.human_attribute_name('ticket_type.%s' % ticket.ticket_type) %></td>
         <td>

@@ -88,7 +88,6 @@ RSpec.describe(Lottery, type: :model) do
       Ticket.create!(
         number: 1,
         lottery: lottery,
-        seller: Seller.create!(full_name: 'Gonzo'),
         state: 'reserved',
         ticket_type: 'meal_and_lottery',
       )
