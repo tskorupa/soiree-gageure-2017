@@ -20,6 +20,7 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  search_placeholder: 'Search...'
   layouts:
     application:
       title: 'Gambling event 2017'

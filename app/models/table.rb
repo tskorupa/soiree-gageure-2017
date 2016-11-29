@@ -1,5 +1,5 @@
 class Table < ApplicationRecord
-  belongs_to :lottery
+  belongs_to :lottery, required: true
 
   attr_readonly :lottery_id
 
