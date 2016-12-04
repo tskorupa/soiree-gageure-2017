@@ -5,6 +5,6 @@ class Guest < ApplicationRecord
   private
 
   def clean_full_name
-    self.full_name = full_name.to_s.strip.squeeze(' ').titleize
+    self.full_name = FullNameFormatter.format(full_name)
   end
 end
