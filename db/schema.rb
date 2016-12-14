@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161129233542) do
+ActiveRecord::Schema.define(version: 20161205040419) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 20161129233542) do
     t.string   "full_name",  null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index "to_tsvector('english'::regconfig, 'full_name'::text)", name: "full_text_en_on_guests", using: :gin
     t.index ["full_name"], name: "index_guests_on_full_name", using: :btree
   end
 
@@ -53,6 +54,7 @@ ActiveRecord::Schema.define(version: 20161129233542) do
     t.string   "full_name",  null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index "to_tsvector('english'::regconfig, 'full_name'::text)", name: "full_text_en_on_sellers", using: :gin
     t.index ["full_name"], name: "index_sellers_on_full_name", using: :btree
   end
 
@@ -60,6 +62,7 @@ ActiveRecord::Schema.define(version: 20161129233542) do
     t.string   "full_name",  null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index "to_tsvector('english'::regconfig, 'full_name'::text)", name: "full_text_en_on_sponsors", using: :gin
     t.index ["full_name"], name: "index_sponsors_on_full_name", using: :btree
   end
 
@@ -75,18 +78,15 @@ ActiveRecord::Schema.define(version: 20161129233542) do
   end
 
   create_table "tickets", force: :cascade do |t|
-    t.integer  "lottery_id",   null: false
+    t.integer  "lottery_id",  null: false
     t.integer  "seller_id"
     t.integer  "guest_id"
-    t.integer  "number",       null: false
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.integer  "number",      null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
     t.integer  "sponsor_id"
-    t.string   "state",        null: false
-    t.string   "ticket_type",  null: false
-    t.string   "seller_name"
-    t.string   "guest_name"
-    t.string   "sponsor_name"
+    t.string   "state",       null: false
+    t.string   "ticket_type", null: false
     t.index ["guest_id"], name: "index_tickets_on_guest_id", using: :btree
     t.index ["lottery_id", "number"], name: "index_tickets_on_lottery_id_and_number", unique: true, using: :btree
     t.index ["lottery_id"], name: "index_tickets_on_lottery_id", using: :btree
@@ -110,16 +110,19 @@ ActiveRecord::Schema.define(version: 20161129233542) do
      FROM tickets
   UNION
    SELECT tickets.id AS ticket_id,
-      tickets.seller_name AS term
-     FROM tickets
+      sellers.full_name AS term
+     FROM (tickets
+       JOIN sellers ON ((tickets.seller_id = sellers.id)))
   UNION
    SELECT tickets.id AS ticket_id,
-      tickets.guest_name AS term
-     FROM tickets
+      guests.full_name AS term
+     FROM (tickets
+       JOIN guests ON ((tickets.guest_id = guests.id)))
   UNION
    SELECT tickets.id AS ticket_id,
-      tickets.sponsor_name AS term
-     FROM tickets;
+      sponsors.full_name AS term
+     FROM (tickets
+       JOIN sponsors ON ((tickets.sponsor_id = sponsors.id)));
   SQL
 
 end

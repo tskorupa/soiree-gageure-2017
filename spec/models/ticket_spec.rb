@@ -71,36 +71,6 @@ RSpec.describe(Ticket, type: :model) do
       expect(new_ticket.errors[:lottery]).to include("must exist")
     end
 
-    it ('allows for an optional seller_name') do
-      new_ticket = Ticket.new(seller_name: 'Gonzo')
-      new_ticket.valid?
-      expect(new_ticket.errors[:seller_name]).to be_empty
-
-      new_ticket.seller_name = nil
-      new_ticket.valid?
-      expect(new_ticket.errors[:seller_name]).to be_empty
-    end
-
-    it ('allows for an optional guest_name') do
-      new_ticket = Ticket.new(guest_name: 'Gonzo')
-      new_ticket.valid?
-      expect(new_ticket.errors[:guest_name]).to be_empty
-
-      new_ticket.guest_name = nil
-      new_ticket.valid?
-      expect(new_ticket.errors[:guest_name]).to be_empty
-    end
-
-    it ('allows for an optional sponsor_name') do
-      new_ticket = Ticket.new(sponsor_name: 'Gonzo')
-      new_ticket.valid?
-      expect(new_ticket.errors[:sponsor_name]).to be_empty
-
-      new_ticket.sponsor_name = nil
-      new_ticket.valid?
-      expect(new_ticket.errors[:sponsor_name]).to be_empty
-    end
-
     it('requires :number to be a number') do
       new_ticket = Ticket.new
       expect(new_ticket).not_to be_valid

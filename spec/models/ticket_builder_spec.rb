@@ -1,0 +1,149 @@
+require 'rails_helper'
+
+RSpec.describe(TicketBuilder, type: :model) do
+  let(:lottery) do
+    Lottery.create!(event_date: Date.today)
+  end
+
+  let(:seller) do
+    Seller.create!(full_name: 'Gonzo')
+  end
+
+  let(:ticket) do
+    Ticket.create!(
+      lottery: lottery,
+      number: 1,
+      state: 'reserved',
+      ticket_type: 'meal_and_lottery',
+    )
+  end
+
+  let(:ticket_builder) do
+    TicketBuilder.new(lottery: lottery)
+  end
+
+  describe('#build') do
+    it('returns a new ticket scoped to lottery when an :id is not provided') do
+      actual_ticket = ticket_builder.build
+      expect(actual_ticket).to be_new_record
+      expect(actual_ticket.lottery).to eq(lottery)
+    end
+
+    it('returns an existing ticket belonging to the lottery when an :id is provided') do
+      actual_ticket = ticket_builder.build(id: ticket.id)
+      expect(actual_ticket).not_to be_new_record
+      expect(actual_ticket.lottery).to eq(lottery)
+    end
+
+    it('raises an exception when the ticket with the given :id is not found') do
+      expect {
+        ticket_builder.build(id: 0)
+      }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it('raises an exception when the ticket with the given :id does not belong to the lottery') do
+      other_lottery = Lottery.create!(event_date: Date.tomorrow)
+      ticket_builder = TicketBuilder.new(lottery: other_lottery)
+
+      expect {
+        ticket_builder.build(id: ticket.id)
+      }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it('returns a new ticket with ticket#number assigned when an :id is not provided and a :number is provided') do
+      actual_ticket = ticket_builder.build(number: 101)
+      expect(actual_ticket).to be_new_record
+      expect(actual_ticket.number).to eq(101)
+    end
+
+    it('returns an existing ticket with ticket#number assigned when an :id is provided and a :number is provided') do
+      actual_ticket = ticket_builder.build(id: ticket.id, number: 101)
+      expect(actual_ticket).not_to be_new_record
+      expect(actual_ticket.number).to eq(101)
+    end
+
+    it('returns a new ticket with ticket#state assigned when an :id is not provided and a :state is provided') do
+      actual_ticket = ticket_builder.build(state: 'sold')
+      expect(actual_ticket).to be_new_record
+      expect(actual_ticket.state).to eq('sold')
+    end
+
+    it('returns an existing ticket with ticket#state assigned when an :id is provided and a :state is provided') do
+      actual_ticket = ticket_builder.build(id: ticket.id, state: 'sold')
+      expect(actual_ticket).not_to be_new_record
+      expect(actual_ticket.state).to eq('sold')
+    end
+
+    it('returns a new ticket with ticket#ticket_type assigned when an :id is not provided and a :ticket_type is provided') do
+      actual_ticket = ticket_builder.build(ticket_type: 'lottery_only')
+      expect(actual_ticket).to be_new_record
+      expect(actual_ticket.ticket_type).to eq('lottery_only')
+    end
+
+    it('returns an existing ticket with ticket#ticket_type assigned when an :id is provided and a :ticket_type is provided') do
+      actual_ticket = ticket_builder.build(id: ticket.id, ticket_type: 'lottery_only')
+      expect(actual_ticket).not_to be_new_record
+      expect(actual_ticket.ticket_type).to eq('lottery_only')
+    end
+
+    it('returns a new ticket with the seller set to nil when an :id is not provided and the :seller_name is blank') do
+      [nil, ''].each do |seller_name|
+        actual_ticket = ticket_builder.build(seller_name: seller_name)
+        expect(actual_ticket).to be_new_record
+        expect(actual_ticket.seller).to be_nil
+      end
+    end
+
+    it('returns an existing ticket with the seller set to nil when an :id is provided and the :seller_name is blank') do
+      [nil, ''].each do |seller_name|
+        actual_ticket = ticket_builder.build(id: ticket.id, seller_name: seller_name)
+        expect(actual_ticket).not_to be_new_record
+        expect(actual_ticket.seller).to be_nil
+      end
+    end
+
+    it('returns an existing ticket with the seller unchanged when an :id is provided and the :seller_name matches the current seller') do
+      ticket.seller = seller
+      actual_ticket = ticket_builder.build(id: ticket.id, seller_name: seller.full_name)
+      expect(actual_ticket).not_to be_new_record
+      expect(actual_ticket.seller).not_to be_new_record
+      expect(actual_ticket.seller).to eq(seller)
+    end
+
+    it('returns a new ticket tied to an existing seller when an :id is not provided and the :seller_name matches an existing seller') do
+      actual_ticket = ticket_builder.build(seller_name: seller.full_name)
+      expect(actual_ticket).to be_new_record
+      expect(actual_ticket.seller).not_to be_new_record
+      expect(actual_ticket.seller).to eq(seller)
+    end
+
+    it('returns an existing ticket set to an existing seller when an :id is provided and the :seller_name matches an existing seller') do
+      actual_ticket = ticket_builder.build(id: ticket.id, seller_name: seller.full_name)
+      expect(actual_ticket).not_to be_new_record
+      expect(actual_ticket.seller).not_to be_new_record
+      expect(actual_ticket.seller).to eq(seller)
+    end
+
+    it('returns a new ticket set to a new seller when an :id is not provided and the :seller_name does not match an existing seller') do
+      actual_ticket = ticket_builder.build(seller_name: 'Pip')
+      expect(actual_ticket).to be_new_record
+      expect(actual_ticket.seller).to be_new_record
+      expect(actual_ticket.seller.full_name).to eq('Pip')
+    end
+
+    it('returns an existing ticket set to a new seller when an :id is provided and the :seller_name does not match an existing seller') do
+      actual_ticket = ticket_builder.build(id: ticket.id, seller_name: 'Pip')
+      expect(actual_ticket).not_to be_new_record
+      expect(actual_ticket.seller).to be_new_record
+      expect(actual_ticket.seller.full_name).to eq('Pip')
+    end
+
+    it('runs same tests as for seller but for guest') do
+      skip
+    end
+
+    it('runs same tests as for seller but for sponsor') do
+      skip
+    end
+  end
+end

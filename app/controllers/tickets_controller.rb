@@ -14,29 +14,29 @@ class TicketsController < ApplicationController
   end
 
   def new
+    builder = TicketBuilder.new(lottery: @lottery)
     @ticket = @lottery.tickets.new
   end
 
   def create
-    @ticket = @lottery.tickets.new(ticket_params)
-    return(
-      redirect_to(lottery_tickets_path(@lottery))
-    ) if @ticket.save
+    builder = TicketBuilder.new(lottery: @lottery)
+    @ticket = builder.build(builder_params)
 
-    render(:new)
+    return(render(:new)) unless @ticket.save
+    redirect_to(lottery_tickets_path(@lottery))
   end
 
   def edit
+    builder = TicketBuilder.new(lottery: @lottery)
     @ticket = @lottery.tickets.find(params[:id])
   end
 
   def update
-    @ticket = @lottery.tickets.find(params[:id])
-    return(
-      redirect_to(lottery_tickets_path(@lottery))
-    ) if @ticket.update(ticket_params)
+    builder = TicketBuilder.new(lottery: @lottery)
+    @ticket = builder.build(builder_params.merge(id: params[:id]))
 
-    render(:edit)
+    return(render(:edit)) unless @ticket.save
+    redirect_to(lottery_tickets_path(@lottery))
   end
 
   private
@@ -45,7 +45,7 @@ class TicketsController < ApplicationController
     @lottery = Lottery.find(params[:lottery_id])
   end
 
-  def ticket_params
+  def builder_params
     params.require(:ticket)
       .permit(
         :seller_name,

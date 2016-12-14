@@ -1,7 +1,7 @@
 class Lottery < ApplicationRecord
   has_many :prizes
   has_many :tables
-  has_many :tickets, inverse_of: :lottery
+  has_many :tickets
 
   validates :event_date, presence: true
   validates(

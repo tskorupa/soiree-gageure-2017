@@ -49,11 +49,11 @@ fr:
         meal_voucher_price: "Le prix d'un billet de souper"
         ticket_price: "Le prix d'un billet de tirage"
       seller:
-        full_name: 'Le nom complet'
+        full_name: 'Le vendeur'
       guest:
-        full_name: 'Le nom complet'
+        full_name: "L'invité"
       sponsor:
-        full_name: 'Le nom complet'
+        full_name: 'Le commanditaire'
       ticket/state:
         reserved: 'Réservé'
         authorized: 'Authorisé'
@@ -64,9 +64,6 @@ fr:
       ticket:
         number: 'Le numéro'
         state: "L'état"
-        seller_name: 'Nom du vendeur'
-        guest_name: "Nom de l'invité"
-        sponsor_name: 'Nom du commanditaire'
         ticket_type: 'Le type de billet'
       table:
         number: 'Le numéro'

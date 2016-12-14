@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe(TicketsController, type: :controller) do
+  render_views
+
   let(:lottery) do
     Lottery.create!(event_date: Date.today)
   end
@@ -146,10 +148,105 @@ RSpec.describe(TicketsController, type: :controller) do
         expect(response).to redirect_to(lottery_tickets_path(lottery))
       end
 
-      it('renders :new when the ticket could not be persisted') do
-        post(:create, params: { locale: I18n.locale, lottery_id: lottery.id, ticket: { number: nil } })
+      it('presents the submitted value for :number when the ticket validation fails') do
+        post(
+          :create,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            ticket: {
+              number: -1,
+            },
+          },
+        )
         expect(response).to have_http_status(:success)
         expect(assigns(:ticket)).to be_a_new(Ticket)
+        expect(assigns(:ticket).number).to eq(-1)
+        expect(response).to render_template(:new)
+      end
+
+      it('presents the submitted value for :seller_name when the ticket validation fails') do
+        post(
+          :create,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            ticket: {
+              seller_name: 'a',
+            },
+          },
+        )
+        expect(response).to have_http_status(:success)
+        expect(assigns(:ticket)).to be_a_new(Ticket)
+        expect(assigns(:ticket).seller.full_name).to eq('a')
+        expect(response).to render_template(:new)
+      end
+
+      it('presents the submitted value for :guest_name when the ticket validation fails') do
+        post(
+          :create,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            ticket: {
+              guest_name: 'a',
+            },
+          },
+        )
+        expect(response).to have_http_status(:success)
+        expect(assigns(:ticket)).to be_a_new(Ticket)
+        expect(assigns(:ticket).guest.full_name).to eq('a')
+        expect(response).to render_template(:new)
+      end
+
+      it('presents the submitted value for :sponsor_name when the ticket validation fails') do
+        post(
+          :create,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            ticket: {
+              sponsor_name: 'a',
+            },
+          },
+        )
+        expect(response).to have_http_status(:success)
+        expect(assigns(:ticket)).to be_a_new(Ticket)
+        expect(assigns(:ticket).sponsor.full_name).to eq('a')
+        expect(response).to render_template(:new)
+      end
+
+      it('presents the submitted value for :state when the ticket validation fails') do
+        post(
+          :create,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            ticket: {
+              state: 'a',
+            },
+          },
+        )
+        expect(response).to have_http_status(:success)
+        expect(assigns(:ticket)).to be_a_new(Ticket)
+        expect(assigns(:ticket).state).to eq('a')
+        expect(response).to render_template(:new)
+      end
+
+      it('presents the submitted value for :ticket_type when the ticket validation fails') do
+        post(
+          :create,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            ticket: {
+              ticket_type: 'a',
+            },
+          },
+        )
+        expect(response).to have_http_status(:success)
+        expect(assigns(:ticket)).to be_a_new(Ticket)
+        expect(assigns(:ticket).ticket_type).to eq('a')
         expect(response).to render_template(:new)
       end
     end
@@ -172,6 +269,39 @@ RSpec.describe(TicketsController, type: :controller) do
     end
 
     describe('PATCH #update') do
+      it('redirects to lottery_tickets_path when :number is updated') do
+        patch(
+          :update,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            id: ticket.id,
+            ticket: {
+              number: 2,
+            },
+          },
+        )
+        expect(ticket.reload.number).to eq(2)
+        expect(response).to redirect_to(lottery_tickets_path(lottery))
+      end
+
+      it('presents the submitted value for :number when the ticket validation fails') do
+        patch(
+          :update,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            id: ticket.id,
+            ticket: {
+              number: -1,
+            },
+          },
+        )
+        expect(response).to have_http_status(:success)
+        expect(assigns(:ticket).number).to eq(-1)
+        expect(response).to render_template(:edit)
+      end
+
       it('redirects to lottery_tickets_path when :seller_name is updated') do
         patch(
           :update,
@@ -184,8 +314,26 @@ RSpec.describe(TicketsController, type: :controller) do
             },
           },
         )
-        expect(ticket.reload.seller_name).to eq('Clyde')
+        expect(ticket.reload.seller.full_name).to eq('Clyde')
         expect(response).to redirect_to(lottery_tickets_path(lottery))
+      end
+
+      it('presents the submitted value for :seller_name when the ticket validation fails') do
+        patch(
+          :update,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            id: ticket.id,
+            ticket: {
+              number: -1,
+              seller_name: 'a',
+            },
+          },
+        )
+        expect(response).to have_http_status(:success)
+        expect(assigns(:ticket).seller.full_name).to eq('a')
+        expect(response).to render_template(:edit)
       end
 
       it('redirects to lottery_tickets_path when :guest_name is updated') do
@@ -200,8 +348,26 @@ RSpec.describe(TicketsController, type: :controller) do
             },
           },
         )
-        expect(ticket.reload.guest_name).to eq('Bubbles')
+        expect(ticket.reload.guest.full_name).to eq('Bubbles')
         expect(response).to redirect_to(lottery_tickets_path(lottery))
+      end
+
+      it('presents the submitted value for :guest_name when the ticket validation fails') do
+        patch(
+          :update,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            id: ticket.id,
+            ticket: {
+              number: -1,
+              guest_name: 'a',
+            },
+          },
+        )
+        expect(response).to have_http_status(:success)
+        expect(assigns(:ticket).guest.full_name).to eq('a')
+        expect(response).to render_template(:edit)
       end
 
       it('redirects to lottery_tickets_path when :sponsor_name is updated') do
@@ -216,14 +382,26 @@ RSpec.describe(TicketsController, type: :controller) do
             },
           },
         )
-        expect(ticket.reload.sponsor_name).to eq('Clyde')
+        expect(ticket.reload.sponsor.full_name).to eq('Clyde')
         expect(response).to redirect_to(lottery_tickets_path(lottery))
       end
 
-      it('redirects to lottery_tickets_path when :number is updated') do
-        patch(:update, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id, ticket: { number: 2 } })
-        expect(ticket.reload.number).to eq(2)
-        expect(response).to redirect_to(lottery_tickets_path(lottery))
+      it('presents the submitted value for :sponsor_name when the ticket validation fails') do
+        patch(
+          :update,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            id: ticket.id,
+            ticket: {
+              number: -1,
+              sponsor_name: 'a',
+            },
+          },
+        )
+        expect(response).to have_http_status(:success)
+        expect(assigns(:ticket).sponsor.full_name).to eq('a')
+        expect(response).to render_template(:edit)
       end
 
       it('redirects to lottery_tickets_path when :state is updated') do
@@ -232,17 +410,45 @@ RSpec.describe(TicketsController, type: :controller) do
         expect(response).to redirect_to(lottery_tickets_path(lottery))
       end
 
+      it('presents the submitted value for :state when the ticket validation fails') do
+        patch(
+          :update,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            id: ticket.id,
+            ticket: {
+              number: -1,
+              state: 'a',
+            },
+          },
+        )
+        expect(response).to have_http_status(:success)
+        expect(assigns(:ticket).state).to eq('a')
+        expect(response).to render_template(:edit)
+      end
+
       it('redirects to lottery_tickets_path when :ticket_type is updated') do
         patch(:update, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id, ticket: { ticket_type: 'lottery_only' } })
         expect(ticket.reload.ticket_type).to eq('lottery_only')
         expect(response).to redirect_to(lottery_tickets_path(lottery))
       end
 
-      it('renders :edit when the ticket could not be updated') do
-        patch(:update, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id, ticket: { number: nil } })
+      it('presents the submitted value for :ticket_type when the ticket validation fails') do
+        patch(
+          :update,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            id: ticket.id,
+            ticket: {
+              number: -1,
+              ticket_type: 'a',
+            },
+          },
+        )
         expect(response).to have_http_status(:success)
-        expect(assigns(:ticket).number).to be_nil
-        expect(ticket.reload.number).to eq(1)
+        expect(assigns(:ticket).ticket_type).to eq('a')
         expect(response).to render_template(:edit)
       end
     end
