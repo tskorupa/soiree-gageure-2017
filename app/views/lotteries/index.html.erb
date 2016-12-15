@@ -1,9 +1,24 @@
 <%- model_class = Lottery -%>
 <div class='page-header'>
-  <h1><%= t(
-    '.title',
-    default: model_class.model_name.human.pluralize.titleize,
-  ) %></h1>
+  <div class='row-fluid'>
+    <h1>
+      <%= t(
+        '.title',
+        default: model_class.model_name.human.pluralize.titleize,
+      ) %>
+      <div class='pull-right'>
+        <%= link_to(
+          t(
+            'lottery.new.title',
+            default: [:'helpers.titles.new', 'New %{model}'],
+            model: model_class.model_name.human.downcase,
+          ),
+          new_lottery_path,
+          class: 'btn btn-primary',
+        ) %>
+      </div>
+    </h1>
+  </div>
 </div>
 <table class='table table-striped'>
   <thead>
@@ -31,9 +46,3 @@
     <% end %>
   </tbody>
 </table>
-
-<%= link_to(
-  t('.new', default: t('helpers.links.new')),
-  new_lottery_path,
-  class: 'btn btn-primary',
-) %>

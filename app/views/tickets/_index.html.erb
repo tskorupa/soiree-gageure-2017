@@ -1,21 +1,32 @@
 <%- model_class = Ticket -%>
 <div class='page-header'>
-  <h1><%=t(
-    '.title',
-    default: model_class.model_name.human.pluralize.titleize,
-  ) %></h1>
-  <div class='row'>
-    <div class='pull-right'>
-      <form accept-charset='UTF-8' action='<%= lottery_tickets_path(@lottery) %>' method='get'>
-        <%= text_field_tag(
-          :q, @q,
-          class: 'form-control span2',
-          placeholder: t('search_placeholder'),
-          autofocus: true,
-          onfocus: 'this.select();',
+  <div class='row-fluid'>
+    <h1>
+      <%=t(
+        '.title',
+        default: model_class.model_name.human.pluralize.titleize,
+      ) %>
+      <div class='pull-right'>
+        <form accept-charset='UTF-8' action='<%= lottery_tickets_path(@lottery) %>' method='get'>
+          <%= text_field_tag(
+            :q, @q,
+            class: 'form-control span2',
+            placeholder: t('search_placeholder'),
+            autofocus: true,
+            onfocus: 'this.select();',
+          ) %>
+        </form>
+        <%= link_to(
+          t(
+            'ticket.new.title',
+            default: [:'helpers.titles.new', 'New %{model}'],
+            model: model_class.model_name.human.downcase,
+          ),
+          new_lottery_ticket_path(@lottery),
+          class: 'btn btn-primary',
         ) %>
-      </form>
-    </div>
+      </div>
+    </h1>
   </div>
 </div>
 <table class='table table-striped'>
