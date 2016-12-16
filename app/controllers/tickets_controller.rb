@@ -46,14 +46,17 @@ class TicketsController < ApplicationController
   end
 
   def builder_params
-    params.require(:ticket)
+    ticket_params = params.fetch(:ticket, {})
       .permit(
-        :seller_name,
-        :guest_name,
-        :sponsor_name,
         :number,
         :state,
         :ticket_type,
       )
+
+    params.permit(
+      :seller_name,
+      :guest_name,
+      :sponsor_name,
+    ).merge(ticket_params.to_h)
   end
 end

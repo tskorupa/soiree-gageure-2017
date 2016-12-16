@@ -171,9 +171,7 @@ RSpec.describe(TicketsController, type: :controller) do
           params: {
             locale: I18n.locale,
             lottery_id: lottery.id,
-            ticket: {
-              seller_name: 'a',
-            },
+            seller_name: 'a',
           },
         )
         expect(response).to have_http_status(:success)
@@ -188,9 +186,7 @@ RSpec.describe(TicketsController, type: :controller) do
           params: {
             locale: I18n.locale,
             lottery_id: lottery.id,
-            ticket: {
-              guest_name: 'a',
-            },
+            guest_name: 'a',
           },
         )
         expect(response).to have_http_status(:success)
@@ -205,9 +201,7 @@ RSpec.describe(TicketsController, type: :controller) do
           params: {
             locale: I18n.locale,
             lottery_id: lottery.id,
-            ticket: {
-              sponsor_name: 'a',
-            },
+            sponsor_name: 'a',
           },
         )
         expect(response).to have_http_status(:success)
@@ -309,9 +303,7 @@ RSpec.describe(TicketsController, type: :controller) do
             locale: I18n.locale,
             lottery_id: lottery.id,
             id: ticket.id,
-            ticket: {
-              seller_name: 'Clyde',
-            },
+            seller_name: 'Clyde',
           },
         )
         expect(ticket.reload.seller.full_name).to eq('Clyde')
@@ -325,9 +317,9 @@ RSpec.describe(TicketsController, type: :controller) do
             locale: I18n.locale,
             lottery_id: lottery.id,
             id: ticket.id,
+            seller_name: 'a',
             ticket: {
               number: -1,
-              seller_name: 'a',
             },
           },
         )
@@ -343,9 +335,7 @@ RSpec.describe(TicketsController, type: :controller) do
             locale: I18n.locale,
             lottery_id: lottery.id,
             id: ticket.id,
-            ticket: {
-              guest_name: 'Bubbles',
-            },
+            guest_name: 'Bubbles',
           },
         )
         expect(ticket.reload.guest.full_name).to eq('Bubbles')
@@ -359,9 +349,9 @@ RSpec.describe(TicketsController, type: :controller) do
             locale: I18n.locale,
             lottery_id: lottery.id,
             id: ticket.id,
+            guest_name: 'a',
             ticket: {
               number: -1,
-              guest_name: 'a',
             },
           },
         )
@@ -377,9 +367,7 @@ RSpec.describe(TicketsController, type: :controller) do
             locale: I18n.locale,
             lottery_id: lottery.id,
             id: ticket.id,
-            ticket: {
-              sponsor_name: 'Clyde',
-            },
+            sponsor_name: 'Clyde',
           },
         )
         expect(ticket.reload.sponsor.full_name).to eq('Clyde')
@@ -393,9 +381,9 @@ RSpec.describe(TicketsController, type: :controller) do
             locale: I18n.locale,
             lottery_id: lottery.id,
             id: ticket.id,
+            sponsor_name: 'a',
             ticket: {
               number: -1,
-              sponsor_name: 'a',
             },
           },
         )

@@ -20,6 +20,13 @@ RSpec.describe(SellersController, type: :controller) do
       end
     end
 
+    describe('GET #index with format: :json') do
+      it('redirects to the user log in') do
+        get(:index, format: :json)
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
     describe('GET #new') do
       it('redirects to the user log in') do
         get(:new, params: { locale: I18n.locale })
@@ -81,6 +88,18 @@ RSpec.describe(SellersController, type: :controller) do
         expect(response).to have_http_status(:success)
         expect(assigns(:sellers)).to eq([seller_3, seller_2, seller_4, seller_1])
         expect(response).to render_template(:index)
+      end
+    end
+
+    describe('GET #index with format: :json') do
+      it('returns all seller full names') do
+        guest_1 = Seller.create!(full_name: 'Foo')
+        guest_2 = Seller.create!(full_name: 'Bar')
+        guest_3 = Seller.create!(full_name: 'Baz')
+
+        get(:index, format: :json)
+        expect(response).to have_http_status(:success)
+        expect(ActiveSupport::JSON.decode(response.body)).to eq(['Bar', 'Baz', 'Foo'])
       end
     end
 

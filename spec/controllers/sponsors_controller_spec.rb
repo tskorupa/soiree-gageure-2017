@@ -20,6 +20,13 @@ RSpec.describe(SponsorsController, type: :controller) do
       end
     end
 
+    describe('GET #index with format: :json') do
+      it('redirects to the user log in') do
+        get(:index, format: :json)
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
     describe('GET #new') do
       it('redirects to the user log in') do
         get(:new, params: { locale: I18n.locale })
@@ -81,6 +88,18 @@ RSpec.describe(SponsorsController, type: :controller) do
         expect(response).to have_http_status(:success)
         expect(assigns(:sponsors)).to eq([sponsor_3, sponsor_2, sponsor_4, sponsor_1])
         expect(response).to render_template(:index)
+      end
+    end
+
+    describe('GET #index with format: :json') do
+      it('returns all sponsor full names') do
+        guest_1 = Sponsor.create!(full_name: 'Foo')
+        guest_2 = Sponsor.create!(full_name: 'Bar')
+        guest_3 = Sponsor.create!(full_name: 'Baz')
+
+        get(:index, format: :json)
+        expect(response).to have_http_status(:success)
+        expect(ActiveSupport::JSON.decode(response.body)).to eq(['Bar', 'Baz', 'Foo'])
       end
     end
 

@@ -1,6 +1,11 @@
 class SellersController < ApplicationController
   def index
     @sellers = Seller.order('LOWER(full_name) ASC')
+
+    respond_to do |format|
+      format.html
+      format.json { render(json: @sellers.pluck(:full_name) ) }
+    end
   end
 
   def new

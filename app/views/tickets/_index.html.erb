@@ -6,7 +6,7 @@
         '.title',
         default: model_class.model_name.human.pluralize.titleize,
       ) %>
-      <div class='pull-right'>
+      <div class='pull-right text-right'>
         <form accept-charset='UTF-8' action='<%= lottery_tickets_path(@lottery) %>' method='get'>
           <%= text_field_tag(
             :q, @q,

@@ -1,5 +1,7 @@
 fr:
   devise:
+    failure:
+      unauthenticated: 'Vous devez vous connecter afin de continuer.'
     sessions:
       new:
         log_in: 'Se connecter'

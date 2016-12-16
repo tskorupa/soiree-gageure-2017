@@ -20,6 +20,13 @@ RSpec.describe(GuestsController, type: :controller) do
       end
     end
 
+    describe('GET #index with format: :json') do
+      it('redirects to the user log in') do
+        get(:index, format: :json)
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
     describe('GET #new') do
       it('redirects to the user log in') do
         get(:new, params: { locale: I18n.locale })
@@ -81,6 +88,18 @@ RSpec.describe(GuestsController, type: :controller) do
         expect(response).to have_http_status(:success)
         expect(assigns(:guests)).to eq([guest_3, guest_2, guest_4, guest_1])
         expect(response).to render_template(:index)
+      end
+    end
+
+    describe('GET #index with format: :json') do
+      it('returns all guest full names') do
+        guest_1 = Guest.create!(full_name: 'Foo')
+        guest_2 = Guest.create!(full_name: 'Bar')
+        guest_3 = Guest.create!(full_name: 'Baz')
+
+        get(:index, format: :json)
+        expect(response).to have_http_status(:success)
+        expect(ActiveSupport::JSON.decode(response.body)).to eq(['Bar', 'Baz', 'Foo'])
       end
     end
 

@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  with_options(defaults: { format: :json }) do |actions|
+    actions.get('seller_names', to: 'sellers#index')
+    actions.get('guest_names', to: 'guests#index')
+    actions.get('sponsor_names', to: 'sponsors#index')
+  end
+
   scope(':locale') do
     devise_for(:users)
 
