@@ -11,9 +11,21 @@ class TicketBuilder
 
     ticket = find_or_build_ticket(ticket_id, attributes)
 
-    ticket.seller = handle_relation(Seller, ticket.seller, seller_name)
-    ticket.guest = handle_relation(Guest, ticket.guest, guest_name)
-    ticket.sponsor = handle_relation(Sponsor, ticket.sponsor, sponsor_name)
+    ticket.seller = HandleRelation.find_or_build(
+      klass: Seller,
+      actual_entity: ticket.seller,
+      supplied_full_name: seller_name,
+    )
+    ticket.guest = HandleRelation.find_or_build(
+      klass: Guest,
+      actual_entity: ticket.guest,
+      supplied_full_name: guest_name,
+    )
+    ticket.sponsor = HandleRelation.find_or_build(
+      klass: Sponsor,
+      actual_entity: ticket.sponsor,
+      supplied_full_name: sponsor_name,
+    )
 
     ticket
   end
@@ -33,15 +45,5 @@ class TicketBuilder
     ticket.assign_attributes(attributes)
 
     ticket
-  end
-
-  def handle_relation(klass, actual_entity, supplied_full_name)
-    return if supplied_full_name.blank?
-    return(actual_entity) if actual_entity.try(:full_name) == supplied_full_name
-
-    existing_entity = klass.search(supplied_full_name).first
-    return(existing_entity) if existing_entity
-
-    klass.new(full_name: supplied_full_name)
   end
 end

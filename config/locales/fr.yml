@@ -5,6 +5,11 @@ fr:
       title: 'Soirée gageure 2017'
     navigation:
       logout: 'Se déconnecter'
+  ticket_registrations:
+    errors:
+      ticket:
+        guest: 'doit être spécifié.'
+        state: "n'est pas valide. Le billet doit être payé ou autorisé."
   activerecord:
     errors:
       messages:
@@ -49,11 +54,11 @@ fr:
         meal_voucher_price: "Le prix d'un billet de souper"
         ticket_price: "Le prix d'un billet de tirage"
       seller:
-        full_name: 'Le vendeur'
+        full_name: 'Le nom du vendeur'
       guest:
-        full_name: "L'invité"
+        full_name: "Le nom de l'invité"
       sponsor:
-        full_name: 'Le commanditaire'
+        full_name: 'Le nom du commanditaire'
       ticket/state:
         reserved: 'Réservé'
         authorized: 'Authorisé'
@@ -65,6 +70,7 @@ fr:
         number: 'Le numéro'
         state: "L'état"
         ticket_type: 'Le type de billet'
+        guest: "Le nom de l'invité"
       table:
         number: 'Le numéro'
         capacity: 'La capacité'

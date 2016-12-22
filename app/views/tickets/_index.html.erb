@@ -2,7 +2,7 @@
 <div class='page-header'>
   <div class='row-fluid'>
     <h1>
-      <%=t(
+      <%= t(
         '.title',
         default: model_class.model_name.human.pluralize.titleize,
       ) %>
@@ -33,9 +33,9 @@
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:number) %></th>
-      <th><%= Seller.human_attribute_name(:full_name) %></th>
-      <th><%= Guest.human_attribute_name(:full_name) %></th>
-      <th><%= Sponsor.human_attribute_name(:full_name) %></th>
+      <th><%= Seller.model_name.human %></th>
+      <th><%= Guest.model_name.human %></th>
+      <th><%= Sponsor.model_name.human %></th>
       <th><%= model_class.human_attribute_name(:state) %></th>
       <th><%= model_class.human_attribute_name(:ticket_type) %></th>
       <th></th>

@@ -16,6 +16,8 @@ fr:
     submit:
       create: 'Créer'
       update: 'Mettre à jour'
+      ticket_registrations:
+        update: 'Enregistrer'
   guests:
     new:
       title: 'Nouvel %{model}'
@@ -31,3 +33,8 @@ fr:
       title: 'Nouvel %{model}'
     edit:
       title: "Modifier l'%{model}"
+  ticket_registrations:
+    index:
+      title: 'Enregistrement'
+    edit:
+      title: 'Enregistrer le %{model}'

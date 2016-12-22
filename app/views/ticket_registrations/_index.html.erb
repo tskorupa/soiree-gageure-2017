@@ -1,0 +1,32 @@
+<%- model_class = Ticket -%>
+<div class='page-header'>
+  <h1><%= t('.title') %></h1>
+</div>
+<table class='table table-striped'>
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:number) %></th>
+      <th><%= Guest.model_name.human %></th>
+      <th><%= model_class.human_attribute_name(:state) %></th>
+      <th><%= model_class.human_attribute_name(:ticket_type) %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tickets.each do |ticket| %>
+      <tr>
+        <td><%= ticket.number %></td>
+        <td><%= ticket.guest.try(:full_name) %></td>
+        <td><%= model_class.human_attribute_name('state.%s' % ticket.state) %></td>
+        <td><%= model_class.human_attribute_name('ticket_type.%s' % ticket.ticket_type) %></td>
+        <td>
+          <%= link_to(
+            t('.edit', default: t('helpers.links.edit')),
+            edit_lottery_ticket_registration_path(@lottery, ticket),
+            class: 'btn btn-default btn-xs',
+          ) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

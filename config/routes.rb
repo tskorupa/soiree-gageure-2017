@@ -15,6 +15,7 @@ Rails.application.routes.draw do
         actions.resources(:prizes)
         actions.resources(:tables)
         actions.resources(:tickets)
+        resources(:ticket_registrations, only: %i(index edit update))
       end
       actions.resources(:sellers)
       actions.resources(:guests)

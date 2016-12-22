@@ -1,6 +1,10 @@
 <div class='row'>
   <div class='col-sm-2 sidebar'>
     <ul class='nav nav-sidebar'>
+      <%= menu_item(
+        t('ticket_registrations.index.title'),
+        lottery_ticket_registrations_path(@lottery),
+      ) %>
       <%= menu_item(Ticket.model_name.human.pluralize, lottery_tickets_path(@lottery)) %>
       <%= menu_item(Table.model_name.human.pluralize, lottery_tables_path(@lottery)) %>
       <%= menu_item(Prize.model_name.human.pluralize(I18n.locale), lottery_prizes_path(@lottery)) %>

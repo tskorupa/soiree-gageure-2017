@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161205040419) do
+ActiveRecord::Schema.define(version: 20161221005445) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -78,17 +78,19 @@ ActiveRecord::Schema.define(version: 20161205040419) do
   end
 
   create_table "tickets", force: :cascade do |t|
-    t.integer  "lottery_id",  null: false
+    t.integer  "lottery_id",                  null: false
     t.integer  "seller_id"
     t.integer  "guest_id"
-    t.integer  "number",      null: false
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.integer  "number",                      null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
     t.integer  "sponsor_id"
-    t.string   "state",       null: false
-    t.string   "ticket_type", null: false
+    t.string   "state",                       null: false
+    t.string   "ticket_type",                 null: false
+    t.boolean  "registered",  default: false, null: false
     t.index ["guest_id"], name: "index_tickets_on_guest_id", using: :btree
     t.index ["lottery_id", "number"], name: "index_tickets_on_lottery_id_and_number", unique: true, using: :btree
+    t.index ["lottery_id", "registered"], name: "index_tickets_on_lottery_id_and_registered", using: :btree
     t.index ["lottery_id"], name: "index_tickets_on_lottery_id", using: :btree
     t.index ["number"], name: "index_tickets_on_number", using: :btree
     t.index ["seller_id"], name: "index_tickets_on_seller_id", using: :btree
