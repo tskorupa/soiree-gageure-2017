@@ -62,7 +62,7 @@ fr:
       ticket/state:
         reserved: 'Réservé'
         authorized: 'Authorisé'
-        sold: 'Vendu'
+        paid: 'Payé'
       ticket/ticket_type:
         meal_and_lottery: 'Souper et tirage'
         lottery_only: 'Tirage seulement'

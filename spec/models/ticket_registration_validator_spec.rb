@@ -42,9 +42,9 @@ RSpec.describe(TicketRegistrationValidator, type: :model) do
       expect(ticket.errors).to be_empty
     end
 
-    it('passes all validations when ticket#guest is present and ticket#state = :sold') do
+    it('passes all validations when ticket#guest is present and ticket#state = :paid') do
       ticket.guest = guest
-      ticket.state = 'sold'
+      ticket.state = 'paid'
       validator.validate(ticket)
       expect(ticket.errors).to be_empty
     end

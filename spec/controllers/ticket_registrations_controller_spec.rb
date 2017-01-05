@@ -190,7 +190,7 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
               lottery_id: lottery.id,
               id: ticket.id,
               ticket: {
-                state: 'sold',
+                state: 'paid',
               },
             },
           )
@@ -206,7 +206,7 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
             id: ticket.id,
             guest_name: '',
             ticket: {
-              state: 'sold',
+              state: 'paid',
             },
           },
         )
@@ -225,7 +225,7 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
             id: ticket.id,
             guest_name: nil,
             ticket: {
-              state: 'sold',
+              state: 'paid',
             },
           },
         )
@@ -274,7 +274,7 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
         expect(ticket.registered).to be(true)
       end
 
-      it('redirects to the ticket registration path and sets ticket#registered = true when the guest name is present and the ticket#state = :sold') do
+      it('redirects to the ticket registration path and sets ticket#registered = true when the guest name is present and the ticket#state = :paid') do
         patch(
           :update,
           params: {
@@ -283,14 +283,14 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
             id: ticket.id,
             guest_name: 'FOO',
             ticket: {
-              state: 'sold',
+              state: 'paid',
             },
           },
         )
         expect(response).to redirect_to(lottery_ticket_registrations_path(lottery))
         ticket.reload
         expect(ticket.guest.full_name).to eq('Foo')
-        expect(ticket.state).to eq('sold')
+        expect(ticket.state).to eq('paid')
         expect(ticket.registered).to be(true)
       end
     end

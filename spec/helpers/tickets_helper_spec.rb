@@ -7,7 +7,7 @@ RSpec.describe(TicketsHelper, type: :helper) do
         [
           ['Reserved', 'reserved'],
           ['Authorized', 'authorized'],
-          ['Sold', 'sold'],
+          ['Paid', 'paid'],
         ]
       )
     end
@@ -18,7 +18,7 @@ RSpec.describe(TicketsHelper, type: :helper) do
         [
           ['Réservé', 'reserved'],
           ['Authorisé', 'authorized'],
-          ['Vendu', 'sold'],
+          ['Payé', 'paid'],
         ]
       )
       I18n.locale = :en

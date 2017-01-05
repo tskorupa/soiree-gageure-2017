@@ -10,6 +10,6 @@ class TicketRegistrationValidator < ActiveModel::Validator
       :state,
       :inclusion,
       message: I18n.translate('ticket_registrations.errors.ticket.state'),
-    ) unless %w(authorized sold).include?(ticket.state)
+    ) unless %w(authorized paid).include?(ticket.state)
   end
 end

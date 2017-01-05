@@ -63,15 +63,15 @@ RSpec.describe(TicketBuilder, type: :model) do
     end
 
     it('returns a new ticket with ticket#state assigned when an :id is not provided and a :state is provided') do
-      actual_ticket = ticket_builder.build(state: 'sold')
+      actual_ticket = ticket_builder.build(state: 'paid')
       expect(actual_ticket).to be_new_record
-      expect(actual_ticket.state).to eq('sold')
+      expect(actual_ticket.state).to eq('paid')
     end
 
     it('returns an existing ticket with ticket#state assigned when an :id is provided and a :state is provided') do
-      actual_ticket = ticket_builder.build(id: ticket.id, state: 'sold')
+      actual_ticket = ticket_builder.build(id: ticket.id, state: 'paid')
       expect(actual_ticket).not_to be_new_record
-      expect(actual_ticket.state).to eq('sold')
+      expect(actual_ticket.state).to eq('paid')
     end
 
     it('returns a new ticket with ticket#ticket_type assigned when an :id is not provided and a :ticket_type is provided') do
