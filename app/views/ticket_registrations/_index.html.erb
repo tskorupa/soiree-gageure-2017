@@ -1,6 +1,21 @@
 <%- model_class = Ticket -%>
 <div class='page-header'>
-  <h1><%= t('.title') %></h1>
+  <div class='row-fluid'>
+    <h1>
+      <%= t('.title') %>
+      <div class='pull-right text-right'>
+        <form accept-charset='UTF-8' action='<%= lottery_ticket_registrations_path(@lottery) %>' method='get'>
+          <%= text_field_tag(
+            :number, @number,
+            class: 'form-control span2',
+            autofocus: true,
+            placeholder: t('number_filter_placeholder'),
+            onfocus: 'this.select();',
+          ) %>
+        </form>
+      </div>
+    </h1>
+  </div>
 </div>
 <table class='table table-striped'>
   <thead>

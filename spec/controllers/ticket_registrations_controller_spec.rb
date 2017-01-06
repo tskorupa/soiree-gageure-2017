@@ -100,30 +100,46 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
     end
 
     describe('GET #index') do
-      it('returns all unregistered tickets ordered by :number') do
-        ticket_1 = Ticket.create!(
+      before(:each) do
+        @ticket_1 = Ticket.create!(
           lottery: lottery,
           number: 3,
           state: 'reserved',
           ticket_type: 'meal_and_lottery',
         )
-        ticket_2 = Ticket.create!(
+        @ticket_2 = Ticket.create!(
           lottery: lottery,
           number: 1,
           state: 'reserved',
           ticket_type: 'meal_and_lottery',
           registered: true,
         )
-        ticket_3 = Ticket.create!(
+        @ticket_3 = Ticket.create!(
           lottery: lottery,
           number: 2,
           state: 'reserved',
           ticket_type: 'meal_and_lottery',
         )
+      end
 
+      it('returns all unregistered tickets ordered by :number') do
         get(:index, params: { locale: I18n.locale, lottery_id: lottery.id })
         expect(response).to have_http_status(:success)
-        expect(assigns(:tickets)).to eq([ticket_3, ticket_1])
+        expect(assigns(:tickets)).to eq([@ticket_3, @ticket_1])
+        expect(response).to render_template('lotteries/lottery_child_index')
+      end
+
+      it('returns the ticket with the correct number when params contain :number') do
+        get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number: 2 })
+        expect(response).to have_http_status(:success)
+        expect(assigns(:tickets)).to eq([@ticket_3])
+        expect(response).to render_template('lotteries/lottery_child_index')
+      end
+
+      it('returns no ticket when params contain :number of a ticket that is not found') do
+        get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number: 1 })
+        expect(response).to have_http_status(:success)
+        expect(assigns(:tickets)).to eq([])
         expect(response).to render_template('lotteries/lottery_child_index')
       end
     end

@@ -1,5 +1,6 @@
 en:
   search_placeholder: 'Search...'
+  number_filter_placeholder: 'Ticket number...'
   layouts:
     application:
       title: 'Gambling event 2017'

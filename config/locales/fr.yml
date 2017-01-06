@@ -1,5 +1,6 @@
 fr:
   search_placeholder: 'Recherche...'
+  number_filter_placeholder: 'Numéro de billet...'
   layouts:
     application:
       title: 'Soirée gageure 2017'

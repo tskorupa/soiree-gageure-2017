@@ -2,7 +2,9 @@ class TicketRegistrationsController < ApplicationController
   before_action :find_lottery
 
   def index
+    @number = params[:number]
     @tickets = unregistered_tickets.order(:number)
+    @tickets = @tickets.where(number: @number) if @number.present?
 
     render(
       'lotteries/lottery_child_index',
