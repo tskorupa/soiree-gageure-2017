@@ -23,6 +23,14 @@ RSpec.describe(TicketsController, type: :controller) do
     )
   end
 
+  let(:table) do
+    Table.create!(
+      lottery: lottery,
+      number: 1,
+      capacity: 6,
+    )
+  end
+
   context('When the user is logged out') do
     describe('GET #index') do
       it('redirects to the user log in') do
@@ -437,6 +445,39 @@ RSpec.describe(TicketsController, type: :controller) do
         )
         expect(response).to have_http_status(:success)
         expect(assigns(:ticket).ticket_type).to eq('a')
+        expect(response).to render_template(:edit)
+      end
+
+      it('redirects to lottery_tickets_path when :table_id is updated') do
+        patch(
+          :update,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            id: ticket.id,
+            ticket: {
+              table_id: table.id,
+            },
+          },
+        )
+        expect(ticket.reload.table_id).to eq(table.id)
+        expect(response).to redirect_to(lottery_tickets_path(lottery))
+      end
+
+      it('presents the submitted value for :table_id when the ticket validation fails') do
+        patch(
+          :update,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            id: ticket.id,
+            ticket: {
+              table_id: -3,
+            },
+          },
+        )
+        expect(response).to have_http_status(:success)
+        expect(assigns(:ticket).table_id).to eq(-3)
         expect(response).to render_template(:edit)
       end
     end

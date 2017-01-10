@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170105150758) do
+ActiveRecord::Schema.define(version: 20170109022154) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,11 +67,12 @@ ActiveRecord::Schema.define(version: 20170105150758) do
   end
 
   create_table "tables", force: :cascade do |t|
-    t.integer  "lottery_id", null: false
-    t.integer  "number",     null: false
-    t.integer  "capacity",   null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "lottery_id",                null: false
+    t.integer  "number",                    null: false
+    t.integer  "capacity",                  null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.integer  "tickets_count", default: 0, null: false
     t.index ["lottery_id", "number"], name: "index_tables_on_lottery_id_and_number", unique: true, using: :btree
     t.index ["lottery_id"], name: "index_tables_on_lottery_id", using: :btree
     t.index ["number"], name: "index_tables_on_number", using: :btree
@@ -88,6 +89,7 @@ ActiveRecord::Schema.define(version: 20170105150758) do
     t.string   "state",                       null: false
     t.string   "ticket_type",                 null: false
     t.boolean  "registered",  default: false, null: false
+    t.integer  "table_id"
     t.index ["guest_id"], name: "index_tickets_on_guest_id", using: :btree
     t.index ["lottery_id", "number"], name: "index_tickets_on_lottery_id_and_number", unique: true, using: :btree
     t.index ["lottery_id", "registered"], name: "index_tickets_on_lottery_id_and_registered", using: :btree
@@ -95,6 +97,7 @@ ActiveRecord::Schema.define(version: 20170105150758) do
     t.index ["number"], name: "index_tickets_on_number", using: :btree
     t.index ["seller_id"], name: "index_tickets_on_seller_id", using: :btree
     t.index ["sponsor_id"], name: "index_tickets_on_sponsor_id", using: :btree
+    t.index ["table_id"], name: "index_tickets_on_table_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|

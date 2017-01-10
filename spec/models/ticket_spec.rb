@@ -14,6 +14,14 @@ RSpec.describe(Ticket, type: :model) do
     )
   end
 
+  let(:table) do
+    Table.create!(
+      lottery: lottery,
+      number: 1,
+      capacity: 6,
+    )
+  end
+
   describe('::STATES') do
     it('defines a list of allowed states') do
       expect(Ticket::STATES).to eq(%w( reserved authorized paid ))
@@ -109,11 +117,42 @@ RSpec.describe(Ticket, type: :model) do
       expect(new_ticket).not_to be_valid
       expect(new_ticket.errors[:ticket_type]).to include("is not included in the list")
     end
+
+    it('requires :table_id to exist as a Table') do
+      new_ticket = Ticket.new(table_id: 1)
+      expect(new_ticket).not_to be_valid
+      expect(new_ticket.errors[:table_id]).to include("is invalid")
+
+      new_ticket.table = table
+      new_ticket.valid?
+      expect(new_ticket.errors[:table_id]).to be_empty
+    end
   end
 
   describe('#lottery') do
     it('returns the parent lottery') do
       expect(ticket.lottery).to eq(lottery)
+    end
+  end
+
+  describe('#table') do
+    it('returns the parent table') do
+      ticket.update!(table: table)
+      expect(ticket.reload.table).to eq(table)
+    end
+
+    it('increment table#tickets_count when the table is added to the ticket') do
+      expect do
+        ticket.update!(table: table)
+      end.to change { table.reload.tickets_count }
+    end
+
+    it('decrement table#tickets_count when the table is removed from the ticket') do
+      ticket.update!(table: table)
+      ticket.reload
+      expect do
+        ticket.update!(table: nil)
+      end.to change { table.reload.tickets_count }
     end
   end
 end

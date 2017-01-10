@@ -51,6 +51,7 @@ class TicketsController < ApplicationController
         :number,
         :state,
         :ticket_type,
+        :table_id,
       )
 
     params.permit(

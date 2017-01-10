@@ -42,6 +42,13 @@
     </div>
   </div>
   <div class='form-group'>
+    <%= f.label(:table_id, class: 'control-label col-lg-2') %>
+    <div class='col-lg-10'>
+      <%= f.text_field(:table_id, class: 'form-control') %>
+      <%= f.error_span(:table_id) %>
+    </div>
+  </div>
+  <div class='form-group'>
     <%= label_tag(:sponsor_name, Sponsor.human_attribute_name(:full_name), class: 'control-label col-lg-2') %>
     <div class='col-lg-10'>
       <%= text_field_tag(:sponsor_name, @ticket.sponsor.try(:full_name), class: 'form-control') %>
