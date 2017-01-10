@@ -7,9 +7,11 @@ fr:
   helpers:
     actions: 'Actions'
     links:
+      back: 'Retour'
       cancel: 'Annuler'
       new: 'Nouveau'
       edit: 'Modifier'
+      show: 'Inspecter'
     titles:
       edit: 'Modifier le %{model}'
       new: 'Nouveau %{model}'

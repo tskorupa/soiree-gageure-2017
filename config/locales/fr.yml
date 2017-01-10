@@ -81,7 +81,7 @@ fr:
       table:
         number: 'Le numéro'
         capacity: 'La capacité'
-        tickets_count: 'Places assignées'
+        tickets_count: 'No. billets assignés'
       prize:
         draw_order: "L'ordre de pige"
         amount: 'Le montant'

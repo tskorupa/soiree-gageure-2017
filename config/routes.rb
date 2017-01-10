@@ -13,8 +13,8 @@ Rails.application.routes.draw do
     ) do |actions|
       actions.resources(:lotteries) do
         actions.resources(:prizes)
-        actions.resources(:tables)
         actions.resources(:tickets)
+        resources(:tables, only: %i(index new create edit show update))
         resources(:ticket_registrations, only: %i(index edit update))
       end
       actions.resources(:sellers)

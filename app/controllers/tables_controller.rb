@@ -26,6 +26,11 @@ class TablesController < ApplicationController
     @table = @lottery.tables.find(params[:id])
   end
 
+  def show
+    @table = @lottery.tables.find(params[:id])
+    @tickets = @lottery.tickets.where(table_id: @table.id).order(:number)
+  end
+
   def update
     @table = @lottery.tables.find(params[:id])
     return(

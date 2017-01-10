@@ -20,6 +20,15 @@ RSpec.describe(TablesController, type: :controller) do
     )
   end
 
+  let(:ticket) do
+    Ticket.create!(
+      lottery: lottery,
+      number: 1,
+      state: 'reserved',
+      ticket_type: 'meal_and_lottery',
+    )
+  end
+
   context('When the user is logged out') do
     describe('GET #index') do
       it('redirects to the user log in') do
@@ -43,10 +52,9 @@ RSpec.describe(TablesController, type: :controller) do
     end
 
     describe('GET #show') do
-      it('raises a "No route matches" error') do
-        expect do
-          get(:show, params: { locale: I18n.locale, lottery_id: lottery.id, id: table.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
+      it('redirects to the user log in') do
+        get(:show, params: { locale: I18n.locale, lottery_id: lottery.id, id: table.id })
+        expect(response).to redirect_to(new_user_session_path)
       end
     end
 
@@ -129,10 +137,25 @@ RSpec.describe(TablesController, type: :controller) do
     end
 
     describe('GET #show') do
-      it('raises a "No route matches" error') do
-        expect do
-          get(:show, params: { locale: I18n.locale, lottery_id: lottery.id, id: table.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
+      before(:each) do
+        ticket.update!(table: table)
+        get(:show, params: { locale: I18n.locale, lottery_id: lottery.id, id: table.id })
+      end
+
+      it('returns :success') do
+        expect(response).to have_http_status(:success)
+      end
+
+      it('renders :show') do
+        expect(response).to render_template(:show)
+      end
+
+      it('assigns @table') do
+        expect(assigns(:table)).to eq(table)
+      end
+
+      it('assigns @tickets') do
+        expect(assigns(:tickets)).to eq([ticket])
       end
     end
 

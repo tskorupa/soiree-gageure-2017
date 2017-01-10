@@ -1,0 +1,44 @@
+<%- model_class = Table -%>
+<div class='page-header'>
+  <h1><%=t('.title', default: model_class.model_name.human.titleize) %></h1>
+</div>
+
+<dl class='dl-horizontal'>
+  <dt><strong><%= model_class.human_attribute_name(:number) %>:</strong></dt>
+  <dd><%= @table.number %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:capacity) %>:</strong></dt>
+  <dd><%= @table.capacity %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:tickets_count) %>:</strong></dt>
+  <dd><%= @table.tickets_count %></dd>
+</dl>
+
+<h3><%= Ticket.model_name.human.pluralize %></h3>
+<table class='table table-striped'>
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:number) %></th>
+      <th><%= Seller.model_name.human %></th>
+      <th><%= Guest.model_name.human %></th>
+      <th><%= Sponsor.model_name.human %></th>
+    </tr>
+  </thead>
+  <% @tickets.each do |ticket| %>
+    <tr>
+      <td><%= ticket.number %></td>
+      <td><%= ticket.seller.try(:full_name) %></td>
+      <td><%= ticket.guest.try(:full_name) %></td>
+      <td><%= ticket.sponsor.try(:full_name) %></td>
+    </tr>
+  <% end %>
+</table>
+
+<%= link_to(
+  t('.back', default: t('helpers.links.back')),
+  lottery_tables_path(@lottery),
+  class: 'btn btn-default',
+) %>
+<%= link_to(
+  t('.edit', default: t('helpers.links.edit')),
+  edit_lottery_table_path(@lottery, @table),
+  class: 'btn btn-default',
+) %>

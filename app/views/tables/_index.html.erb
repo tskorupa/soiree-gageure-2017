@@ -39,6 +39,11 @@
             edit_lottery_table_path(@lottery, table),
             class: 'btn btn-default btn-xs',
           ) %>
+          <%= link_to(
+            t('.show', default: t('helpers.links.show')),
+            lottery_table_path(@lottery, table),
+            class: 'btn btn-default btn-xs',
+          ) %>
         </td>
       </tr>
     <% end %>
