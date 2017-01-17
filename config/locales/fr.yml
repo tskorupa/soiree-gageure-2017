@@ -11,6 +11,12 @@ fr:
       ticket:
         guest: 'doit être spécifié.'
         state: "n'est pas valide. Le billet doit être payé ou autorisé."
+        registered: "n'est pas valide: le billet à déjà été enregistré."
+  ticket_drop_offs:
+    errors:
+      ticket:
+        registered: 'doit être enregistré.'
+        dropped_off: 'à déjà été mis en boulier.'
   activerecord:
     errors:
       messages:
@@ -78,6 +84,8 @@ fr:
         ticket_type: 'Le type de billet'
         guest: "Le nom de l'invité"
         table_id: 'Le numéro de table'
+        registered: "L'enregistrement"
+        dropped_off: 'La mise en boulier'
       table:
         number: 'Le numéro'
         capacity: 'La capacité'

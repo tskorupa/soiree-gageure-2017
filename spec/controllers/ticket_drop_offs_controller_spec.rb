@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe(TicketRegistrationsController, type: :controller) do
+RSpec.describe(TicketDropOffsController, type: :controller) do
   render_views
 
   let(:lottery) do
@@ -15,9 +15,11 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
     Ticket.create!(
       lottery: lottery,
       number: 1,
-      state: 'reserved',
-      ticket_type: 'meal_and_lottery',
       guest: guest,
+      state: 'paid',
+      ticket_type: 'meal_and_lottery',
+      registered: true,
+      dropped_off: false,
     )
   end
 
@@ -72,9 +74,10 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
     end
 
     describe('GET #edit') do
-      it('redirects to the user log in') do
-        get(:edit, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        expect(response).to redirect_to(new_user_session_path)
+      it('raises a "No route matches" error') do
+        expect do
+          get(:edit, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
+        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
       end
     end
 
@@ -106,41 +109,90 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
           number: 3,
           state: 'reserved',
           ticket_type: 'meal_and_lottery',
+          registered: false,
+          dropped_off: false,
         )
         @ticket_2 = Ticket.create!(
           lottery: lottery,
           number: 1,
-          state: 'reserved',
+          guest: guest,
+          state: 'paid',
           ticket_type: 'meal_and_lottery',
           registered: true,
+          dropped_off: false,
         )
         @ticket_3 = Ticket.create!(
           lottery: lottery,
           number: 2,
-          state: 'reserved',
+          guest: guest,
+          state: 'paid',
           ticket_type: 'meal_and_lottery',
+          registered: true,
+          dropped_off: true,
+        )
+        @ticket_4 = Ticket.create!(
+          lottery: lottery,
+          number: 4,
+          guest: guest,
+          state: 'paid',
+          ticket_type: 'meal_and_lottery',
+          registered: true,
+          dropped_off: false,
         )
       end
 
-      it('returns all unregistered tickets ordered by :number') do
-        get(:index, params: { locale: I18n.locale, lottery_id: lottery.id })
-        expect(response).to have_http_status(:success)
-        expect(assigns(:tickets)).to eq([@ticket_3, @ticket_1])
-        expect(response).to render_template('lotteries/lottery_child_index')
+      context('when not specifying :number in the params') do
+        before(:each) do
+          get(:index, params: { locale: I18n.locale, lottery_id: lottery.id })
+        end
+
+        it('returns an http :success status') do
+          expect(response).to have_http_status(:success)
+        end
+
+        it('returns all registered but not dropped off tickets ordered by :number') do
+          expect(assigns(:tickets)).to eq([@ticket_2, @ticket_4])
+        end
+
+        it('renders the template lotteries/lottery_child_index') do
+          expect(response).to render_template('lotteries/lottery_child_index')
+        end
       end
 
-      it('returns the ticket with the correct number when params contain :number') do
-        get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number: 2 })
-        expect(response).to have_http_status(:success)
-        expect(assigns(:tickets)).to eq([@ticket_3])
-        expect(response).to render_template('lotteries/lottery_child_index')
+      context('when specyfying the :number of a registered but not dropped off ticket in the params') do
+        before(:each) do
+          get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number: 4 })
+        end
+
+        it('returns an http :success status') do
+          expect(response).to have_http_status(:success)
+        end
+
+        it('returns the ticket#number = params[:number]') do
+          expect(assigns(:tickets)).to eq([@ticket_4])
+        end
+
+        it('renders the template lotteries/lottery_child_index') do
+          expect(response).to render_template('lotteries/lottery_child_index')
+        end
       end
 
-      it('returns no ticket when params contain :number of a ticket that is not found') do
-        get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number: 1 })
-        expect(response).to have_http_status(:success)
-        expect(assigns(:tickets)).to eq([])
-        expect(response).to render_template('lotteries/lottery_child_index')
+      context('when specyfying the :number a ticket that is not registered and not dropped off in the params') do
+        before(:each) do
+          get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number: 2 })
+        end
+
+        it('returns an http :success status') do
+          expect(response).to have_http_status(:success)
+        end
+
+        it('returns the ticket#number = params[:number]') do
+          expect(assigns(:tickets)).to be_empty
+        end
+
+        it('renders the template lotteries/lottery_child_index') do
+          expect(response).to render_template('lotteries/lottery_child_index')
+        end
       end
     end
 
@@ -180,24 +232,16 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
     end
 
     describe('GET #edit') do
-      it('returns the requested ticket when the ticket is unregistered') do
-        get(:edit, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        expect(response).to have_http_status(:success)
-        expect(assigns(:ticket)).to eq(ticket)
-        expect(response).to render_template(:edit)
-      end
-
-      it('raises a "RecordNotFound" when the requested ticket is registered') do
-        ticket.update!(registered: true)
+      it('raises a "No route matches" error') do
         expect do
           get(:edit, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        end.to raise_error(ActiveRecord::RecordNotFound)
+        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
       end
     end
 
     describe('PATCH #update') do
-      it('raises a "RecordNotFound" when the requested ticket is registered') do
-        ticket.update!(registered: true)
+      it('raises a "RecordNotFound" when the requested ticket is dropped off') do
+        ticket.update!(dropped_off: true)
         expect do
           patch(
             :update,
@@ -205,15 +249,12 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
               locale: I18n.locale,
               lottery_id: lottery.id,
               id: ticket.id,
-              ticket: {
-                state: 'paid',
-              },
             },
           )
         end.to raise_error(ActiveRecord::RecordNotFound)
       end
 
-      context('when the validation fails') do
+      context('when the ticket#registered = true and ticket#dropped_off = false') do
         before(:each) do
           patch(
             :update,
@@ -221,73 +262,17 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
               locale: I18n.locale,
               lottery_id: lottery.id,
               id: ticket.id,
-              guest_name: '',
-              ticket: {
-                state: 'paid',
-              },
             },
           )
         end
 
-        it('responds with http status :success') do
-          expect(response).to have_http_status(:success)
+        it('redirects to the lottery_ticket_drop_offs_path') do
+          expect(response).to redirect_to(lottery_ticket_drop_offs_path(lottery))
         end
 
-        it('renders the :edit tamplate') do
-          expect(response).to render_template(:edit)
+        it('sets ticket#dropped_off = true when ticket is dropped off after registration') do
+          expect(ticket.reload.dropped_off).to be(true)
         end
-
-        it('assigns ticket#guest to nil when ticket#guest_name is an empty string') do
-          expect(assigns(:ticket).guest).to be_nil
-        end
-
-        it('preserves the submitted value for ticket#state') do
-          expect(assigns(:ticket).state).to eq('paid')
-        end
-
-        it('does not change ticket#registered when the update fails') do
-          expect(assigns(:ticket).registered).to be(false)
-        end
-      end
-
-      it('redirects to the ticket registration path and sets ticket#registered = true when the guest name is present and the ticket#state = :authorized') do
-        patch(
-          :update,
-          params: {
-            locale: I18n.locale,
-            lottery_id: lottery.id,
-            id: ticket.id,
-            guest_name: 'FOO',
-            ticket: {
-              state: 'authorized',
-            },
-          },
-        )
-        expect(response).to redirect_to(lottery_ticket_registrations_path(lottery))
-        ticket.reload
-        expect(ticket.guest.full_name).to eq('Foo')
-        expect(ticket.state).to eq('authorized')
-        expect(ticket.registered).to be(true)
-      end
-
-      it('redirects to the ticket registration path and sets ticket#registered = true when the guest name is present and the ticket#state = :paid') do
-        patch(
-          :update,
-          params: {
-            locale: I18n.locale,
-            lottery_id: lottery.id,
-            id: ticket.id,
-            guest_name: 'FOO',
-            ticket: {
-              state: 'paid',
-            },
-          },
-        )
-        expect(response).to redirect_to(lottery_ticket_registrations_path(lottery))
-        ticket.reload
-        expect(ticket.guest.full_name).to eq('Foo')
-        expect(ticket.state).to eq('paid')
-        expect(ticket.registered).to be(true)
       end
     end
 

@@ -9,6 +9,12 @@ en:
       ticket:
         guest: "can't be blank."
         state: 'is not valid. The ticket must be paid or authorized.'
+        registered: 'is not valid: the ticket has already been registered.'
+  ticket_drop_offs:
+    errors:
+      ticket:
+        registered: 'must be registered.'
+        dropped_off: 'is already dropped off.'
   activerecord:
     errors:
       template:

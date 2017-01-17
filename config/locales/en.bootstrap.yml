@@ -19,8 +19,13 @@ en:
       update: 'Update'
       ticket_registrations:
         update: 'Register'
+      ticket_drop_offs:
+        update: 'Drop off'
   ticket_registrations:
     index:
       title: 'Registration'
     edit:
       title: 'Register %{model}'
+  ticket_drop_offs:
+    index:
+      title: 'Drop off'

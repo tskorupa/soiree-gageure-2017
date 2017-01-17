@@ -1,20 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe(TicketRegistrationValidator, type: :model) do
-  let(:lottery) do
-    Lottery.create!(event_date: Date.today)
-  end
-
   let(:guest) do
     Guest.create!(full_name: 'Bubbles')
   end
 
   let(:ticket) do
-    Ticket.create!(
-      lottery: lottery,
-      number: 1,
-      state: 'reserved',
-      ticket_type: 'meal_and_lottery',
+    Ticket.new(
+      guest: guest,
+      state: 'paid',
     )
   end
 
@@ -35,14 +29,20 @@ RSpec.describe(TicketRegistrationValidator, type: :model) do
       expect(ticket.errors[:state]).to be_present
     end
 
-    it('passes all validations when ticket#guest is present and ticket#state = :authorized') do
+    it('sets an error on ticket when ticket#registered = true') do
+      ticket.registered = true
+      validator.validate(ticket)
+      expect(ticket.errors[:registered]).to be_present
+    end
+
+    it('passes validations when ticket#guest is set and ticket#state = :authorized') do
       ticket.guest = guest
       ticket.state = 'authorized'
       validator.validate(ticket)
       expect(ticket.errors).to be_empty
     end
 
-    it('passes all validations when ticket#guest is present and ticket#state = :paid') do
+    it('passes validations when ticket#guest is set and ticket#state = :paid') do
       ticket.guest = guest
       ticket.state = 'paid'
       validator.validate(ticket)

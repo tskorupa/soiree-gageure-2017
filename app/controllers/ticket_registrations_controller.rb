@@ -18,16 +18,18 @@ class TicketRegistrationsController < ApplicationController
 
   def update
     @ticket = unregistered_tickets.find(params[:id])
+
     @ticket.guest = HandleRelation.find_or_build(
       klass: Guest,
       actual_entity: @ticket.guest,
       supplied_full_name: params[:guest_name],
     )
-    @ticket.assign_attributes(ticket_params.merge(registered: true))
+    @ticket.assign_attributes(ticket_params)
 
     TicketRegistrationValidator.new.validate(@ticket)
     return render(:edit) if @ticket.errors.any?
 
+    @ticket.registered = true
     @ticket.save
     redirect_to(lottery_ticket_registrations_path(@lottery))
   end

@@ -1,0 +1,42 @@
+<%- model_class = Ticket -%>
+<div class='page-header'>
+  <div class='row-fluid'>
+    <h1>
+      <%= t('.title') %>
+      <div class='pull-right text-right'>
+        <form accept-charset='UTF-8' action='<%= lottery_ticket_drop_offs_path(@lottery) %>' method='get'>
+          <%= text_field_tag(
+            :number, @number,
+            class: 'form-control span2',
+            autofocus: true,
+            placeholder: t('number_filter_placeholder'),
+            onfocus: 'this.select();',
+          ) %>
+        </form>
+      </div>
+    </h1>
+  </div>
+</div>
+<table class='table table-striped'>
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:number) %></th>
+      <th><%= Guest.model_name.human %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tickets.each do |ticket| %>
+      <tr>
+        <td><%= ticket.number %></td>
+        <td><%= ticket.guest.try(:full_name) %></td>
+        <td><%= link_to(
+          t('helpers.submit.ticket_drop_offs.update'),
+          lottery_ticket_drop_off_path(@lottery, ticket),
+          method: :patch,
+          class: 'btn btn-xs btn-primary',
+        ) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

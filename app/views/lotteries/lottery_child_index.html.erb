@@ -2,6 +2,10 @@
   <div class='col-sm-2 sidebar'>
     <ul class='nav nav-sidebar'>
       <%= menu_item(
+        t('ticket_drop_offs.index.title'),
+        lottery_ticket_drop_offs_path(@lottery),
+      ) %>
+      <%= menu_item(
         t('ticket_registrations.index.title'),
         lottery_ticket_registrations_path(@lottery),
       ) %>

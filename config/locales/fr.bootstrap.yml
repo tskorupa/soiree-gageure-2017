@@ -20,6 +20,8 @@ fr:
       update: 'Mettre à jour'
       ticket_registrations:
         update: 'Enregistrer'
+      ticket_drop_offs:
+        update: 'Mise en boulier'
   guests:
     new:
       title: 'Nouvel %{model}'
@@ -40,3 +42,6 @@ fr:
       title: 'Enregistrement'
     edit:
       title: 'Enregistrer le %{model}'
+  ticket_drop_offs:
+    index:
+      title: 'Mise en boulier'
