@@ -35,10 +35,9 @@ RSpec.describe(LotteriesController, type: :controller) do
     end
 
     describe('GET #show') do
-      it('raises a "No route matches" error') do
-        expect do
-          get(:show, params: { locale: I18n.locale, id: lottery.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
+      it('redirects to the user log in') do
+        get(:show, params: { locale: I18n.locale, id: lottery.id })
+        expect(response).to redirect_to(new_user_session_path)
       end
     end
 
@@ -109,10 +108,40 @@ RSpec.describe(LotteriesController, type: :controller) do
     end
 
     describe('GET #show') do
-      it('raises a "No route matches" error') do
-        expect do
-          get(:show, params: { locale: I18n.locale, id: lottery.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
+      before(:each) do
+        get(:show, params: { locale: I18n.locale, id: lottery.id })
+      end
+
+      it('returns an http :success status') do
+        expect(response).to have_http_status(:success)
+      end
+
+      it('renders the :show template') do
+        expect(response).to render_template(:show)
+      end
+
+      it('assigns @lottery') do
+        expect(assigns(:lottery)).to eq(lottery)
+      end
+
+      it('assigns @total_num_tickets') do
+        expect(assigns(:total_num_tickets)).to eq(0)
+      end
+
+      it('assigns @num_unregistered_tickets') do
+        expect(assigns(:num_unregistered_tickets)).to eq(0)
+      end
+
+      it('assigns @num_tickets_in_circulation') do
+        expect(assigns(:num_tickets_in_circulation)).to eq(0)
+      end
+
+      it('assigns @num_tickets_in_container') do
+        expect(assigns(:num_tickets_in_container)).to eq(0)
+      end
+
+      it('assigns @num_drawn_tickets') do
+        expect(assigns(:num_drawn_tickets)).to eq(0)
       end
     end
 

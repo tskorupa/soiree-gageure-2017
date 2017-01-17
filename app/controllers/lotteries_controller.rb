@@ -13,6 +13,15 @@ class LotteriesController < ApplicationController
     render(:new)
   end
 
+  def show
+    @lottery = Lottery.find(params[:id])
+    @total_num_tickets = @lottery.tickets.count
+    @num_unregistered_tickets = @lottery.tickets.where(registered: false).count
+    @num_tickets_in_circulation = @lottery.tickets.where(registered: true, dropped_off: false).count
+    @num_tickets_in_container = @lottery.tickets.where(registered: true, dropped_off: true).count
+    @num_drawn_tickets = 0
+  end
+
   def edit
     @lottery = Lottery.find(params[:id])
   end

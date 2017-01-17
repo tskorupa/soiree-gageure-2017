@@ -11,7 +11,7 @@ Rails.application.routes.draw do
     with_options(
       only: %i(index new create edit update),
     ) do |actions|
-      actions.resources(:lotteries) do
+      resources(:lotteries, only: %i(index new create edit show update)) do
         actions.resources(:prizes)
         actions.resources(:tickets)
         resources(:tables, only: %i(index new create edit show update))

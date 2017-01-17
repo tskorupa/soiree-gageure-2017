@@ -15,6 +15,12 @@ en:
       ticket:
         registered: 'must be registered.'
         dropped_off: 'is already dropped off.'
+  lotteries:
+    total_num_tickets: 'Total number of tickets'
+    num_unregistered_tickets: 'unregistered tickets'
+    num_tickets_in_circulation: 'tickets to drop off'
+    num_tickets_in_container: 'tickets in container'
+    num_drawn_tickets: 'tickets drawn'
   activerecord:
     errors:
       template:
