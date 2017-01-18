@@ -1,0 +1,44 @@
+<%- model_class = Ticket -%>
+<div class='page-header'>
+  <div class='row-fluid'>
+    <h1>
+      <%= t('.title') %>
+      <div class='pull-right text-right'>
+        <form accept-charset='UTF-8' action='<%= lottery_ticket_draws_path(@lottery) %>' method='get'>
+          <%= text_field_tag(
+            :number, @number,
+            class: 'form-control span2',
+            autofocus: true,
+            placeholder: t('number_filter_placeholder'),
+            onfocus: 'this.select();',
+          ) %>
+        </form>
+      </div>
+    </h1>
+  </div>
+</div>
+<table class='table table-striped'>
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:number) %></th>
+      <th><%= Guest.model_name.human %></th>
+      <th><%= model_class.human_attribute_name(:ticket_type) %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tickets.each do |ticket| %>
+      <tr>
+        <td><%= ticket.number %></td>
+        <td><%= ticket.guest.try(:full_name) %></td>
+        <td><%= model_class.human_attribute_name('ticket_type.%s' % ticket.ticket_type) %></td>
+        <td><%= link_to(
+          t('helpers.submit.ticket_draws.update'),
+          lottery_ticket_draw_path(@lottery, ticket),
+          method: :patch,
+          class: 'btn btn-xs btn-primary',
+        ) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

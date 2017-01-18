@@ -21,6 +21,8 @@ en:
         update: 'Register'
       ticket_drop_offs:
         update: 'Drop off'
+      ticket_draws:
+        update: 'Draw'
   ticket_registrations:
     index:
       title: 'Registration'
@@ -29,3 +31,6 @@ en:
   ticket_drop_offs:
     index:
       title: 'Drop off'
+  ticket_draws:
+    index:
+      title: 'Draw ticket'

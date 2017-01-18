@@ -19,7 +19,7 @@ class LotteriesController < ApplicationController
     @num_unregistered_tickets = @lottery.tickets.where(registered: false).count
     @num_tickets_in_circulation = @lottery.tickets.where(registered: true, dropped_off: false).count
     @num_tickets_in_container = @lottery.tickets.where(registered: true, dropped_off: true).count
-    @num_drawn_tickets = 0
+    @num_drawn_tickets = @lottery.tickets.where(registered: true, dropped_off: true, drawn: true).count
   end
 
   def edit
