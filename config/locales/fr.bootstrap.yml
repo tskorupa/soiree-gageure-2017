@@ -24,6 +24,8 @@ fr:
         update: 'Mise en boulier'
       ticket_draws:
         update: 'Tirer'
+      drawn_tickets:
+        update: 'Retourner au boulier'
   guests:
     new:
       title: 'Nouvel %{model}'
@@ -50,3 +52,8 @@ fr:
   ticket_draws:
     index:
       title: 'Tirer un billet'
+  drawn_tickets:
+    index:
+      title: 'Billets tirés'
+      table_columns:
+        draw_order: 'Ordre de pige'

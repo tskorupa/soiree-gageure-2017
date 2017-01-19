@@ -23,6 +23,8 @@ en:
         update: 'Drop off'
       ticket_draws:
         update: 'Draw'
+      drawn_tickets:
+        update: 'Return to draw'
   ticket_registrations:
     index:
       title: 'Registration'
@@ -34,3 +36,8 @@ en:
   ticket_draws:
     index:
       title: 'Draw ticket'
+  drawn_tickets:
+    index:
+      title: 'Drawn tickets'
+      table_columns:
+        draw_order: 'Draw order'

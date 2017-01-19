@@ -17,7 +17,10 @@ class TicketDrawsController < ApplicationController
 
   def update
     @ticket = tickets_for_draw.find(params[:id])
-    @ticket.update_attributes(drawn: true)
+    @ticket.update_attributes(
+      drawn: true,
+      drawn_at: Time.now.utc,
+    )
     redirect_to(lottery_ticket_draws_path(@lottery))
   end
 

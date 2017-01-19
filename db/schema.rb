@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170118013303) do
+ActiveRecord::Schema.define(version: 20170119021630) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -92,9 +92,10 @@ ActiveRecord::Schema.define(version: 20170118013303) do
     t.integer  "table_id"
     t.boolean  "dropped_off", default: false, null: false
     t.boolean  "drawn",       default: false, null: false
+    t.datetime "drawn_at"
     t.index ["guest_id"], name: "index_tickets_on_guest_id", using: :btree
     t.index ["lottery_id", "number"], name: "index_tickets_on_lottery_id_and_number", unique: true, using: :btree
-    t.index ["lottery_id", "registered", "dropped_off", "drawn"], name: "by_registration_and_draw_state", using: :btree
+    t.index ["lottery_id", "registered", "dropped_off", "drawn", "drawn_at"], name: "by_registration_and_draw", using: :btree
     t.index ["lottery_id"], name: "index_tickets_on_lottery_id", using: :btree
     t.index ["number"], name: "index_tickets_on_number", using: :btree
     t.index ["seller_id"], name: "index_tickets_on_seller_id", using: :btree

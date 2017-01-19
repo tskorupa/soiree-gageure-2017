@@ -1,7 +1,6 @@
 require 'rails_helper'
-include ActiveSupport::Testing::TimeHelpers
 
-RSpec.describe(TicketDrawsController, type: :controller) do
+RSpec.describe(DrawnTicketsController, type: :controller) do
   render_views
 
   let(:lottery) do
@@ -21,7 +20,8 @@ RSpec.describe(TicketDrawsController, type: :controller) do
       ticket_type: 'meal_and_lottery',
       registered: true,
       dropped_off: true,
-      drawn: false,
+      drawn: true,
+      drawn_at: Time.now.utc,
     )
   end
 
@@ -114,6 +114,7 @@ RSpec.describe(TicketDrawsController, type: :controller) do
           registered: false,
           dropped_off: false,
           drawn: false,
+          drawn_at: nil,
         )
         @ticket_2 = Ticket.create!(
           lottery: lottery,
@@ -124,6 +125,7 @@ RSpec.describe(TicketDrawsController, type: :controller) do
           registered: true,
           dropped_off: false,
           drawn: false,
+          drawn_at: nil,
         )
         @ticket_3 = Ticket.create!(
           lottery: lottery,
@@ -133,7 +135,8 @@ RSpec.describe(TicketDrawsController, type: :controller) do
           ticket_type: 'meal_and_lottery',
           registered: true,
           dropped_off: true,
-          drawn: false,
+          drawn: true,
+          drawn_at: 5.minutes.ago.utc,
         )
         @ticket_4 = Ticket.create!(
           lottery: lottery,
@@ -144,73 +147,28 @@ RSpec.describe(TicketDrawsController, type: :controller) do
           registered: true,
           dropped_off: true,
           drawn: true,
+          drawn_at: Time.now.utc,
         )
       end
 
-      context('when not specifying :number in the params') do
-        before(:each) do
-          get(:index, params: { locale: I18n.locale, lottery_id: lottery.id })
-        end
-
-        it('returns an http :success status') do
-          expect(response).to have_http_status(:success)
-        end
-
-        it('returns no tickets when :number is not specified in the params') do
-          expect(assigns(:tickets)).to be_empty
-        end
-
-        it('renders the template lotteries/lottery_child_index') do
-          expect(response).to render_template('lotteries/lottery_child_index')
-        end
-
-        it('renders the partial ticket_draws/index') do
-          expect(response).to render_template('ticket_draws/_index')
-        end
+      before(:each) do
+        get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number: 2 })
       end
 
-      context('when specyfying the :number of a dropped off but not drawn ticket in the params') do
-        before(:each) do
-          get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number: 2 })
-        end
-
-        it('returns an http :success status') do
-          expect(response).to have_http_status(:success)
-        end
-
-        it('returns the ticket#number = params[:number]') do
-          expect(assigns(:tickets)).to eq([@ticket_3])
-        end
-
-        it('renders the template lotteries/lottery_child_index') do
-          expect(response).to render_template('lotteries/lottery_child_index')
-        end
-
-        it('renders the partial ticket_draws/index') do
-          expect(response).to render_template('ticket_draws/_index')
-        end
+      it('returns an http :success status') do
+        expect(response).to have_http_status(:success)
       end
 
-      context('when specyfying the :number a drawn ticket in the params') do
-        before(:each) do
-          get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number: 4 })
-        end
+      it('returns the all drawn tickets ordered by drawn_at: :desc') do
+        expect(assigns(:tickets)).to eq([@ticket_4, @ticket_3])
+      end
 
-        it('returns an http :success status') do
-          expect(response).to have_http_status(:success)
-        end
+      it('renders the template lotteries/lottery_child_index') do
+        expect(response).to render_template('lotteries/lottery_child_index')
+      end
 
-        it('returns the ticket#number = params[:number]') do
-          expect(assigns(:tickets)).to be_empty
-        end
-
-        it('renders the template lotteries/lottery_child_index') do
-          expect(response).to render_template('lotteries/lottery_child_index')
-        end
-
-        it('renders the partial ticket_draws/index') do
-          expect(response).to render_template('ticket_draws/_index')
-        end
+      it('renders the partial drawn_tickets/index') do
+        expect(response).to render_template('drawn_tickets/_index')
       end
     end
 
@@ -259,7 +217,7 @@ RSpec.describe(TicketDrawsController, type: :controller) do
 
     describe('PATCH #update') do
       it('raises a "RecordNotFound" when the requested ticket is drawn') do
-        ticket.update!(drawn: true)
+        ticket.update!(drawn: false)
         expect do
           patch(
             :update,
@@ -272,7 +230,7 @@ RSpec.describe(TicketDrawsController, type: :controller) do
         end.to raise_error(ActiveRecord::RecordNotFound)
       end
 
-      context('when the ticket#registered = true and ticket#dropped_off = true and ticket#drawn = false') do
+      context('when the ticket#registered = true and ticket#dropped_off = true and ticket#drawn = true') do
         let(:update) do
           patch(
             :update,
@@ -284,19 +242,18 @@ RSpec.describe(TicketDrawsController, type: :controller) do
           )
         end
 
-        it('redirects to the lottery_ticket_draws_path') do
+        it('redirects to the lottery_drawn_tickets_path') do
           update
-          expect(response).to redirect_to(lottery_ticket_draws_path(lottery))
+          expect(response).to redirect_to(lottery_drawn_tickets_path(lottery))
         end
 
-        it('sets ticket#drawn = true') do
-          expect { update }.to change { ticket.reload.drawn }.from(false).to(true)
+        it('sets ticket#drawn = false') do
+          expect { update }.to change { ticket.reload.drawn }.from(true).to(false)
         end
 
-        it('sets ticket#drawn_at = Time.now.utc') do
-          travel_to Time.new(2004, 11, 24, 01, 04, 44)
-          allow(Time).to receive(:now).and_return(Time.now.utc)
-          expect { update }.to change { ticket.reload.drawn_at }.from(nil).to(Time.now.utc)
+        it('sets ticket#drawn_at = nil') do
+          expect(ticket.drawn_at).not_to be_nil
+          expect { update }.to change { ticket.reload.drawn_at }.to(nil)
         end
       end
     end
