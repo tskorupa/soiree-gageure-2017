@@ -57,3 +57,6 @@ fr:
       title: 'Billets tirés'
       table_columns:
         draw_order: 'Ordre de pige'
+  results:
+    index:
+      title: 'Dernier billet tiré'
