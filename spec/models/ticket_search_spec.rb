@@ -34,6 +34,50 @@ RSpec.describe(TicketSearch, type: :model) do
   end
 
   describe('#new') do
+    context('when tickets number 11, 111, 112 exist') do
+      before(:each) do
+        @ticket_11 = Ticket.create!(
+          lottery: lottery1,
+          number: 11,
+          state: 'reserved',
+          ticket_type: 'meal_and_lottery',
+        )
+        @ticket_111 = Ticket.create!(
+          lottery: lottery1,
+          number: 111,
+          state: 'reserved',
+          ticket_type: 'meal_and_lottery',
+        )
+        @ticket_112 = Ticket.create!(
+          lottery: lottery1,
+          number: 112,
+          state: 'reserved',
+          ticket_type: 'meal_and_lottery',
+        )
+      end
+
+      it('returns ticket#number = 11 when the query is "11"') do
+        assert_equal(
+          [@ticket_11],
+          TicketSearch.new(lottery_id: lottery1.id, query: '11'),
+        )
+      end
+
+      it('returns ticket#number = 111 when the query is "111"') do
+        assert_equal(
+          [@ticket_111],
+          TicketSearch.new(lottery_id: lottery1.id, query: '111'),
+        )
+      end
+
+      it('returns ticket#number = 112 when the query is "112"') do
+        assert_equal(
+          [@ticket_112],
+          TicketSearch.new(lottery_id: lottery1.id, query: '112'),
+        )
+      end
+    end
+
     it('returns all tickets scoped to the lottery when the query is empty') do
       assert_equal(
         [ticket1],

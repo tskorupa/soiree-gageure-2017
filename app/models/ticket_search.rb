@@ -3,11 +3,13 @@ class TicketSearch < ApplicationRecord
 
   def self.new(lottery_id:, query:)
     query = query.to_s
-
     where_attributes = { lottery_id: lottery_id }
-    if query.present?
+
+    ticket_ids = if query.to_i > 0
+      where_attributes[:number] = query
+    elsif query.present?
       ticket_ids = TicketSearch.fuzzy_search(query).map(&:ticket_id)
-      where_attributes.merge!(id: ticket_ids)
+      where_attributes[:id] = ticket_ids
     end
 
     Ticket.where(where_attributes)
