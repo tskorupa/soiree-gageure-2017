@@ -17,28 +17,34 @@
     </h1>
   </div>
 </div>
-<table class='table table-striped'>
-  <thead>
-    <tr>
-      <th><%= model_class.human_attribute_name(:number) %></th>
-      <th><%= Guest.model_name.human %></th>
-      <th><%= model_class.human_attribute_name(:ticket_type) %></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @tickets.each do |ticket| %>
+<% if @tickets.present? %>
+  <table class='table table-striped'>
+    <thead>
       <tr>
-        <td><%= ticket.number %></td>
-        <td><%= ticket.guest.try(:full_name) %></td>
-        <td><%= model_class.human_attribute_name('ticket_type.%s' % ticket.ticket_type) %></td>
-        <td><%= link_to(
-          t('helpers.submit.ticket_draws.update'),
-          lottery_ticket_draw_path(@lottery, ticket),
-          method: :patch,
-          class: 'btn btn-xs btn-primary',
-        ) %></td>
+        <th><%= t('column_names.ticket.number') %></th>
+        <th><%= Guest.model_name.human %></th>
+        <th><%= t('column_names.ticket.ticket_type') %></th>
+        <th></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @tickets.each do |ticket| %>
+        <tr>
+          <td><%= ticket.number %></td>
+          <td><%= ticket.guest.try(:full_name) %></td>
+          <td><%= model_class.human_attribute_name('ticket_type.%s' % ticket.ticket_type) %></td>
+          <td><%= link_to(
+            t('helpers.submit.ticket_draws.update'),
+            lottery_ticket_draw_path(@lottery, ticket),
+            method: :patch,
+            class: 'btn btn-xs btn-primary',
+          ) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% elsif @number.present? %>
+  <div class='row-fluid'><%= t('.ticket_number_not_found', number: @number) %></div>
+<% else %>
+  <div class='row-fluid'><%= t('.enter_ticket_number') %></div>
+<% end %>

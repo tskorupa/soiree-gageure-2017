@@ -36,6 +36,8 @@ en:
   ticket_draws:
     index:
       title: 'Draw ticket'
+      ticket_number_not_found: 'The ticket #%{number} was not found.'
+      enter_ticket_number: 'Enter the ticket # to draw.'
   drawn_tickets:
     index:
       title: 'Drawn tickets'

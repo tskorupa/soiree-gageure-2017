@@ -52,6 +52,8 @@ fr:
   ticket_draws:
     index:
       title: 'Tirer un billet'
+      ticket_number_not_found: "Le billet no. %{number} n'est pas dans le boulier."
+      enter_ticket_number: 'Entrez le numéro du billet à sortir du boulier.'
   drawn_tickets:
     index:
       title: 'Billets tirés'

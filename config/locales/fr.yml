@@ -17,6 +17,10 @@ fr:
       ticket:
         registered: 'doit être enregistré.'
         dropped_off: 'à déjà été mis en boulier.'
+  column_names:
+    ticket:
+      number: 'Numéro'
+      ticket_type: 'Type de billet'
   lotteries:
     total_num_tickets: 'Nombre de billets total'
     num_unregistered_tickets: 'billets à enregistrer'
