@@ -29,37 +29,43 @@
     </h1>
   </div>
 </div>
-<table class='table table-striped'>
-  <thead>
-    <tr>
-      <th><%= t('column_names.number') %></th>
-      <th><%= Seller.model_name.human %></th>
-      <th><%= Guest.model_name.human %></th>
-      <th><%= Sponsor.model_name.human %></th>
-      <th><%= t('column_names.ticket.state') %></th>
-      <th><%= t('column_names.ticket.ticket_type') %></th>
-      <th><%= t('column_names.ticket.table_id') %></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @tickets.each do |ticket| %>
+<% if @tickets.present? %>
+  <table class='table table-striped'>
+    <thead>
       <tr>
-        <td><%= ticket.number %></td>
-        <td><%= ticket.seller.try(:full_name) %></td>
-        <td><%= ticket.guest.try(:full_name) %></td>
-        <td><%= ticket.sponsor.try(:full_name) %></td>
-        <td><%= model_class.human_attribute_name('state.%s' % ticket.state) %></td>
-        <td><%= model_class.human_attribute_name('ticket_type.%s' % ticket.ticket_type) %></td>
-        <td class='text-center'><%=h ticket.table_id %></td>
-        <td>
-          <%= link_to(
-            t('.edit', default: t('helpers.links.edit')),
-            edit_lottery_ticket_path(@lottery, ticket),
-            class: 'btn btn-default btn-xs',
-          ) %>
-        </td>
+        <th><%= t('column_names.number') %></th>
+        <th><%= Seller.model_name.human %></th>
+        <th><%= Guest.model_name.human %></th>
+        <th><%= Sponsor.model_name.human %></th>
+        <th><%= t('column_names.ticket.state') %></th>
+        <th><%= t('column_names.ticket.ticket_type') %></th>
+        <th><%= t('column_names.ticket.table_id') %></th>
+        <th></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @tickets.each do |ticket| %>
+        <tr>
+          <td><%= ticket.number %></td>
+          <td><%= ticket.seller.try(:full_name) %></td>
+          <td><%= ticket.guest.try(:full_name) %></td>
+          <td><%= ticket.sponsor.try(:full_name) %></td>
+          <td><%= model_class.human_attribute_name('state.%s' % ticket.state) %></td>
+          <td><%= model_class.human_attribute_name('ticket_type.%s' % ticket.ticket_type) %></td>
+          <td class='text-center'><%=h ticket.table_id %></td>
+          <td>
+            <%= link_to(
+              t('.edit', default: t('helpers.links.edit')),
+              edit_lottery_ticket_path(@lottery, ticket),
+              class: 'btn btn-default btn-xs',
+            ) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% elsif @q.present? %>
+  <div class='row-fluid'><%= t('.no_tickets_for_query', query: @q) %></div>
+<% else %>
+  <div class='row-fluid'><%= t('.no_tickets') %></div>
+<% end %>

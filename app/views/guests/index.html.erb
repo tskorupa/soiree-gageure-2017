@@ -20,25 +20,29 @@
     </h1>
   </div>
 </div>
-<table class='table table-striped'>
-  <thead>
-    <tr>
-      <th><%= t('column_names.guest.full_name') %></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @guests.each do |guest| %>
+<% if @guests.present? %>
+  <table class='table table-striped'>
+    <thead>
       <tr>
-        <td><%= guest.full_name %></td>
-        <td>
-          <%= link_to(
-            t('.edit', default: t('helpers.links.edit')),
-            edit_guest_path(guest),
-            class: 'btn btn-default btn-xs',
-          ) %>
-        </td>
+        <th><%= t('column_names.guest.full_name') %></th>
+        <th></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @guests.each do |guest| %>
+        <tr>
+          <td><%= guest.full_name %></td>
+          <td>
+            <%= link_to(
+              t('.edit', default: t('helpers.links.edit')),
+              edit_guest_path(guest),
+              class: 'btn btn-default btn-xs',
+            ) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <div class='row-fluid'><%= t('.no_guests') %></div>
+<% end %>

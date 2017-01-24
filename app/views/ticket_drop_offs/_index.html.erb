@@ -17,26 +17,32 @@
     </h1>
   </div>
 </div>
-<table class='table table-striped'>
-  <thead>
-    <tr>
-      <th><%= t('column_names.number') %></th>
-      <th><%= Guest.model_name.human %></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @tickets.each do |ticket| %>
+<% if @tickets.present? %>
+  <table class='table table-striped'>
+    <thead>
       <tr>
-        <td><%= ticket.number %></td>
-        <td><%= ticket.guest.try(:full_name) %></td>
-        <td><%= link_to(
-          t('helpers.submit.ticket_drop_offs.update'),
-          lottery_ticket_drop_off_path(@lottery, ticket),
-          method: :patch,
-          class: 'btn btn-xs btn-primary',
-        ) %></td>
+        <th><%= t('column_names.number') %></th>
+        <th><%= Guest.model_name.human %></th>
+        <th></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @tickets.each do |ticket| %>
+        <tr>
+          <td><%= ticket.number %></td>
+          <td><%= ticket.guest.try(:full_name) %></td>
+          <td><%= link_to(
+            t('helpers.submit.ticket_drop_offs.update'),
+            lottery_ticket_drop_off_path(@lottery, ticket),
+            method: :patch,
+            class: 'btn btn-xs btn-primary',
+          ) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% elsif @number.present? %>
+  <div class='row-fluid'><%= t('.ticket_number_not_found', number: @number) %></div>
+<% else %>
+  <div class='row-fluid'><%= t('.no_registered_tickets') %></div>
+<% end %>

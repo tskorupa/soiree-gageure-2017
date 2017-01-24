@@ -26,37 +26,61 @@ fr:
         update: 'Tirer'
       drawn_tickets:
         update: 'Retourner au boulier'
+  sponsors:
+    index:
+      no_sponsors: "Il n'existe aucun commenditaire."
+  sellers:
+    index:
+      no_sellers: "Il n'existe aucun vendeur."
   guests:
+    index:
+      no_guests: "Il n'existe aucun invité."
     new:
       title: 'Nouvel %{model}'
     edit:
       title: "Modifier l'%{model}"
   tables:
+    index:
+      no_tables: "Il n'existe auncune table."
     new:
       title: 'Nouvelle %{model}'
     edit:
       title: 'Modifier la %{model}'
   users:
+    index:
+      no_users: "Il n'existe aucun utilisateur."
     new:
       title: 'Nouvel %{model}'
     edit:
       title: "Modifier l'%{model}"
+  prizes:
+    index:
+      no_prizes: "Il n'existe aucun prix."
+  tickets:
+    index:
+      no_tickets_for_query: "Il n'y a aucun billet qui correspond à '%{query}'."
+      no_tickets: "Il n'existe aucun billet."
   ticket_registrations:
     index:
       title: 'Enregistrement'
+      ticket_number_not_found: "Le billet no.%{number} ne peut pas être enregistré."
+      no_unregistered_tickets: "Il n'y a pas de billets non-enregistrés."
     edit:
       title: 'Enregistrer le %{model}'
   ticket_drop_offs:
     index:
       title: 'Mise en boulier'
+      no_registered_tickets: "Il n'y a aucun billet enregistré et prêt à être mis en boulier."
+      ticket_number_not_found: "Le billet no.%{number} n'est pas un billet enregistré qui peut être mis en boulier."
   ticket_draws:
     index:
       title: 'Tirer un billet'
-      ticket_number_not_found: "Le billet no. %{number} n'est pas dans le boulier."
-      enter_ticket_number: 'Entrez le numéro du billet à sortir du boulier.'
+      ticket_number_not_found: "Le billet no.%{number} n'est pas dans le boulier."
+      enter_ticket_number: 'Entrez le numéro du billet à être sorti du boulier.'
   drawn_tickets:
     index:
       title: 'Billets tirés'
   results:
     index:
       title: 'Dernier billet tiré'
+      no_drawn_tickets: "Aucun billet n'a été tiré."

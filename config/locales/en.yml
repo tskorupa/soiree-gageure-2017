@@ -16,8 +16,8 @@ en:
         registered: 'must be registered.'
         dropped_off: 'is already dropped off.'
   column_names:
+    draw_order: 'Draw order'
     ticket:
-      draw_order: 'Draw order'
       ticket_type: 'Ticket type'
     table:
       tickets_count: 'Assigned seats'

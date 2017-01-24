@@ -20,25 +20,29 @@
     </h1>
   </div>
 </div>
-<table class='table table-striped'>
-  <thead>
-    <tr>
-      <th><%= t('column_names.user.email') %></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @users.each do |user| %>
+<% if @users.present? %>
+  <table class='table table-striped'>
+    <thead>
       <tr>
-        <td><%= user.email %></td>
-        <td>
-          <%= link_to(
-            t('.edit', default: t('helpers.links.edit')),
-            edit_user_path(user),
-            class: 'btn btn-default btn-xs',
-          ) %>
-        </td>
+        <th><%= t('column_names.user.email') %></th>
+        <th></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td><%= user.email %></td>
+          <td>
+            <%= link_to(
+              t('.edit', default: t('helpers.links.edit')),
+              edit_user_path(user),
+              class: 'btn btn-default btn-xs',
+            ) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <div class='row-fluid'><%= t('.no_users') %></div>
+<% end %>

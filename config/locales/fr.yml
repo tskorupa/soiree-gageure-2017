@@ -19,7 +19,7 @@ fr:
         dropped_off: 'à déjà été mis en boulier.'
   column_names:
     number: 'Numéro'
-    draw_order: 'Order de pige'
+    draw_order: 'Ordre de pige'
     ticket:
       ticket_type: 'Type de billet'
       state: 'État'

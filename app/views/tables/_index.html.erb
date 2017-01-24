@@ -18,34 +18,38 @@
     </div>
   </div>
 </div>
-<table class='table table-striped'>
-  <thead>
-    <tr>
-      <th><%= t('column_names.number') %></th>
-      <th><%= t('column_names.table.capacity') %></th>
-      <th><%= t('column_names.table.tickets_count') %></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @tables.each do |table| %>
+<% if @tables.present? %>
+  <table class='table table-striped'>
+    <thead>
       <tr>
-        <td><%= table.number %></td>
-        <td><%= table.capacity %></td>
-        <td><%= table.tickets_count %></td>
-        <td>
-          <%= link_to(
-            t('.edit', default: t('helpers.links.edit')),
-            edit_lottery_table_path(@lottery, table),
-            class: 'btn btn-default btn-xs',
-          ) %>
-          <%= link_to(
-            t('.show', default: t('helpers.links.show')),
-            lottery_table_path(@lottery, table),
-            class: 'btn btn-default btn-xs',
-          ) %>
-        </td>
+        <th><%= t('column_names.number') %></th>
+        <th><%= t('column_names.table.capacity') %></th>
+        <th><%= t('column_names.table.tickets_count') %></th>
+        <th></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @tables.each do |table| %>
+        <tr>
+          <td><%= table.number %></td>
+          <td><%= table.capacity %></td>
+          <td><%= table.tickets_count %></td>
+          <td>
+            <%= link_to(
+              t('.edit', default: t('helpers.links.edit')),
+              edit_lottery_table_path(@lottery, table),
+              class: 'btn btn-default btn-xs',
+            ) %>
+            <%= link_to(
+              t('.show', default: t('helpers.links.show')),
+              lottery_table_path(@lottery, table),
+              class: 'btn btn-default btn-xs',
+            ) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <div class='row-fluid'><%= t('.no_tables') %></div>
+<% end %>

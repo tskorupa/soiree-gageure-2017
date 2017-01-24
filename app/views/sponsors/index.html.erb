@@ -20,25 +20,29 @@
     </h1>
   </div>
 </div>
-<table class='table table-striped'>
-  <thead>
-    <tr>
-      <th><%= t('column_names.sponsor.full_name') %></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @sponsors.each do |sponsor| %>
+<% if @sponsors.present? %>
+  <table class='table table-striped'>
+    <thead>
       <tr>
-        <td><%= sponsor.full_name %></td>
-        <td>
-          <%= link_to(
-            t('.edit', default: t('helpers.links.edit')),
-            edit_sponsor_path(sponsor),
-            class: 'btn btn-default btn-xs',
-          ) %>
-        </td>
+        <th><%= t('column_names.sponsor.full_name') %></th>
+        <th></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @sponsors.each do |sponsor| %>
+        <tr>
+          <td><%= sponsor.full_name %></td>
+          <td>
+            <%= link_to(
+              t('.edit', default: t('helpers.links.edit')),
+              edit_sponsor_path(sponsor),
+              class: 'btn btn-default btn-xs',
+            ) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <div class='row-fluid'><%= t('.no_sponsors') %></div>
+<% end %>

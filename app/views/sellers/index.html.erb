@@ -20,25 +20,29 @@
     </h1>
   </div>
 </div>
-<table class='table table-striped'>
-  <thead>
-    <tr>
-      <th><%= t('column_names.seller.full_name') %></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @sellers.each do |seller| %>
+<% if @sellers.present? %>
+  <table class='table table-striped'>
+    <thead>
       <tr>
-        <td><%= seller.full_name %></td>
-        <td>
-          <%= link_to(
-            t('.edit', default: t('helpers.links.edit')),
-            edit_seller_path(seller),
-            class: 'btn btn-default btn-xs',
-          ) %>
-        </td>
+        <th><%= t('column_names.seller.full_name') %></th>
+        <th></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @sellers.each do |seller| %>
+        <tr>
+          <td><%= seller.full_name %></td>
+          <td>
+            <%= link_to(
+              t('.edit', default: t('helpers.links.edit')),
+              edit_seller_path(seller),
+              class: 'btn btn-default btn-xs',
+            ) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <div class='row-fluid'><%= t('.no_sellers') %></div>
+<% end %>

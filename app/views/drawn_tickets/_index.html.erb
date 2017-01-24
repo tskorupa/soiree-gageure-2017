@@ -4,30 +4,34 @@
     <h1><%= t('.title') %></h1>
   </div>
 </div>
-<table class='table table-striped'>
-  <thead>
-    <tr>
-      <th><%= t('column_names.draw_order') %></th>
-      <th><%= t('column_names.number') %></th>
-      <th><%= Guest.model_name.human %></th>
-      <th><%= t('column_names.ticket.ticket_type') %></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @tickets.each_with_index do |ticket, index| %>
+<% if @tickets.present? %>
+  <table class='table table-striped'>
+    <thead>
       <tr>
-        <td><%= @tickets_count - index %></td>
-        <td><%= ticket.number %></td>
-        <td><%= ticket.guest.try(:full_name) %></td>
-        <td><%= model_class.human_attribute_name('ticket_type.%s' % ticket.ticket_type) %></td>
-        <td><%= link_to(
-          t('helpers.submit.drawn_tickets.update'),
-          lottery_drawn_ticket_path(@lottery, ticket),
-          method: :patch,
-          class: 'btn btn-xs btn-primary',
-        ) %></td>
+        <th><%= t('column_names.draw_order') %></th>
+        <th><%= t('column_names.number') %></th>
+        <th><%= Guest.model_name.human %></th>
+        <th><%= t('column_names.ticket.ticket_type') %></th>
+        <th></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @tickets.each_with_index do |ticket, index| %>
+        <tr>
+          <td><%= @tickets_count - index %></td>
+          <td><%= ticket.number %></td>
+          <td><%= ticket.guest.try(:full_name) %></td>
+          <td><%= model_class.human_attribute_name('ticket_type.%s' % ticket.ticket_type) %></td>
+          <td><%= link_to(
+            t('helpers.submit.drawn_tickets.update'),
+            lottery_drawn_ticket_path(@lottery, ticket),
+            method: :patch,
+            class: 'btn btn-xs btn-primary',
+          ) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <div class='row-fluid'><%= t('results.index.no_drawn_tickets') %></div>
+<% end %>

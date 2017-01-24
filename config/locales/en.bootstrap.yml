@@ -25,14 +25,40 @@ en:
         update: 'Draw'
       drawn_tickets:
         update: 'Return to draw'
+  users:
+    index:
+      no_users: 'No users exist.'
+  sponsors:
+    index:
+      no_sponsors: 'No sponsors exist.'
+  guests:
+    index:
+      no_guests: 'No guests exist.'
+  sellers:
+    index:
+      no_sellers: 'No sellers exist.'
+  prizes:
+    index:
+      no_prizes: 'No prizes exist.'
+  tickets:
+    index:
+      no_tickets_for_query: "There are no tickets that match '%{query}'."
+      no_tickets: 'No tickets exist.'
+  tables:
+    index:
+      no_tables: 'No tables exist.'
   ticket_registrations:
     index:
       title: 'Registration'
+      ticket_number_not_found: "The ticket #%{number} can't be registered."
+      no_unregistered_tickets: 'There are no unregistered tickets.'
     edit:
       title: 'Register %{model}'
   ticket_drop_offs:
     index:
       title: 'Drop off'
+      no_registered_tickets: 'There are no registered tickets ready to be dropped off.'
+      ticket_number_not_found: "The ticket #%{number} is not a registered ticket that can be dropped off."
   ticket_draws:
     index:
       title: 'Draw ticket'
@@ -44,3 +70,4 @@ en:
   results:
     index:
       title: 'Last drawn ticket'
+      no_drawn_tickets: 'No tickets were drawn.'

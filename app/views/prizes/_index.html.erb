@@ -18,27 +18,31 @@
     </div>
   </div>
 </div>
-<table class='table table-striped'>
-  <thead>
-    <tr>
-      <th><%= t('column_names.draw_order') %></th>
-      <th><%= t('column_names.prize.amount') %></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @prizes.each do |prize| %>
+<% if @prizes.present? %>
+  <table class='table table-striped'>
+    <thead>
       <tr>
-        <td><%= prize.draw_order %></td>
-        <td><%= number_to_currency(prize.amount) %></td>
-        <td>
-          <%= link_to(
-            t('.edit', default: t('helpers.links.edit')),
-            edit_lottery_prize_path(@lottery, prize),
-            class: 'btn btn-default btn-xs',
-          ) %>
-        </td>
+        <th><%= t('column_names.draw_order') %></th>
+        <th><%= t('column_names.prize.amount') %></th>
+        <th></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @prizes.each do |prize| %>
+        <tr>
+          <td><%= prize.draw_order %></td>
+          <td><%= number_to_currency(prize.amount) %></td>
+          <td>
+            <%= link_to(
+              t('.edit', default: t('helpers.links.edit')),
+              edit_lottery_prize_path(@lottery, prize),
+              class: 'btn btn-default btn-xs',
+            ) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <div class='row-fluid'><%= t('.no_prizes') %></div>
+<% end %>
