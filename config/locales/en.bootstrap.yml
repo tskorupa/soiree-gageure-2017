@@ -41,8 +41,6 @@ en:
   drawn_tickets:
     index:
       title: 'Drawn tickets'
-      table_columns:
-        draw_order: 'Draw order'
   results:
     index:
       title: 'Last drawn ticket'

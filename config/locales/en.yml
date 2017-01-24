@@ -15,6 +15,22 @@ en:
       ticket:
         registered: 'must be registered.'
         dropped_off: 'is already dropped off.'
+  column_names:
+    ticket:
+      draw_order: 'Draw order'
+      ticket_type: 'Ticket type'
+    table:
+      tickets_count: 'Assigned seats'
+    seller:
+      full_name: 'Seller name'
+    guest:
+      full_name: 'Guest name'
+    sponsor:
+      full_name: 'Sponsor name'
+    lottery:
+      event_date: 'Event date'
+      meal_voucher_price: 'Meal voucher price'
+      ticket_price: 'Ticket price'
   lotteries:
     total_num_tickets: 'Total number of tickets'
     num_unregistered_tickets: 'unregistered tickets'

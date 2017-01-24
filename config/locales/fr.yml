@@ -18,9 +18,29 @@ fr:
         registered: 'doit être enregistré.'
         dropped_off: 'à déjà été mis en boulier.'
   column_names:
+    number: 'Numéro'
+    draw_order: 'Order de pige'
     ticket:
-      number: 'Numéro'
       ticket_type: 'Type de billet'
+      state: 'État'
+      table_id: 'Numéro de table'
+    table:
+      capacity: 'Capacité'
+      tickets_count: 'Places assignées'
+    prize:
+      amount: 'Montant'
+    seller:
+      full_name: 'Nom du vendeur'
+    guest:
+      full_name: "Nom de l'invité"
+    sponsor:
+      full_name: 'Nom du commanditaire'
+    user:
+      email: 'Adresse courriel'
+    lottery:
+      event_date: "Date de l'événement"
+      meal_voucher_price: "Prix d'un billet souper"
+      ticket_price: "Prix d'un billet tirage"
   lotteries:
     total_num_tickets: 'Nombre de billets total'
     num_unregistered_tickets: 'billets à enregistrer'
@@ -99,7 +119,7 @@ fr:
       table:
         number: 'Le numéro'
         capacity: 'La capacité'
-        tickets_count: 'No. billets assignés'
+        tickets_count: 'No. places assignées'
       prize:
         draw_order: "L'ordre de pige"
         amount: 'Le montant'

@@ -4,11 +4,11 @@
 </div>
 
 <dl class='dl-horizontal'>
-  <dt><strong><%= model_class.human_attribute_name(:number) %>:</strong></dt>
+  <dt><strong><%= t('column_names.number') %>:</strong></dt>
   <dd><%= @table.number %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:capacity) %>:</strong></dt>
+  <dt><strong><%= t('column_names.table.capacity') %>:</strong></dt>
   <dd><%= @table.capacity %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:tickets_count) %>:</strong></dt>
+  <dt><strong><%= t('column_names.table.tickets_count') %>:</strong></dt>
   <dd><%= @table.tickets_count %></dd>
 </dl>
 
@@ -16,7 +16,7 @@
 <table class='table table-striped'>
   <thead>
     <tr>
-      <th><%= model_class.human_attribute_name(:number) %></th>
+      <th><%= t('column_names.number') %></th>
       <th><%= Seller.model_name.human %></th>
       <th><%= Guest.model_name.human %></th>
       <th><%= Sponsor.model_name.human %></th>

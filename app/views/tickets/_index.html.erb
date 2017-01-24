@@ -32,13 +32,13 @@
 <table class='table table-striped'>
   <thead>
     <tr>
-      <th><%= model_class.human_attribute_name(:number) %></th>
+      <th><%= t('column_names.number') %></th>
       <th><%= Seller.model_name.human %></th>
       <th><%= Guest.model_name.human %></th>
       <th><%= Sponsor.model_name.human %></th>
-      <th><%= model_class.human_attribute_name(:state) %></th>
-      <th><%= model_class.human_attribute_name(:ticket_type) %></th>
-      <th><%= model_class.human_attribute_name(:table_id) %></th>
+      <th><%= t('column_names.ticket.state') %></th>
+      <th><%= t('column_names.ticket.ticket_type') %></th>
+      <th><%= t('column_names.ticket.table_id') %></th>
       <th></th>
     </tr>
   </thead>
