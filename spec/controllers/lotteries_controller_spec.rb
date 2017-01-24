@@ -12,6 +12,15 @@ RSpec.describe(LotteriesController, type: :controller) do
     )
   end
 
+  let(:ticket) do
+    Ticket.create!(
+      lottery: lottery,
+      number: 1,
+      state: 'paid',
+      ticket_type: 'meal_and_lottery',
+    )
+  end
+
   context('When the user is logged out') do
     describe('GET #index') do
       it('redirects to the user log in') do
@@ -108,40 +117,148 @@ RSpec.describe(LotteriesController, type: :controller) do
     end
 
     describe('GET #show') do
-      before(:each) do
+      let(:get_show) do
         get(:show, params: { locale: I18n.locale, id: lottery.id })
       end
 
-      it('returns an http :success status') do
-        expect(response).to have_http_status(:success)
+      context('when the lottery contains 1 unregistered ticket') do
+        before(:each) do
+          ticket.update!(registered: false)
+          get_show
+        end
+
+        it('returns an http :success status') do
+          expect(response).to have_http_status(:success)
+        end
+
+        it('assigns @lottery') do
+          expect(assigns(:lottery)).to eq(lottery)
+        end
+
+        it('assigns @total_num_tickets = 1') do
+          expect(assigns(:total_num_tickets)).to eq(1)
+        end
+
+        it('assigns @num_unregistered_tickets = 1') do
+          expect(assigns(:num_unregistered_tickets)).to eq(1)
+        end
+
+        it('assigns @num_tickets_in_circulation = 0') do
+          expect(assigns(:num_tickets_in_circulation)).to eq(0)
+        end
+
+        it('assigns @num_tickets_in_container = 0') do
+          expect(assigns(:num_tickets_in_container)).to eq(0)
+        end
+
+        it('assigns @num_drawn_tickets = 0') do
+          expect(assigns(:num_drawn_tickets)).to eq(0)
+        end
       end
 
-      it('renders the :show template') do
-        expect(response).to render_template(:show)
+      context('when the lottery contains 1 registered ticket') do
+        before(:each) do
+          ticket.update!(registered: true)
+          get_show
+        end
+
+        it('returns an http :success status') do
+          expect(response).to have_http_status(:success)
+        end
+
+        it('assigns @lottery') do
+          expect(assigns(:lottery)).to eq(lottery)
+        end
+
+        it('assigns @total_num_tickets = 1') do
+          expect(assigns(:total_num_tickets)).to eq(1)
+        end
+
+        it('assigns @num_unregistered_tickets = 0') do
+          expect(assigns(:num_unregistered_tickets)).to eq(0)
+        end
+
+        it('assigns @num_tickets_in_circulation = 1') do
+          expect(assigns(:num_tickets_in_circulation)).to eq(1)
+        end
+
+        it('assigns @num_tickets_in_container = 0') do
+          expect(assigns(:num_tickets_in_container)).to eq(0)
+        end
+
+        it('assigns @num_drawn_tickets = 0') do
+          expect(assigns(:num_drawn_tickets)).to eq(0)
+        end
       end
 
-      it('assigns @lottery') do
-        expect(assigns(:lottery)).to eq(lottery)
+      context('when the lottery contains 1 dropped off ticket') do
+        before(:each) do
+          ticket.update!(registered: true, dropped_off: true)
+          get_show
+        end
+
+        it('returns an http :success status') do
+          expect(response).to have_http_status(:success)
+        end
+
+        it('assigns @lottery') do
+          expect(assigns(:lottery)).to eq(lottery)
+        end
+
+        it('assigns @total_num_tickets = 1') do
+          expect(assigns(:total_num_tickets)).to eq(1)
+        end
+
+        it('assigns @num_unregistered_tickets = 0') do
+          expect(assigns(:num_unregistered_tickets)).to eq(0)
+        end
+
+        it('assigns @num_tickets_in_circulation = 0') do
+          expect(assigns(:num_tickets_in_circulation)).to eq(0)
+        end
+
+        it('assigns @num_tickets_in_container = 1') do
+          expect(assigns(:num_tickets_in_container)).to eq(1)
+        end
+
+        it('assigns @num_drawn_tickets = 0') do
+          expect(assigns(:num_drawn_tickets)).to eq(0)
+        end
       end
 
-      it('assigns @total_num_tickets') do
-        expect(assigns(:total_num_tickets)).to eq(0)
-      end
+      context('when the lottery contains 1 drawn ticket') do
+        before(:each) do
+          ticket.update!(registered: true, dropped_off: true, drawn: true)
+          get_show
+        end
 
-      it('assigns @num_unregistered_tickets') do
-        expect(assigns(:num_unregistered_tickets)).to eq(0)
-      end
+        it('returns an http :success status') do
+          expect(response).to have_http_status(:success)
+        end
 
-      it('assigns @num_tickets_in_circulation') do
-        expect(assigns(:num_tickets_in_circulation)).to eq(0)
-      end
+        it('assigns @lottery') do
+          expect(assigns(:lottery)).to eq(lottery)
+        end
 
-      it('assigns @num_tickets_in_container') do
-        expect(assigns(:num_tickets_in_container)).to eq(0)
-      end
+        it('assigns @total_num_tickets = 1') do
+          expect(assigns(:total_num_tickets)).to eq(1)
+        end
 
-      it('assigns @num_drawn_tickets') do
-        expect(assigns(:num_drawn_tickets)).to eq(0)
+        it('assigns @num_unregistered_tickets = 0') do
+          expect(assigns(:num_unregistered_tickets)).to eq(0)
+        end
+
+        it('assigns @num_tickets_in_circulation = 0') do
+          expect(assigns(:num_tickets_in_circulation)).to eq(0)
+        end
+
+        it('assigns @num_tickets_in_container = 0') do
+          expect(assigns(:num_tickets_in_container)).to eq(0)
+        end
+
+        it('assigns @num_drawn_tickets = 1') do
+          expect(assigns(:num_drawn_tickets)).to eq(1)
+        end
       end
     end
 
