@@ -1,5 +1,5 @@
 class TablesController < ApplicationController
-  before_action :find_lottery
+  include LotteryLookup
 
   def index
     @tables = @lottery.tables.order(:number)
@@ -41,10 +41,6 @@ class TablesController < ApplicationController
   end
 
   private
-
-  def find_lottery
-    @lottery = Lottery.find(params[:lottery_id])
-  end
 
   def table_params
     params.require(:table).permit(:number, :capacity)

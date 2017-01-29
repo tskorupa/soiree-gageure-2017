@@ -1,5 +1,5 @@
 class DrawnTicketsController < ApplicationController
-  before_action :find_lottery
+  include LotteryLookup
 
   def index
     @tickets = drawn_tickets.order(drawn_at: :desc)
@@ -27,9 +27,5 @@ class DrawnTicketsController < ApplicationController
       dropped_off: true,
       drawn: true,
     )
-  end
-
-  def find_lottery
-    @lottery = Lottery.find(params[:lottery_id])
   end
 end

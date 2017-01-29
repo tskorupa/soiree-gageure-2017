@@ -1,5 +1,5 @@
 class TicketsController < ApplicationController
-  before_action :find_lottery
+  include LotteryLookup
 
   def index
     @q = params[:q]
@@ -40,10 +40,6 @@ class TicketsController < ApplicationController
   end
 
   private
-
-  def find_lottery
-    @lottery = Lottery.find(params[:lottery_id])
-  end
 
   def builder_params
     ticket_params = params.fetch(:ticket, {})

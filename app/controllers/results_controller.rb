@@ -1,5 +1,5 @@
 class ResultsController < ApplicationController
-  before_action :find_lottery
+  include LotteryLookup
 
   def index
     @ticket = @lottery.tickets
@@ -13,11 +13,5 @@ class ResultsController < ApplicationController
       'lotteries/lottery_child_index',
       locals: { main_partial: 'results/index' },
     )
-  end
-
-  private
-
-  def find_lottery
-    @lottery = Lottery.find(params[:lottery_id])
   end
 end

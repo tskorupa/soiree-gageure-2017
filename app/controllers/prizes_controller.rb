@@ -1,5 +1,5 @@
 class PrizesController < ApplicationController
-  before_action :find_lottery
+  include LotteryLookup
 
   def index
     @prizes = @lottery.prizes.order(:draw_order)
@@ -36,10 +36,6 @@ class PrizesController < ApplicationController
   end
 
   private
-
-  def find_lottery
-    @lottery = Lottery.find(params[:lottery_id])
-  end
 
   def prize_params
     params.require(:prize).permit(:draw_order, :amount)

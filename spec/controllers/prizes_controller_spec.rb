@@ -20,6 +20,10 @@ RSpec.describe(PrizesController, type: :controller) do
     )
   end
 
+  it('includes LotteryLookup') do
+    expect(controller.class.ancestors).to include(LotteryLookup)
+  end
+
   context('When the user is logged out') do
     describe('GET #index') do
       it('redirects to the user log in') do

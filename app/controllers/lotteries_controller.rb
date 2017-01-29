@@ -14,7 +14,7 @@ class LotteriesController < ApplicationController
   end
 
   def show
-    @lottery = Lottery.find(params[:id])
+    find_lottery
     @total_num_tickets = @lottery.tickets.count
     @num_unregistered_tickets = @lottery.tickets.where(registered: false).count
     @num_tickets_in_circulation = @lottery.tickets.where(registered: true, dropped_off: false).count
@@ -23,16 +23,20 @@ class LotteriesController < ApplicationController
   end
 
   def edit
-    @lottery = Lottery.find(params[:id])
+    find_lottery
   end
 
   def update
-    @lottery = Lottery.find(params[:id])
+    find_lottery
     return(redirect_to(lotteries_path)) if @lottery.update(lottery_params)
     render(:edit)
   end
 
   private
+
+  def find_lottery
+    @lottery = Lottery.find(params[:id])
+  end
 
   def lottery_params
     params.require(:lottery)

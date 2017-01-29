@@ -1,5 +1,5 @@
 class TicketRegistrationsController < ApplicationController
-  before_action :find_lottery
+  include LotteryLookup
 
   def index
     @number = params[:number]
@@ -38,10 +38,6 @@ class TicketRegistrationsController < ApplicationController
 
   def unregistered_tickets
     @lottery.tickets.where(registered: false)
-  end
-
-  def find_lottery
-    @lottery = Lottery.find(params[:lottery_id])
   end
 
   def ticket_params
