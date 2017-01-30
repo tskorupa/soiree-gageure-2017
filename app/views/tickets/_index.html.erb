@@ -37,9 +37,10 @@
         <th><%= Seller.model_name.human %></th>
         <th><%= Guest.model_name.human %></th>
         <th><%= Sponsor.model_name.human %></th>
-        <th><%= t('column_names.ticket.state') %></th>
+        <th><%= t('column_names.ticket.stage') %></th>
         <th><%= t('column_names.ticket.ticket_type') %></th>
         <th><%= t('column_names.ticket.table_id') %></th>
+        <th><%= t('column_names.ticket.registration_step') %></th>
         <th></th>
       </tr>
     </thead>
@@ -53,6 +54,7 @@
           <td><%= model_class.human_attribute_name('state.%s' % ticket.state) %></td>
           <td><%= model_class.human_attribute_name('ticket_type.%s' % ticket.ticket_type) %></td>
           <td class='text-center'><%=h ticket.table_id %></td>
+          <td><%= registration_step_label(ticket) %></td>
           <td>
             <%= link_to(
               t('.edit', default: t('helpers.links.edit')),

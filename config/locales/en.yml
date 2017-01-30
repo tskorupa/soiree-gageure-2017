@@ -19,6 +19,7 @@ en:
     draw_order: 'Draw order'
     ticket:
       ticket_type: 'Ticket type'
+      registration_step: 'Registration'
     table:
       tickets_count: 'Assigned seats'
     seller:
@@ -50,5 +51,7 @@ en:
         full_name: 'Guest name'
       sponsor:
         full_name: 'Sponsor name'
+      ticket/registration_step:
+        registration: 'Unregistered'
       ticket:
         guest: 'Guest name'

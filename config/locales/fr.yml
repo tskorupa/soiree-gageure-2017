@@ -24,6 +24,7 @@ fr:
       ticket_type: 'Type de billet'
       state: 'État'
       table_id: 'Numéro de table'
+      registration_step: 'Enregistrement'
     table:
       capacity: 'Capacité'
       tickets_count: 'Places assignées'
@@ -108,6 +109,10 @@ fr:
       ticket/ticket_type:
         meal_and_lottery: 'Souper et tirage'
         lottery_only: 'Tirage seulement'
+      ticket/registration_step:
+        completed: 'Complété'
+        drop_off: 'Mise en boulier'
+        registration: 'Non-enregistré'
       ticket:
         number: 'Le numéro'
         state: "L'état"

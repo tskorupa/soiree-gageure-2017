@@ -1,4 +1,20 @@
 module TicketsHelper
+  def registration_step_label(ticket)
+    stage, label_variation = if ticket.dropped_off?
+      [:completed, :default]
+    elsif ticket.registered?
+      [:drop_off, :warning]
+    else
+      [:registration, :danger]
+    end
+
+    content_tag(
+      :span,
+      Ticket.human_attribute_name('ticket.registration_step.%s' % stage),
+      class: 'label label-%s' % label_variation,
+    )
+  end
+
   def options_for_state_select
     Ticket::STATES.map do |state|
       [
