@@ -5,6 +5,10 @@ gem 'devise'
 gem 'textacular'
 gem 'scenic'
 gem 'raygun4ruby'
+gem 'wicked_pdf'
+group :production do
+  gem 'wkhtmltopdf-heroku'
+end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.0', '>= 5.0.0.1'
@@ -39,6 +43,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.5'
   gem 'pry-byebug'
   gem 'rails-controller-testing'
+  gem 'wkhtmltopdf-binary'
 end
 
 group :development do

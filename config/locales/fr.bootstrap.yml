@@ -12,6 +12,8 @@ fr:
       new: 'Nouveau'
       edit: 'Modifier'
       show: 'Détails'
+      ticket_impressions:
+        show: 'Imprimer'
     titles:
       edit: 'Modifier le %{model}'
       new: 'Nouveau %{model}'
@@ -67,6 +69,11 @@ fr:
       no_unregistered_tickets: "Il n'y a pas de billets non-enregistrés."
     edit:
       title: 'Enregistrer le %{model}'
+  ticket_impressions:
+    index:
+      title: 'Impression'
+      no_printable_tickets: "Il n'y a aucun billet de souper enregistré et prêt à être imprimé."
+      ticket_number_not_found: "Le billet no.%{number} n'est pas un billet de souper enregistré qui peut être imprimé."
   ticket_drop_offs:
     index:
       title: 'Mise en boulier'

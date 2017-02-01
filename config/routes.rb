@@ -16,6 +16,7 @@ Rails.application.routes.draw do
         actions.resources(:tickets)
         resources(:tables, only: %i(index new create edit show update))
         resources(:ticket_registrations, only: %i(index edit update))
+        resources(:ticket_impressions, only: %i(index show))
         resources(:ticket_drop_offs, only: %i(index update))
         resources(:ticket_draws, only: %i(index update))
         resources(:drawn_tickets, only: %i(index update))

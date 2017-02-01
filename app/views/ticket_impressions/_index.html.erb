@@ -1,0 +1,50 @@
+<div class='page-header'>
+  <div class='row-fluid'>
+    <h1>
+      <%= t('.title') %>
+      <div class='pull-right text-right'>
+        <form accept-charset='UTF-8' action='<%= lottery_ticket_impressions_path(@lottery) %>' method='get'>
+          <%= text_field_tag(
+            :number, @number,
+            class: 'form-control span2',
+            autofocus: true,
+            placeholder: t('number_filter_placeholder'),
+            onfocus: 'this.select();',
+          ) %>
+        </form>
+      </div>
+    </h1>
+  </div>
+</div>
+<% if @tickets.present? %>
+  <table class='table table-striped'>
+    <thead>
+      <tr>
+        <th><%= t('column_names.number') %></th>
+        <th><%= Guest.model_name.human %></th>
+        <th class='text-center'><%= t('column_names.ticket.table_id') %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @tickets.each do |ticket| %>
+        <tr>
+          <td><%= ticket.number %></td>
+          <td><%= ticket.guest.try(:full_name) %></td>
+          <td class='text-center'><%=h ticket.table_id %></td>
+          <td>
+            <%= link_to(
+              t('helpers.links.ticket_impressions.show'),
+              lottery_ticket_impression_path(@lottery, ticket, format: :pdf),
+              class: 'btn btn-default btn-xs',
+            ) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% elsif @number.present? %>
+  <div class='row-fluid'><%= t('.ticket_number_not_found', number: @number) %></div>
+<% else %>
+  <div class='row-fluid'><%= t('.no_printable_tickets') %></div>
+<% end %>
