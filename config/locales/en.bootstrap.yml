@@ -27,6 +27,10 @@ en:
         update: 'Draw'
       drawn_tickets:
         update: 'Return to draw'
+      lock_lotteries:
+        update:
+          lock: 'Lock registration'
+          unlock: 'Unlock registration'
   users:
     index:
       no_users: 'No users exist.'

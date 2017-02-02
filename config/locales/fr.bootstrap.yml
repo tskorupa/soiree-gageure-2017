@@ -28,6 +28,10 @@ fr:
         update: 'Tirer'
       drawn_tickets:
         update: 'Retourner au boulier'
+      lock_lotteries:
+        update:
+          lock: "Fermer l'enregistrement"
+          unlock: "Réouvrir l'enregistrement"
   sponsors:
     index:
       no_sponsors: "Il n'existe aucun commenditaire."

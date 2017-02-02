@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170119021630) do
+ActiveRecord::Schema.define(version: 20170202014054) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,12 +31,14 @@ ActiveRecord::Schema.define(version: 20170119021630) do
   end
 
   create_table "lotteries", force: :cascade do |t|
-    t.date     "event_date",                                 null: false
+    t.date     "event_date",                                                 null: false
     t.decimal  "meal_voucher_price", precision: 6, scale: 2
     t.decimal  "ticket_price",       precision: 6, scale: 2
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.datetime "created_at",                                                 null: false
+    t.datetime "updated_at",                                                 null: false
+    t.boolean  "locked",                                     default: false, null: false
     t.index ["event_date"], name: "index_lotteries_on_event_date", order: {"event_date"=>:desc}, using: :btree
+    t.index ["locked"], name: "index_lotteries_on_locked", using: :btree
   end
 
   create_table "prizes", force: :cascade do |t|

@@ -71,3 +71,9 @@
   edit_lottery_path(@lottery),
   class: 'btn btn-default',
 ) %>
+<%= link_to(
+  lock_or_unlock(@lottery),
+  lock_lottery_path(@lottery),
+  method: :patch,
+  class: 'btn btn-danger',
+) %>

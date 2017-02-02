@@ -27,6 +27,7 @@ Rails.application.routes.draw do
       actions.resources(:sponsors)
       actions.resources(:users)
     end
+    resources(:lock_lotteries, only: :update)
 
     root 'lotteries#index'
   end
