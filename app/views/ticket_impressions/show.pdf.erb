@@ -2,9 +2,9 @@
 <html>
   <body>
     <div align='center'>
-      <h2><%= Ticket.model_name.human %> <%= @ticket.number %></h2>
-      <h1><%= @ticket.guest.try(:full_name) %></h1>
-      <h2><%= Table.model_name.human %> <%= @ticket.table_id %></h2>
+      <p><%= Ticket.model_name.human %> <%= @ticket.number %></p>
+      <p><%= @ticket.guest.try(:full_name) %></p>
+      <p><%= Table.model_name.human %> <%= @ticket.table_id %></p>
     </div>
   </body>
 </html>

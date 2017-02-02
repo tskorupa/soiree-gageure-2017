@@ -25,8 +25,8 @@ class TicketImpressionsController < ApplicationController
 
         render(
           pdf: file_name,
-          page_width: 100,
-          page_height: 62,
+          page_width: 62,
+          page_height: 29,
           encoding: 'UTF-8',
         )
       end
