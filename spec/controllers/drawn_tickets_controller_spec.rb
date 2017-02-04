@@ -18,8 +18,6 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
       guest: guest,
       state: 'paid',
       ticket_type: 'meal_and_lottery',
-      registered: true,
-      dropped_off: true,
       drawn: true,
       drawn_at: Time.now.utc,
     )
@@ -115,8 +113,6 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
           number: 3,
           state: 'reserved',
           ticket_type: 'meal_and_lottery',
-          registered: false,
-          dropped_off: false,
           drawn: false,
           drawn_at: nil,
         )
@@ -126,8 +122,6 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
           guest: guest,
           state: 'paid',
           ticket_type: 'meal_and_lottery',
-          registered: true,
-          dropped_off: false,
           drawn: false,
           drawn_at: nil,
         )
@@ -137,8 +131,6 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
           guest: guest,
           state: 'paid',
           ticket_type: 'meal_and_lottery',
-          registered: true,
-          dropped_off: true,
           drawn: true,
           drawn_at: 5.minutes.ago.utc,
         )
@@ -148,8 +140,6 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
           guest: guest,
           state: 'paid',
           ticket_type: 'meal_and_lottery',
-          registered: true,
-          dropped_off: true,
           drawn: true,
           drawn_at: Time.now.utc,
         )
@@ -220,7 +210,7 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
     end
 
     describe('PATCH #update') do
-      it('raises a "RecordNotFound" when the requested ticket is drawn') do
+      it('raises a "RecordNotFound" when ticket#drawn = false') do
         ticket.update!(drawn: false)
         expect do
           patch(
@@ -234,7 +224,7 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
         end.to raise_error(ActiveRecord::RecordNotFound)
       end
 
-      context('when the ticket#registered = true and ticket#dropped_off = true and ticket#drawn = true') do
+      context('when ticket#drawn = true') do
         let(:update) do
           patch(
             :update,

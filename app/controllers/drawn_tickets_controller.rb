@@ -22,10 +22,6 @@ class DrawnTicketsController < ApplicationController
   private
 
   def drawn_tickets
-    @lottery.tickets.where(
-      registered: true,
-      dropped_off: true,
-      drawn: true,
-    )
+    @lottery.tickets.where(drawn: true)
   end
 end
