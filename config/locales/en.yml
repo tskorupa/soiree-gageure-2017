@@ -1,6 +1,7 @@
 en:
   search_placeholder: 'Search...'
   number_filter_placeholder: 'Ticket number...'
+  warning_notice: 'Warning!'
   layouts:
     application:
       title: 'Gambling event 2017'
@@ -15,6 +16,9 @@ en:
       ticket:
         registered: 'must be registered.'
         dropped_off: 'is already dropped off.'
+  ticket_draws:
+    warnings:
+      lottery_is_unlocked: 'Tickets may be drawn once the lottery is locked.'
   column_names:
     draw_order: 'Draw order'
     ticket:

@@ -1,6 +1,7 @@
 fr:
   search_placeholder: 'Recherche...'
   number_filter_placeholder: 'Numéro de billet...'
+  warning_notice: 'Attention!'
   layouts:
     application:
       title: 'Soirée gageure 2017'
@@ -17,6 +18,9 @@ fr:
       ticket:
         registered: 'doit être enregistré.'
         dropped_off: 'à déjà été mis en boulier.'
+  ticket_draws:
+    warnings:
+      lottery_is_unlocked: 'Les billets ne peuvent être tirés que lorsque le tirage est fermé.'
   column_names:
     number: 'Numéro'
     draw_order: 'Ordre de pige'
