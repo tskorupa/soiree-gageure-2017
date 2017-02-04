@@ -72,9 +72,9 @@ en:
       ticket_number_not_found: "Ticket #%{number} is not a registered ticket that can be dropped off."
   ticket_draws:
     index:
-      title: 'Draw ticket'
+      title: 'Tickets to draw'
       ticket_number_not_found: 'Ticket #%{number} was not found.'
-      enter_ticket_number: 'Enter the ticket # to draw.'
+      no_tickets_to_draw: 'There are no dropped tickets to draw.'
   drawn_tickets:
     index:
       title: 'Drawn tickets'

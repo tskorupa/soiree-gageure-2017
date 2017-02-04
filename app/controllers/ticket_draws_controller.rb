@@ -3,11 +3,8 @@ class TicketDrawsController < ApplicationController
 
   def index
     @number = params[:number]
-    @tickets = if @number.present?
-      tickets_for_draw.where(number: @number).order(:number)
-    else
-      Ticket.none
-    end
+    @tickets = tickets_for_draw.order(:number)
+    @tickets = @tickets.where(number: @number) if @number.present?
 
     render(
       'lotteries/lottery_child_index',

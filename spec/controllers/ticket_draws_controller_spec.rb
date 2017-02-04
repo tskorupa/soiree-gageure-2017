@@ -160,8 +160,8 @@ RSpec.describe(TicketDrawsController, type: :controller) do
           expect(response).to have_http_status(:success)
         end
 
-        it('returns no tickets when :number is not specified in the params') do
-          expect(assigns(:tickets)).to be_empty
+        it('returns all dropped off and not drawn tickets when :number is not specified in the params') do
+          expect(assigns(:tickets)).to eq([@ticket_3])
         end
 
         it('renders the template lotteries/lottery_child_index') do

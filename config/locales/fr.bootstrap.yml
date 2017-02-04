@@ -85,9 +85,9 @@ fr:
       ticket_number_not_found: "Le billet no.%{number} n'est pas un billet enregistré qui peut être mis en boulier."
   ticket_draws:
     index:
-      title: 'Tirer un billet'
+      title: 'Billets en boulier'
       ticket_number_not_found: "Le billet no.%{number} n'est pas dans le boulier."
-      enter_ticket_number: 'Entrez le numéro du billet à être sorti du boulier.'
+      no_tickets_to_draw: "Il n'y a aucun billet dans le boulier."
   drawn_tickets:
     index:
       title: 'Billets tirés'
