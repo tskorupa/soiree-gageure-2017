@@ -110,29 +110,28 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
       before(:each) do
         @ticket_1 = Ticket.create!(
           lottery: lottery,
-          number: 3,
+          number: 1,
           state: 'reserved',
           ticket_type: 'meal_and_lottery',
           drawn: false,
-          drawn_at: nil,
         )
         @ticket_2 = Ticket.create!(
-          lottery: lottery,
-          number: 1,
-          guest: guest,
-          state: 'paid',
-          ticket_type: 'meal_and_lottery',
-          drawn: false,
-          drawn_at: nil,
-        )
-        @ticket_3 = Ticket.create!(
           lottery: lottery,
           number: 2,
           guest: guest,
           state: 'paid',
           ticket_type: 'meal_and_lottery',
+          drawn: false,
+        )
+        @ticket_3 = Ticket.create!(
+          lottery: lottery,
+          number: 3,
+          guest: guest,
+          state: 'paid',
+          ticket_type: 'meal_and_lottery',
+          dropped_off: true,
           drawn: true,
-          drawn_at: 5.minutes.ago.utc,
+          drawn_at: Time.now.utc,
         )
         @ticket_4 = Ticket.create!(
           lottery: lottery,
@@ -140,29 +139,78 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
           guest: guest,
           state: 'paid',
           ticket_type: 'meal_and_lottery',
+          dropped_off: true,
           drawn: true,
-          drawn_at: Time.now.utc,
+          drawn_at: 5.minutes.ago.utc,
         )
       end
 
-      before(:each) do
-        get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number: 2 })
+      let(:get_index) do
+        get(:index, params: { locale: I18n.locale, lottery_id: lottery.id })
       end
 
-      it('returns an http :success status') do
-        expect(response).to have_http_status(:success)
+      context('when all tickets for the given lottery have ticket#dropped_off == false') do
+        before(:each) do
+          Ticket.update_all(dropped_off: false)
+          get_index
+        end
+
+        it('returns an http :success status') do
+          expect(response).to have_http_status(:success)
+        end
+
+        it('renders the template lotteries/lottery_child_index') do
+          expect(response).to render_template('lotteries/lottery_child_index')
+        end
+
+        it('renders the partial drawn_tickets/no_tickets_index') do
+          expect(response).to render_template('drawn_tickets/_no_tickets_index')
+        end
       end
 
-      it('returns the all drawn tickets ordered by drawn_at: :desc') do
-        expect(assigns(:tickets)).to eq([@ticket_4, @ticket_3])
+      context('when some tickets have ticket#dropped_off == true and all tickets are ticket#drawn == false') do
+        before(:each) do
+          Ticket.update_all(drawn: false)
+          get_index
+        end
+
+        it('returns an http :success status') do
+          expect(response).to have_http_status(:success)
+        end
+
+        it('returns a draw position for each dropped off ticket and sets the drawn ticket to nil') do
+          expect(assigns(:draw_positions)).to eq([[1, nil],[2, nil]])
+        end
+
+        it('renders the template lotteries/lottery_child_index') do
+          expect(response).to render_template('lotteries/lottery_child_index')
+        end
+
+        it('renders the partial drawn_tickets/index') do
+          expect(response).to render_template('drawn_tickets/_index')
+        end
       end
 
-      it('renders the template lotteries/lottery_child_index') do
-        expect(response).to render_template('lotteries/lottery_child_index')
-      end
+      context('when some tickets have ticket#dropped_off == true and some tickets are ticket#drawn == true') do
+        before(:each) do
+          get_index
+        end
 
-      it('renders the partial drawn_tickets/index') do
-        expect(response).to render_template('drawn_tickets/_index')
+        it('returns an http :success status') do
+          expect(response).to have_http_status(:success)
+        end
+
+        it('returns a draw position for each dropped off ticket and sets the drawn ticket') do
+          expect(assigns(:draw_positions)).to eq([[1, @ticket_4],[2, @ticket_3]])
+        end
+
+        it('renders the template lotteries/lottery_child_index') do
+          expect(response).to render_template('lotteries/lottery_child_index')
+        end
+
+        it('renders the partial drawn_tickets/index') do
+          expect(response).to render_template('drawn_tickets/_index')
+        end
       end
     end
 
