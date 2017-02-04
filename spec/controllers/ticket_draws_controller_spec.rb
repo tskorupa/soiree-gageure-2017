@@ -19,7 +19,6 @@ RSpec.describe(TicketDrawsController, type: :controller) do
       guest: guest,
       state: 'paid',
       ticket_type: 'meal_and_lottery',
-      registered: true,
       dropped_off: true,
       drawn: false,
     )
@@ -115,7 +114,6 @@ RSpec.describe(TicketDrawsController, type: :controller) do
           number: 3,
           state: 'reserved',
           ticket_type: 'meal_and_lottery',
-          registered: false,
           dropped_off: false,
           drawn: false,
         )
@@ -125,7 +123,6 @@ RSpec.describe(TicketDrawsController, type: :controller) do
           guest: guest,
           state: 'paid',
           ticket_type: 'meal_and_lottery',
-          registered: true,
           dropped_off: false,
           drawn: false,
         )
@@ -135,7 +132,6 @@ RSpec.describe(TicketDrawsController, type: :controller) do
           guest: guest,
           state: 'paid',
           ticket_type: 'meal_and_lottery',
-          registered: true,
           dropped_off: true,
           drawn: false,
         )
@@ -145,7 +141,6 @@ RSpec.describe(TicketDrawsController, type: :controller) do
           guest: guest,
           state: 'paid',
           ticket_type: 'meal_and_lottery',
-          registered: true,
           dropped_off: true,
           drawn: true,
         )
@@ -262,30 +257,42 @@ RSpec.describe(TicketDrawsController, type: :controller) do
     end
 
     describe('PATCH #update') do
-      it('raises a "RecordNotFound" when the requested ticket is drawn') do
-        ticket.update!(drawn: true)
-        expect do
-          patch(
-            :update,
-            params: {
-              locale: I18n.locale,
-              lottery_id: lottery.id,
-              id: ticket.id,
-            },
-          )
-        end.to raise_error(ActiveRecord::RecordNotFound)
+      let(:update) do
+        patch(
+          :update,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            id: ticket.id,
+          },
+        )
       end
 
-      context('when the ticket#registered = true and ticket#dropped_off = true and ticket#drawn = false') do
-        let(:update) do
-          patch(
-            :update,
-            params: {
-              locale: I18n.locale,
-              lottery_id: lottery.id,
-              id: ticket.id,
-            },
-          )
+      context('when lottery#locked == false') do
+        it('returns http :no_content status') do
+          update
+          expect(response).to have_http_status(:no_content)
+        end
+
+        it('contains no body') do
+          update
+          expect(response.body).to be_empty
+        end
+      end
+
+      context('when lottery#locked == true') do
+        before(:each) do
+          lottery.update!(locked: true)
+        end
+
+        it('raises a "RecordNotFound" when ticket#drawn == true') do
+          ticket.update!(drawn: true)
+          expect { update }.to raise_error(ActiveRecord::RecordNotFound)
+        end
+
+        it('raises a "RecordNotFound" when ticket#dropped_off == false') do
+          ticket.update!(dropped_off: false)
+          expect { update }.to raise_error(ActiveRecord::RecordNotFound)
         end
 
         it('redirects to the lottery_ticket_draws_path') do

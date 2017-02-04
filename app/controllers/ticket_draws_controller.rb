@@ -13,6 +13,8 @@ class TicketDrawsController < ApplicationController
   end
 
   def update
+    return unless @lottery.locked?
+
     @ticket = tickets_for_draw.find(params[:id])
     @ticket.update_attributes(
       drawn: true,
@@ -25,7 +27,6 @@ class TicketDrawsController < ApplicationController
 
   def tickets_for_draw
     @lottery.tickets.where(
-      registered: true,
       dropped_off: true,
       drawn: false,
     )

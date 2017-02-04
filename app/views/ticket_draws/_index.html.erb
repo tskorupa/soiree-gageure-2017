@@ -38,7 +38,7 @@
             lottery_ticket_draw_path(@lottery, ticket),
             method: :patch,
             class: 'btn btn-xs btn-primary',
-          ) %></td>
+          ) if @lottery.locked? %></td>
         </tr>
       <% end %>
     </tbody>
