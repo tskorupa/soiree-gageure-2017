@@ -1,4 +1,3 @@
-<%- model_class = Ticket -%>
 <div class='page-header'>
   <div class='row-fluid'>
     <h1>
@@ -36,7 +35,7 @@
             lottery_ticket_drop_off_path(@lottery, ticket),
             method: :patch,
             class: 'btn btn-xs btn-primary',
-          ) %></td>
+          ) unless @lottery.locked? %></td>
         </tr>
       <% end %>
     </tbody>

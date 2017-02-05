@@ -18,7 +18,6 @@ RSpec.describe(TicketDropOffsController, type: :controller) do
       guest: guest,
       state: 'paid',
       ticket_type: 'meal_and_lottery',
-      registered: true,
       dropped_off: false,
     )
   end
@@ -87,7 +86,7 @@ RSpec.describe(TicketDropOffsController, type: :controller) do
 
     describe('PATCH #update') do
       it('redirects to the user log in') do
-        patch(:update, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id, ticket: { number: 1 } })
+        patch(:update, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -113,7 +112,6 @@ RSpec.describe(TicketDropOffsController, type: :controller) do
           number: 3,
           state: 'reserved',
           ticket_type: 'meal_and_lottery',
-          registered: false,
           dropped_off: false,
         )
         @ticket_2 = Ticket.create!(
@@ -122,7 +120,6 @@ RSpec.describe(TicketDropOffsController, type: :controller) do
           guest: guest,
           state: 'paid',
           ticket_type: 'meal_and_lottery',
-          registered: true,
           dropped_off: false,
         )
         @ticket_3 = Ticket.create!(
@@ -131,7 +128,6 @@ RSpec.describe(TicketDropOffsController, type: :controller) do
           guest: guest,
           state: 'paid',
           ticket_type: 'meal_and_lottery',
-          registered: true,
           dropped_off: true,
         )
         @ticket_4 = Ticket.create!(
@@ -140,7 +136,6 @@ RSpec.describe(TicketDropOffsController, type: :controller) do
           guest: guest,
           state: 'paid',
           ticket_type: 'meal_and_lottery',
-          registered: true,
           dropped_off: false,
         )
       end
@@ -154,8 +149,8 @@ RSpec.describe(TicketDropOffsController, type: :controller) do
           expect(response).to have_http_status(:success)
         end
 
-        it('returns all registered but not dropped off tickets ordered by :number') do
-          expect(assigns(:tickets)).to eq([@ticket_2, @ticket_4])
+        it('returns all tickets with ticket#dropped_off == false ordered by :number') do
+          expect(assigns(:tickets)).to eq([@ticket_2, @ticket_1, @ticket_4])
         end
 
         it('renders the template lotteries/lottery_child_index') do
@@ -163,7 +158,7 @@ RSpec.describe(TicketDropOffsController, type: :controller) do
         end
       end
 
-      context('when specyfying the :number of a registered but not dropped off ticket in the params') do
+      context('when specyfying the :number of a not dropped off ticket in the params') do
         before(:each) do
           get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number: 4 })
         end
@@ -181,7 +176,7 @@ RSpec.describe(TicketDropOffsController, type: :controller) do
         end
       end
 
-      context('when specyfying the :number a ticket that is not registered and not dropped off in the params') do
+      context('when specyfying the :number a ticket that is not dropped off in the params') do
         before(:each) do
           get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number: 2 })
         end
@@ -244,38 +239,47 @@ RSpec.describe(TicketDropOffsController, type: :controller) do
     end
 
     describe('PATCH #update') do
-      it('raises a "RecordNotFound" when the requested ticket is dropped off') do
-        ticket.update!(dropped_off: true)
-        expect do
-          patch(
-            :update,
-            params: {
-              locale: I18n.locale,
-              lottery_id: lottery.id,
-              id: ticket.id,
-            },
-          )
-        end.to raise_error(ActiveRecord::RecordNotFound)
+      let(:patch_update) do
+        patch(
+          :update,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            id: ticket.id,
+          },
+        )
       end
 
-      context('when the ticket#registered = true and ticket#dropped_off = false') do
+      context('when lottery#locked == true') do
         before(:each) do
-          patch(
-            :update,
-            params: {
-              locale: I18n.locale,
-              lottery_id: lottery.id,
-              id: ticket.id,
-            },
-          )
+          lottery.update!(locked: true)
+          patch_update
         end
 
+        it('returns http :no_content status') do
+          expect(response).to have_http_status(:no_content)
+        end
+
+        it('has an empty body') do
+          expect(response.body).to be_empty
+        end
+      end
+
+      context('when ticket#dropped_off = true') do
+        it('raises a "RecordNotFound"') do
+          ticket.update!(dropped_off: true)
+          expect { patch_update }.to raise_error(ActiveRecord::RecordNotFound)
+        end
+      end
+
+      context('when ticket#dropped_off = false') do
         it('redirects to the lottery_ticket_drop_offs_path') do
+          patch_update
           expect(response).to redirect_to(lottery_ticket_drop_offs_path(lottery))
         end
 
         it('sets ticket#dropped_off = true when ticket is dropped off after registration') do
-          expect(ticket.reload.dropped_off).to be(true)
+          expect { patch_update }.to change { ticket.reload.dropped_off }.from(false).to(true)
         end
       end
     end

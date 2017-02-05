@@ -13,10 +13,13 @@ class TicketRegistrationsController < ApplicationController
   end
 
   def edit
+    return head(:no_content) if @lottery.locked?
     @ticket = unregistered_tickets.find(params[:id])
   end
 
   def update
+    return head(:no_content) if @lottery.locked?
+
     @ticket = unregistered_tickets.find(params[:id])
 
     @ticket.guest = HandleRelation.find_or_build(

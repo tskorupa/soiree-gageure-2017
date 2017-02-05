@@ -13,7 +13,7 @@ class TicketDrawsController < ApplicationController
   end
 
   def update
-    return unless @lottery.locked?
+    return head(:no_content) unless @lottery.locked?
 
     @ticket = tickets_for_draw.find(params[:id])
     @ticket.update_attributes(

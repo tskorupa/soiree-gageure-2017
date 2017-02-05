@@ -7,7 +7,7 @@ end
 RSpec.describe(LotteryLookupTestController, type: :controller) do
   controller do
     def index
-      render nothing: true
+      head(:no_content)
     end
   end
 

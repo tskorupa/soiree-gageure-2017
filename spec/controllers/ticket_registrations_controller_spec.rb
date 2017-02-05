@@ -184,22 +184,74 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
     end
 
     describe('GET #edit') do
-      it('returns the requested ticket when the ticket is unregistered') do
+      let(:get_edit) do
         get(:edit, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        expect(response).to have_http_status(:success)
-        expect(assigns(:ticket)).to eq(ticket)
-        expect(response).to render_template(:edit)
       end
 
-      it('raises a "RecordNotFound" when the requested ticket is registered') do
-        ticket.update!(registered: true)
-        expect do
-          get(:edit, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        end.to raise_error(ActiveRecord::RecordNotFound)
+      context('when lottery#locked == true') do
+        before(:each) do
+          lottery.update!(locked: true)
+          get_edit
+        end
+
+        it('returns http :no_content status') do
+          expect(response).to have_http_status(:no_content)
+        end
+
+        it('has an empty body') do
+          expect(response.body).to be_empty
+        end
+      end
+
+      context('when lottery#locked == false') do
+        it('returns http :success') do
+          get_edit
+          expect(response).to have_http_status(:success)
+        end
+
+        it('assigns @ticket') do
+          get_edit
+          expect(assigns(:ticket)).to eq(ticket)
+        end
+
+        it('renders the :edit template') do
+          get_edit
+          expect(response).to render_template(:edit)
+        end
+
+        it('raises a "RecordNotFound" when ticket#registered == true') do
+          ticket.update!(registered: true)
+          expect { get_edit }.to raise_error(ActiveRecord::RecordNotFound)
+        end
       end
     end
 
     describe('PATCH #update') do
+      context('when lottery#locked == true') do
+        before(:each) do
+          lottery.update!(locked: true)
+          patch(
+            :update,
+            params: {
+              locale: I18n.locale,
+              lottery_id: lottery.id,
+              id: ticket.id,
+              ticket: {
+                state: 'paid',
+              },
+            },
+          )
+        end
+
+        it('returns http :no_content status') do
+          expect(response).to have_http_status(:no_content)
+        end
+
+        it('has an empty body') do
+          expect(response.body).to be_empty
+        end
+      end
+
       it('raises a "RecordNotFound" when the requested ticket is registered') do
         ticket.update!(registered: true)
         expect do

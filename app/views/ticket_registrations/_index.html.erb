@@ -40,7 +40,7 @@
               t('.edit', default: t('helpers.links.edit')),
               edit_lottery_ticket_registration_path(@lottery, ticket),
               class: 'btn btn-default btn-xs',
-            ) %>
+            ) unless @lottery.locked? %>
           </td>
         </tr>
       <% end %>
