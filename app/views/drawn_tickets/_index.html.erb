@@ -9,15 +9,17 @@
       <th><%= t('column_names.draw_order') %></th>
       <th><%= t('column_names.number') %></th>
       <th><%= Guest.model_name.human %></th>
+      <th><%= Prize.model_name.human %></th>
       <th></th>
     </tr>
   </thead>
   <tbody>
-    <% @draw_positions.each do |(position, ticket)| %>
-      <tr>
+    <% @draw_positions.each do |(position, ticket, prize)| %>
+      <tr class='<%= prize ? "success" : "" %>'>
         <td><%= position %></td>
         <td><%= ticket&.number %></td>
         <td><%= ticket&.guest&.full_name %></td>
+        <td><%= number_to_currency(prize) if prize %></td>
         <td><%= link_to(
           t('helpers.submit.drawn_tickets.update'),
           lottery_drawn_ticket_path(@lottery, ticket),

@@ -9,6 +9,14 @@ class DrawnTicketsController < ApplicationController
     tickets = drawn_tickets.order(:drawn_at)
     @draw_positions = positions.zip(tickets)
 
+    calculator = PrizeCalculator.new(@lottery)
+    if positions = calculator.draw_positions
+      positions.each do |(position, prize)|
+        index = position - 1
+        @draw_positions[index] = @draw_positions[index] << prize
+      end
+    end
+
     render(
       'lotteries/lottery_child_index',
       locals: { main_partial: 'drawn_tickets/index' },

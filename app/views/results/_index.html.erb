@@ -17,6 +17,13 @@
       <% end %>
     </div>
   </div>
+  <% if @prize %>
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <h2><%= Prize.model_name.human %> <%= number_to_currency(@prize) %></h2>
+      </div>
+    </div>
+  <% end %>
 <% else %>
   <div class='row-fluid'><%= t('.no_drawn_tickets') %></div>
 <% end %>
