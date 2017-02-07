@@ -23,6 +23,9 @@ class TicketDropOffsController < ApplicationController
   private
 
   def tickets_for_drop_off
-    @lottery.tickets.where(dropped_off: false)
+    @lottery.tickets.where(
+      registered: true,
+      dropped_off: false,
+    )
   end
 end

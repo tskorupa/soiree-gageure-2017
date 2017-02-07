@@ -18,6 +18,7 @@ RSpec.describe(TicketDropOffsController, type: :controller) do
       guest: guest,
       state: 'paid',
       ticket_type: 'meal_and_lottery',
+      registered: true,
       dropped_off: false,
     )
   end
@@ -112,6 +113,7 @@ RSpec.describe(TicketDropOffsController, type: :controller) do
           number: 3,
           state: 'reserved',
           ticket_type: 'meal_and_lottery',
+          registered: false,
           dropped_off: false,
         )
         @ticket_2 = Ticket.create!(
@@ -120,6 +122,7 @@ RSpec.describe(TicketDropOffsController, type: :controller) do
           guest: guest,
           state: 'paid',
           ticket_type: 'meal_and_lottery',
+          registered: true,
           dropped_off: false,
         )
         @ticket_3 = Ticket.create!(
@@ -128,6 +131,7 @@ RSpec.describe(TicketDropOffsController, type: :controller) do
           guest: guest,
           state: 'paid',
           ticket_type: 'meal_and_lottery',
+          registered: true,
           dropped_off: true,
         )
         @ticket_4 = Ticket.create!(
@@ -136,6 +140,7 @@ RSpec.describe(TicketDropOffsController, type: :controller) do
           guest: guest,
           state: 'paid',
           ticket_type: 'meal_and_lottery',
+          registered: true,
           dropped_off: false,
         )
       end
@@ -149,8 +154,8 @@ RSpec.describe(TicketDropOffsController, type: :controller) do
           expect(response).to have_http_status(:success)
         end
 
-        it('returns all tickets with ticket#dropped_off == false ordered by :number') do
-          expect(assigns(:tickets)).to eq([@ticket_2, @ticket_1, @ticket_4])
+        it('returns all tickets with ticket#registered == true and ticket#dropped_off == false ordered by :number') do
+          expect(assigns(:tickets)).to eq([@ticket_2, @ticket_4])
         end
 
         it('renders the template lotteries/lottery_child_index') do
