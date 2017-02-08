@@ -20,14 +20,16 @@
   <table class='table table-striped'>
     <thead>
       <tr>
+        <th>#</th>
         <th><%= t('column_names.number') %></th>
         <th><%= Guest.model_name.human %></th>
         <th></th>
       </tr>
     </thead>
     <tbody>
-      <% @tickets.each do |ticket| %>
+      <% @tickets.each.with_index do |ticket, index| %>
         <tr>
+          <td><%= index + 1 %></td>
           <td><%= ticket.number %></td>
           <td><%= ticket.guest.try(:full_name) %></td>
           <td><%= link_to(
