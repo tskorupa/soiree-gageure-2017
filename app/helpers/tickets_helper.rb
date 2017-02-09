@@ -3,9 +3,11 @@ module TicketsHelper
     stage, label_variation = if ticket.dropped_off?
       [:completed, :default]
     elsif ticket.registered?
-      [:drop_off, :warning]
+      [:drop_off, :info]
+    elsif ticket.state == 'reserved'
+      [:not_paid, :danger]
     else
-      [:registration, :danger]
+      [:registration, :warning]
     end
 
     content_tag(

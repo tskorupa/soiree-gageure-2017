@@ -3,7 +3,7 @@ class TicketRegistrationsController < ApplicationController
 
   def index
     @number = params[:number]
-    @tickets = unregistered_tickets.order(:number)
+    @tickets = ticket_for_registration.order(:number)
     @tickets = @tickets.where(number: @number) if @number.present?
 
     render(
@@ -14,13 +14,13 @@ class TicketRegistrationsController < ApplicationController
 
   def edit
     return head(:no_content) if @lottery.locked?
-    @ticket = unregistered_tickets.find(params[:id])
+    @ticket = ticket_for_registration.find(params[:id])
   end
 
   def update
     return head(:no_content) if @lottery.locked?
 
-    @ticket = unregistered_tickets.find(params[:id])
+    @ticket = ticket_for_registration.find(params[:id])
 
     @ticket.guest = HandleRelation.find_or_build(
       klass: Guest,
@@ -39,11 +39,13 @@ class TicketRegistrationsController < ApplicationController
 
   private
 
-  def unregistered_tickets
-    @lottery.tickets.where(registered: false)
+  def ticket_for_registration
+    @lottery.tickets
+      .where(registered: false)
+      .where.not(state: 'reserved')
   end
 
   def ticket_params
-    params.require(:ticket).permit(:state)
+    params.require(:ticket).permit(:ticket_type, :table_id)
   end
 end

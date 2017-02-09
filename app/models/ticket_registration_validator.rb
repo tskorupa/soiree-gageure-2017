@@ -7,6 +7,11 @@ class TicketRegistrationValidator < ActiveModel::Validator
     ) unless ticket.guest
 
     ticket.errors.add(
+      :table_id,
+      :invalid,
+    ) if ticket.table_id.present? && ticket.table.nil?
+
+    ticket.errors.add(
       :state,
       :inclusion,
       message: I18n.translate('ticket_registrations.errors.ticket.state'),

@@ -5,10 +5,23 @@ RSpec.describe(TicketRegistrationValidator, type: :model) do
     Guest.create!(full_name: 'Bubbles')
   end
 
+  let(:lottery) do
+    Lottery.create!(event_date: Date.today)
+  end
+
   let(:ticket) do
     Ticket.new(
+      lottery: lottery,
       guest: guest,
       state: 'paid',
+    )
+  end
+
+  let(:table) do
+    Table.create!(
+      lottery: lottery,
+      number: 1,
+      capacity: 6,
     )
   end
 
@@ -29,6 +42,12 @@ RSpec.describe(TicketRegistrationValidator, type: :model) do
       expect(ticket.errors[:state]).to be_present
     end
 
+    it('sets an error on ticket when ticket#table_id corresponds to no existing table') do
+      ticket.table_id = 0
+      validator.validate(ticket)
+      expect(ticket.errors[:table_id]).to be_present
+    end
+
     it('sets an error on ticket when ticket#registered = true') do
       ticket.registered = true
       validator.validate(ticket)
@@ -45,6 +64,12 @@ RSpec.describe(TicketRegistrationValidator, type: :model) do
     it('passes validations when ticket#guest is set and ticket#state = :paid') do
       ticket.guest = guest
       ticket.state = 'paid'
+      validator.validate(ticket)
+      expect(ticket.errors).to be_empty
+    end
+
+    it('passes validations when ticket#table_id is set and corresponds to an existing table') do
+      ticket.table_id = table.id
       validator.validate(ticket)
       expect(ticket.errors).to be_empty
     end

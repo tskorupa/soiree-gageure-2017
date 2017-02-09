@@ -2,19 +2,24 @@ require 'rails_helper'
 
 RSpec.describe(TicketsHelper, type: :helper) do
   describe('#registration_step_label') do
-    it('returns <span class="label label-default">Completed</span> when ticket#dropped_off == true') do
-      ticket = double(dropped_off?: true, registered?: true)
+    it('returns <span class="label label-default">Completed</span> when ticket#dropped_off? == true') do
+      ticket = double(dropped_off?: true)
       expect(helper.registration_step_label(ticket)).to eq('<span class="label label-default">Completed</span>')
     end
 
-    it('returns <span class="label label-warning">Drop off</span> when ticket#dropped_off == false and ticket#registered == true') do
+    it('returns <span class="label label-info">Drop off</span> when ticket#dropped_off? == false and ticket#registered? == true') do
       ticket = double(dropped_off?: false, registered?: true)
-      expect(helper.registration_step_label(ticket)).to eq('<span class="label label-warning">Drop off</span>')
+      expect(helper.registration_step_label(ticket)).to eq('<span class="label label-info">Drop off</span>')
     end
 
-    it('returns <span class="label label-danger">Unregistered</span> when ticket#dropped_off == false and ticket#registered == false') do
-      ticket = double(dropped_off?: false, registered?: false)
-      expect(helper.registration_step_label(ticket)).to eq('<span class="label label-danger">Unregistered</span>')
+    it('returns <span class="label label-danger">Not paid</span> when ticket#dropped_off == false and ticket#registered == false and ticket#state == "reserved"') do
+      ticket = double(dropped_off?: false, registered?: false, state: 'reserved')
+      expect(helper.registration_step_label(ticket)).to eq('<span class="label label-danger">Not paid</span>')
+    end
+
+    it('returns <span class="label label-warning">Unregistered</span> when ticket#dropped_off == false and ticket#registered == false and ticket#state != "reserved"') do
+      ticket = double(dropped_off?: false, registered?: false, state: :foo)
+      expect(helper.registration_step_label(ticket)).to eq('<span class="label label-warning">Unregistered</span>')
     end
   end
 
