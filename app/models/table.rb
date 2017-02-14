@@ -1,5 +1,6 @@
 class Table < ApplicationRecord
   belongs_to :lottery, required: true
+  has_many :tickets
 
   attr_readonly :lottery_id
 

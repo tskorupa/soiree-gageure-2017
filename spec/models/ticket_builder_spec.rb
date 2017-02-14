@@ -9,6 +9,14 @@ RSpec.describe(TicketBuilder, type: :model) do
     Seller.create!(full_name: 'Gonzo')
   end
 
+  let(:table) do
+    Table.create!(
+      lottery: lottery,
+      number: 1,
+      capacity: 6,
+    )
+  end
+
   let(:ticket) do
     Ticket.create!(
       lottery: lottery,
@@ -22,7 +30,79 @@ RSpec.describe(TicketBuilder, type: :model) do
     TicketBuilder.new(lottery: lottery)
   end
 
+  it('#table_number') do
+    expect(ticket_builder.table_number).to be_nil
+  end
+
   describe('#build') do
+    it('assigns the attribute #table_number when :table_number is provided') do
+      builder = ticket_builder
+      builder.build(table_number: 1)
+      expect(builder.table_number).to eq(1)
+    end
+
+    it('returns a validated ticket') do
+      ticket = ticket_builder.build
+      expect(ticket.errors).to be_present
+    end
+
+    context('when :id is defined in the arguments') do
+      before(:each) do
+        @attributes = { id: ticket.id }
+      end
+
+      context('when ticket#table is defined') do
+        before(:each) do
+          ticket.update!(table: table)
+        end
+
+        let(:other_table) do
+          Table.create!(
+            lottery: lottery,
+            number: 2,
+            capacity: 6,
+          )
+        end
+
+        let(:table_from_different_lottery) do
+          Table.create!(
+            lottery: Lottery.create!(event_date: Date.today),
+            number: 3,
+            capacity: 6,
+          )
+        end
+
+        it('assigns ticket#table to nil when :table_number is empty') do
+          ticket = ticket_builder.build(@attributes.merge(table_number: ''))
+          expect(ticket.table).to be_nil
+        end
+
+        it('leaves ticket#table as-is when :table_number corresponds to the table that is already defined on the ticket') do
+          ticket = ticket_builder.build(@attributes.merge(table_number: table.number))
+          expect(ticket.table).to eq(table)
+        end
+
+        it('assigns ticket#table to nil when :table_number corresponds to a table that does not belong to the lottery') do
+          ticket = ticket_builder.build(
+            @attributes.merge(table_number: table_from_different_lottery.number),
+          )
+          expect(ticket.table).to be_nil
+        end
+
+        it('adds an error to ticket#errors when :table_number corresponds to a table that does not belong to the lottery') do
+          ticket = ticket_builder.build(
+            @attributes.merge(table_number: table_from_different_lottery.number),
+          )
+          expect(ticket.errors[:base]).to eq(['Ticket number is invalid'])
+        end
+
+        it('assigns ticket#table when :table_number corresponds to a different table that belongs to the lottery') do
+          ticket = ticket_builder.build(@attributes.merge(table_number: other_table.number))
+          expect(ticket.table).to eq(other_table)
+        end
+      end
+    end
+
     it('returns a new ticket scoped to lottery when an :id is not provided') do
       actual_ticket = ticket_builder.build
       expect(actual_ticket).to be_new_record

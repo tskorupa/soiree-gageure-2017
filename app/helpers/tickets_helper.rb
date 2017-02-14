@@ -1,4 +1,8 @@
 module TicketsHelper
+  def table_number(ticket)
+    @builder&.table_number || ticket.table&.number
+  end
+
   def registration_step_label(ticket)
     stage, label_variation = if ticket.dropped_off?
       [:completed, :default]

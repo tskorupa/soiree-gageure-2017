@@ -28,7 +28,7 @@ class TablesController < ApplicationController
 
   def show
     @table = @lottery.tables.find(params[:id])
-    @tickets = @lottery.tickets.where(table_id: @table.id).order(:number)
+    @tickets = @table.tickets.order(:number)
   end
 
   def update

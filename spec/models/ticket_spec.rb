@@ -117,16 +117,6 @@ RSpec.describe(Ticket, type: :model) do
       expect(new_ticket).not_to be_valid
       expect(new_ticket.errors[:ticket_type]).to include("is not included in the list")
     end
-
-    it('requires :table_id to exist as a Table') do
-      new_ticket = Ticket.new(table_id: 1)
-      expect(new_ticket).not_to be_valid
-      expect(new_ticket.errors[:table_id]).to include("is invalid")
-
-      new_ticket.table = table
-      new_ticket.valid?
-      expect(new_ticket.errors[:table_id]).to be_empty
-    end
   end
 
   describe('#lottery') do

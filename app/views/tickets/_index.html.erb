@@ -40,7 +40,7 @@
         <th><%= Sponsor.model_name.human %></th>
         <th><%= t('column_names.ticket.stage') %></th>
         <th><%= t('column_names.ticket.ticket_type') %></th>
-        <th class='text-center'><%= t('column_names.ticket.table_id') %></th>
+        <th class='text-center'><%= t('column_names.table.number') %></th>
         <th><%= t('column_names.ticket.registration_step') %></th>
         <th></th>
       </tr>
@@ -55,7 +55,7 @@
           <td><%= ticket.sponsor.try(:full_name) %></td>
           <td><%= model_class.human_attribute_name('state.%s' % ticket.state) %></td>
           <td><%= model_class.human_attribute_name('ticket_type.%s' % ticket.ticket_type) %></td>
-          <td class='text-center'><%=h ticket.table_id %></td>
+          <td class='text-center'><%= table_number(ticket) %></td>
           <td><%= registration_step_label(ticket) %></td>
           <td>
             <%= link_to(

@@ -452,36 +452,32 @@ RSpec.describe(TicketsController, type: :controller) do
         expect(response).to render_template(:edit)
       end
 
-      it('redirects to lottery_tickets_path when :table_id is updated') do
+      it('redirects to lottery_tickets_path when :table_number is updated') do
         patch(
           :update,
           params: {
             locale: I18n.locale,
             lottery_id: lottery.id,
             id: ticket.id,
-            ticket: {
-              table_id: table.id,
-            },
+            table_number: table.number,
           },
         )
-        expect(ticket.reload.table_id).to eq(table.id)
         expect(response).to redirect_to(lottery_tickets_path(lottery))
+        expect(ticket.reload.table.number).to eq(table.number)
       end
 
-      it('presents the submitted value for :table_id when the ticket validation fails') do
+      it('presents the submitted value for :table_number when the ticket validation fails') do
         patch(
           :update,
           params: {
             locale: I18n.locale,
             lottery_id: lottery.id,
             id: ticket.id,
-            ticket: {
-              table_id: -3,
-            },
+            table_number: -3,
           },
         )
         expect(response).to have_http_status(:success)
-        expect(assigns(:ticket).table_id).to eq(-3)
+        expect(assigns(:builder).table_number).to eq('-3')
         expect(response).to render_template(:edit)
       end
     end

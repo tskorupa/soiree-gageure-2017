@@ -20,20 +20,15 @@ class TicketRegistrationsController < ApplicationController
   def update
     return head(:no_content) if @lottery.locked?
 
-    @ticket = ticket_for_registration.find(params[:id])
+    @builder = TicketBuilder.new(lottery: @lottery)
+    ticket = ticket_for_registration.find(params[:id])
+    @ticket = @builder.build(builder_params.merge(id: ticket.id))
 
-    @ticket.guest = HandleRelation.find_or_build(
-      klass: Guest,
-      actual_entity: @ticket.guest,
-      supplied_full_name: params[:guest_name],
-    )
-    @ticket.assign_attributes(ticket_params)
-
-    TicketRegistrationValidator.new.validate(@ticket)
+    @ticket = TicketRegistrationValidator.validate(@ticket)
     return render(:edit) if @ticket.errors.any?
 
     @ticket.registered = true
-    @ticket.save
+    @ticket.save!
     redirect_to(lottery_ticket_registrations_path(@lottery))
   end
 
@@ -45,7 +40,13 @@ class TicketRegistrationsController < ApplicationController
       .where.not(state: 'reserved')
   end
 
-  def ticket_params
-    params.require(:ticket).permit(:ticket_type, :table_id)
+  def builder_params
+    ticket_params = params.fetch(:ticket, {})
+      .permit(:ticket_type)
+
+    params.permit(
+      :guest_name,
+      :table_number,
+    ).merge(ticket_params.to_h)
   end
 end

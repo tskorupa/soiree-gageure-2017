@@ -36,7 +36,7 @@
           <td><%= ticket.number %></td>
           <td><%= ticket.guest.try(:full_name) %></td>
           <td><%= model_class.human_attribute_name('ticket_type.%s' % ticket.ticket_type) %></td>
-          <td><%= ticket.table_id %></td>
+          <td><%= table_number(ticket) %></td>
           <td>
             <%= link_to(
               t('.edit', default: t('helpers.links.edit')),

@@ -5,22 +5,25 @@ en:
   layouts:
     application:
       title: 'Gambling event 2017'
+  tables:
+    errors:
+      number: 'Ticket number is invalid'
   ticket_registrations:
     errors:
+      table_number: 'Table number must be specified'
       ticket:
-        guest: "can't be blank."
-        state: 'is not valid. The ticket must be paid or authorized.'
-        registered: 'is not valid: the ticket has already been registered.'
+        guest: "can't be blank"
   ticket_drop_offs:
     errors:
       ticket:
-        registered: 'must be registered.'
-        dropped_off: 'is already dropped off.'
+        registered: 'must be registered'
+        dropped_off: 'is already dropped off'
   ticket_draws:
     warnings:
-      lottery_is_unlocked: 'Tickets may be drawn once the lottery is locked.'
+      lottery_is_unlocked: 'Tickets may be drawn once the lottery is locked'
   column_names:
     draw_order: 'Draw order'
+    table_number: 'Table number'
     ticket:
       ticket_type: 'Ticket type'
       registration_step: 'Registration'

@@ -266,8 +266,8 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
             lottery_id: lottery.id,
             id: ticket.id,
             guest_name: 'FOO',
+            table_number: table.number,
             ticket: {
-              table_id: table.id,
               ticket_type: 'lottery_only',
             },
           },
@@ -308,8 +308,8 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
               lottery_id: lottery.id,
               id: ticket.id,
               guest_name: '',
+              table_number: -1,
               ticket: {
-                table_id: -1,
                 ticket_type: 'does not exist',
               },
             },
@@ -328,8 +328,8 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
           expect(assigns(:ticket).guest).to be_nil
         end
 
-        it('preserves the submitted value for ticket#table_id') do
-          expect(assigns(:ticket).table_id).to eq(-1)
+        it('preserves the submitted value for :table_number') do
+          expect(assigns(:builder).table_number).to eq('-1')
         end
 
         it('preserves the submitted value for ticket#ticket_type') do
@@ -351,8 +351,10 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
           expect { patch_update }.to change { ticket.reload.guest.full_name }.from('Bubbles').to('Foo')
         end
 
-        it('permits to change ticket#table_id') do
-          expect { patch_update }.to change { ticket.reload.table_id }.from(nil).to(table.id)
+        it('permits to change ticket#table when specifying :table_number') do
+          expect { patch_update }
+            .to change { ticket.reload.table_id }
+            .from(nil).to(table.id)
         end
 
         it('permits to change ticket#ticket_type') do

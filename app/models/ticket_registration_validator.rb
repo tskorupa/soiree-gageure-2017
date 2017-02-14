@@ -1,26 +1,15 @@
-class TicketRegistrationValidator < ActiveModel::Validator
-  def validate(ticket)
+class TicketRegistrationValidator
+  def self.validate(ticket)
     ticket.errors.add(
       :guest,
       :blank,
-      message: I18n.translate('ticket_registrations.errors.ticket.guest'),
+      message: I18n.t('ticket_registrations.errors.ticket.guest'),
     ) unless ticket.guest
 
-    ticket.errors.add(
-      :table_id,
-      :invalid,
-    ) if ticket.table_id.present? && ticket.table.nil?
+    if ticket.ticket_type == 'meal_and_lottery' && ticket.table.nil?
+      ticket.errors.add(:base, I18n.t('ticket_registrations.errors.table_number'))
+    end
 
-    ticket.errors.add(
-      :state,
-      :inclusion,
-      message: I18n.translate('ticket_registrations.errors.ticket.state'),
-    ) unless %w(authorized paid).include?(ticket.state)
-
-    ticket.errors.add(
-      :registered,
-      :invalid,
-      message: I18n.translate('ticket_registrations.errors.ticket.registered'),
-    ) if ticket.registered?
+    ticket
   end
 end

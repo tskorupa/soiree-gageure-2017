@@ -7,12 +7,14 @@ fr:
       title: 'Soirée gageure 2017'
     navigation:
       logout: 'Se déconnecter'
+  tables:
+    errors:
+      number: "Le numéro de table n'est pas valide"
   ticket_registrations:
     errors:
+      table_number: 'Le numéro de table doit être spécifié'
       ticket:
         guest: 'doit être spécifié'
-        state: "n'est pas valide: le billet doit être payé ou autorisé"
-        registered: "n'est pas valide: le billet à déjà été enregistré"
   ticket_drop_offs:
     errors:
       ticket:
@@ -24,6 +26,7 @@ fr:
   column_names:
     number: 'Numéro'
     draw_order: 'Ordre de pige'
+    table_number: 'Numéro de table'
     ticket:
       ticket_type: 'Type de billet'
       state: 'État'
