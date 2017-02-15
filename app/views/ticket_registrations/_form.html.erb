@@ -57,18 +57,4 @@
     </div>
   </div>
 <% end %>
-
-<script type="text/javascript">
-  var guest_names = new Bloodhound({
-    datumTokenizer: Bloodhound.tokenizers.whitespace,
-    queryTokenizer: Bloodhound.tokenizers.whitespace,
-    prefetch: '/guest_names'
-  });
-
-  $('#guest_name').typeahead(null, {
-    name: 'guest_names',
-    source: guest_names,
-    hint: true,
-    highlight: true
-  });
-</script>
+<%= javascript_include_tag('typeahead.fields.guest_name') %>

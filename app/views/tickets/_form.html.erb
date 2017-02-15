@@ -78,48 +78,6 @@
     </div>
   </div>
 <% end %>
-
-<script type="text/javascript">
-  var seller_names = new Bloodhound({
-    datumTokenizer: Bloodhound.tokenizers.whitespace,
-    queryTokenizer: Bloodhound.tokenizers.whitespace,
-    prefetch: '/seller_names'
-  });
-
-  $('#seller_name').typeahead(null, {
-    name: 'seller_names',
-    source: seller_names,
-    hint: true,
-    highlight: true
-  });
-
-  var guest_names = new Bloodhound({
-    datumTokenizer: Bloodhound.tokenizers.whitespace,
-    queryTokenizer: Bloodhound.tokenizers.whitespace,
-    prefetch: '/guest_names'
-  });
-
-  $('#guest_name').typeahead(null, {
-    name: 'guest_names',
-    source: guest_names,
-    hint: true,
-    highlight: true
-  });
-
-  var sponsor_names = new Bloodhound({
-    datumTokenizer: Bloodhound.tokenizers.whitespace,
-    queryTokenizer: Bloodhound.tokenizers.whitespace,
-    prefetch: '/sponsor_names'
-  });
-
-  $('#sponsor_name').typeahead(null, {
-    name: 'sponsor_names',
-    source: sponsor_names,
-    hint: true,
-    highlight: true
-  });
-
-  $('#seller_name #guest_name #sponsor_name').bind('keypress keydown keyup', function(e){
-     if(e.keyCode == 13) { e.preventDefault(); }
-  });
-</script>
+<%= javascript_include_tag('typeahead.fields.seller_name') %>
+<%= javascript_include_tag('typeahead.fields.guest_name') %>
+<%= javascript_include_tag('typeahead.fields.sponsor_name') %>
