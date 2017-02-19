@@ -13,24 +13,16 @@ class TicketImpressionsController < ApplicationController
   end
 
   def show
-    @ticket = printable_tickets.find(params[:id])
+    respond_to(:pdf)
 
-    respond_to do |format|
-      format.pdf do
-        file_name = format(
-          '%s_%i',
-          Ticket.model_name.human.downcase,
-          @ticket.number,
-        )
-
-        render(
-          pdf: file_name,
-          page_width: 62,
-          page_height: 29,
-          encoding: 'UTF-8',
-        )
-      end
-    end
+    ticket = printable_tickets.includes(:guest, :table).find(params[:id])
+    pdf = TicketPdf.new(ticket: ticket)
+    send_data(
+      pdf.render,
+      filename: pdf.filename,
+      type: 'application/pdf',
+      disposition: 'inline',
+    )
   end
 
   private

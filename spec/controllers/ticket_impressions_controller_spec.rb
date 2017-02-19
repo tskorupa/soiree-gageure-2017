@@ -11,11 +11,20 @@ RSpec.describe(TicketImpressionsController, type: :controller) do
     Guest.create!(full_name: 'Bubbles')
   end
 
+  let(:table) do
+    Table.create!(
+      lottery: lottery,
+      number: 103,
+      capacity: 6,
+    )
+  end
+
   let(:ticket) do
     Ticket.create!(
       lottery: lottery,
       number: 1,
       guest: guest,
+      table: table,
       state: 'paid',
       ticket_type: 'meal_and_lottery',
       registered: true,
@@ -71,8 +80,8 @@ RSpec.describe(TicketImpressionsController, type: :controller) do
 
     describe('GET #show') do
       it('redirects to the user log in') do
-        get(:show, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        expect(response).to redirect_to(new_user_session_path)
+        get(:show, format: :pdf, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
+        expect(response).to have_http_status(:unauthorized)
       end
     end
 
@@ -240,11 +249,16 @@ RSpec.describe(TicketImpressionsController, type: :controller) do
     end
 
     describe('GET #show') do
-      it('raises a "No route matches" error') do
-        skip
-        expect do
-          get(:show, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
+      before(:each) do
+        get(:show, format: :pdf, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
+      end
+
+      it('returns an http :success status') do
+        expect(response).to have_http_status(:success)
+      end
+
+      it('returns the content-type to "application/pdf') do
+        expect(response.content_type).to eq('application/pdf')
       end
     end
 

@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe(TicketRegistrationValidator, type: :model) do
+  include I18nHelper
+
   let(:guest) do
     Guest.create!(full_name: 'Bubbles')
   end
@@ -96,15 +98,5 @@ RSpec.describe(TicketRegistrationValidator, type: :model) do
         expect(@ticket.errors[:table]).to be_empty
       end
     end
-  end
-
-  private
-
-  def with_locale(locale)
-    original_locale = I18n.locale
-    I18n.locale = locale
-    yield
-  ensure
-    I18n.locale = original_locale
   end
 end
