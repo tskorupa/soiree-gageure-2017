@@ -33,6 +33,7 @@ fr:
       table_id: 'Numéro de table'
       registration_step: 'Enregistrement'
     table:
+      number: 'Numéro de table'
       capacity: 'Capacité'
       tickets_count: 'Places assignées'
     prize:

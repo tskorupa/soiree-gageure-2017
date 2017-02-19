@@ -28,6 +28,7 @@ en:
       ticket_type: 'Ticket type'
       registration_step: 'Registration'
     table:
+      number: 'Table number'
       tickets_count: 'Assigned seats'
     seller:
       full_name: 'Seller name'
