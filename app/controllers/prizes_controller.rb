@@ -38,6 +38,10 @@ class PrizesController < ApplicationController
   private
 
   def prize_params
-    params.require(:prize).permit(:draw_order, :amount)
+    params.require(:prize).permit(
+      :draw_order,
+      :nth_before_last,
+      :amount,
+    )
   end
 end

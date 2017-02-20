@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe(Prize, type: :model) do
+  include I18nHelper
+
   let(:lottery) do
     Lottery.create!(event_date: Date.today)
   end
@@ -37,6 +39,121 @@ RSpec.describe(Prize, type: :model) do
           unique: true,
         ),
       ).to be(true)
+    end
+  end
+
+  describe('#nth_before_last') do
+    before(:each) do
+      prize.update!(nth_before_last: 275)
+    end
+
+    it('has a unique index on [:lottery_id, :nth_before_last]') do
+      expect(
+        ActiveRecord::Base.connection.index_exists?(
+          :prizes,
+          [:lottery_id, :nth_before_last],
+          unique: true,
+        ),
+      ).to be(true)
+    end
+
+    it('allows nil as a value') do
+      new_prize = Prize.new(nth_before_last: nil)
+      new_prize.valid?
+      expect(new_prize.errors[:nth_before_last]).to be_empty
+    end
+
+    it('allows 0 as a value') do
+      new_prize = Prize.new(nth_before_last: 0)
+      new_prize.valid?
+      expect(new_prize.errors[:nth_before_last]).to be_empty
+    end
+
+    it('does not allow a negative value') do
+      new_prize = Prize.new(nth_before_last: -1)
+      expect(new_prize.valid?).to be(false)
+    end
+
+    it('does not allow a decimal value') do
+      new_prize = Prize.new(nth_before_last: 0.123)
+      expect(new_prize.valid?).to be(false)
+    end
+
+    it('does not allow a duplicate value for the same lottery') do
+      new_prize = Prize.new(
+        lottery: lottery,
+        nth_before_last: prize.nth_before_last,
+      )
+      expect(new_prize.valid?).to be(false)
+    end
+
+    it('allows a duplicate value when the lottery is different') do
+      new_prize = Prize.new(
+        lottery: Lottery.create!(event_date: Date.tomorrow),
+        nth_before_last: prize.nth_before_last,
+      )
+      expect(new_prize.errors[:nth_before_last]).to be_empty
+    end
+
+    it('allows a duplicate value for the same lottery when the value is nil') do
+      prize.update!(nth_before_last: nil)
+      new_prize = Prize.new(
+        lottery: prize.lottery,
+        nth_before_last: nil,
+      )
+      expect(new_prize.errors[:nth_before_last]).to be_empty
+    end
+
+    context('locale is :en') do
+      it('sets an error message when :nth_before_last is a negative value') do
+        new_prize = Prize.new(nth_before_last: -1)
+        new_prize.valid?
+        expect(new_prize.errors.full_messages_for(:nth_before_last)).to eq(['Nth before last must be greater than or equal to 0'])
+      end
+
+      it('sets an error message when :nth_before_last is not an integer') do
+        new_prize = Prize.new(nth_before_last: 0.123)
+        new_prize.valid?
+        expect(new_prize.errors.full_messages_for(:nth_before_last)).to eq(['Nth before last must be an integer'])
+      end
+
+      it('sets an error message when the value has already been taken for the same lottery') do
+        new_prize = Prize.new(
+          lottery: lottery,
+          nth_before_last: prize.nth_before_last,
+        )
+        new_prize.valid?
+        expect(new_prize.errors.full_messages_for(:nth_before_last)).to eq(['Nth before last has already been taken'])
+      end
+    end
+
+    context('locale is :fr') do
+      around(:each) do |example|
+        with_locale(:fr) do
+          example.run
+        end
+      end
+
+      it('sets an error message when :nth_before_last is a negative value') do
+        new_prize = Prize.new(nth_before_last: -1)
+        new_prize.valid?
+        expect(new_prize.errors.full_messages_for(:nth_before_last)).to eq(['Le n-ième avant dernier doit être au minimum 0'])
+      end
+
+      it('sets an error message when :nth_before_last is not an integer') do
+        new_prize = Prize.new(nth_before_last: 0.123)
+        new_prize.valid?
+        expect(new_prize.errors.full_messages_for(:nth_before_last)).to eq(['Le n-ième avant dernier doit être un nombre entier'])
+      end
+
+      it('sets an error message when the value has already been taken for the same lottery') do
+        new_prize = Prize.new(
+          lottery: lottery,
+          nth_before_last: prize.nth_before_last,
+        )
+        new_prize.valid?
+        expect(new_prize.errors.full_messages_for(:nth_before_last)).to eq(['Le n-ième avant dernier a déjà été assigné'])
+      end
     end
   end
 

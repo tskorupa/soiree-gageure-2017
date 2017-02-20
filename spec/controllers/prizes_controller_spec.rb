@@ -116,18 +116,74 @@ RSpec.describe(PrizesController, type: :controller) do
     end
 
     describe('POST #create') do
-      it('redirects to the prize_path when the prize was successfully created') do
-        expect do
-          post(:create, params: { locale: I18n.locale, lottery_id: lottery.id, prize: { draw_order: 1, amount: 100.00} })
-        end.to change { Prize.count }.by(1)
+      let(:post_create) do
+        post(
+          :create,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            prize: {
+              draw_order: 2,
+              nth_before_last: 275,
+              amount: 250.00,
+            },
+          },
+        )
+      end
+
+      it('changes the prize count') do
+        expect { post_create }.to change { Prize.count }.by(1)
+      end
+
+      it('redirects to the prize_path') do
+        post_create
         expect(response).to redirect_to(lottery_prizes_path(lottery))
       end
 
-      it('renders :new when the prize could not be persisted') do
-        post(:create, params: { locale: I18n.locale, lottery_id: lottery.id, prize: { draw_order: nil } })
-        expect(response).to have_http_status(:success)
-        expect(assigns(:prize)).to be_a_new(Prize)
-        expect(response).to render_template(:new)
+      context('on validation error') do
+        let(:post_create) do
+          post(
+            :create,
+            params: {
+              locale: I18n.locale,
+              lottery_id: lottery.id,
+              prize: {
+                draw_order: 0,
+                nth_before_last: 125,
+                amount: -1,
+              },
+            },
+          )
+        end
+
+        it('does not change the prize count') do
+          expect { post_create }.not_to change { Prize.count }
+        end
+
+        it('assigns prize#draw_order') do
+          post_create
+          expect(assigns(:prize).draw_order).to eq(0)
+        end
+
+        it('assigns prize#nth_before_last') do
+          post_create
+          expect(assigns(:prize).nth_before_last).to eq(125)
+        end
+
+        it('assigns prize#amount') do
+          post_create
+          expect(assigns(:prize).amount).to eq(-1)
+        end
+
+        it('returns an http :success status') do
+          post_create
+          expect(response).to have_http_status(:success)
+        end
+
+        it('renders :new') do
+          post_create
+          expect(response).to render_template(:new)
+        end
       end
     end
 
@@ -149,24 +205,80 @@ RSpec.describe(PrizesController, type: :controller) do
     end
 
     describe('PATCH #update') do
-      it('redirects to lottery_prizes_path when :draw_order is updated') do
-        patch(:update, params: { locale: I18n.locale, lottery_id: lottery.id, id: prize.id, prize: { draw_order: 2 } })
-        expect(prize.reload.draw_order).to eq(2)
+      let(:patch_update) do
+        patch(
+          :update,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            id: prize.id,
+            prize: {
+              draw_order: 2,
+              nth_before_last: 275,
+              amount: 250.00,
+            },
+          },
+        )
+      end
+
+      it('changes prize#draw_order') do
+        expect { patch_update }.to change { prize.reload.draw_order }.to(2)
+      end
+
+      it('changes prize#nth_before_last') do
+        expect { patch_update }.to change { prize.reload.nth_before_last }.to(275)
+      end
+
+      it('changes prize#amount') do
+        expect { patch_update }.to change { prize.reload.amount }.to(250)
+      end
+
+      it('redirects to the prize_path') do
+        patch_update
         expect(response).to redirect_to(lottery_prizes_path(lottery))
       end
 
-      it('redirects to lottery_prizes_path when :amount is updated') do
-        patch(:update, params: { locale: I18n.locale, lottery_id: lottery.id, id: prize.id, prize: { amount: 99.99 } })
-        expect(prize.reload.amount.to_f).to eq(99.99)
-        expect(response).to redirect_to(lottery_prizes_path(lottery))
-      end
+      context('on validation error') do
+        let(:patch_update) do
+          patch(
+            :update,
+            params: {
+              locale: I18n.locale,
+              lottery_id: lottery.id,
+              id: prize.id,
+              prize: {
+                draw_order: 0,
+                nth_before_last: 125,
+                amount: -1,
+              },
+            },
+          )
+        end
 
-      it('renders :edit when the prize could not be updated') do
-        patch(:update, params: { locale: I18n.locale, lottery_id: lottery.id, id: prize.id, prize: { draw_order: nil } })
-        expect(response).to have_http_status(:success)
-        expect(assigns(:prize).draw_order).to be_nil
-        expect(prize.reload.draw_order).to eq(1)
-        expect(response).to render_template(:edit)
+        it('assigns prize#draw_order') do
+          patch_update
+          expect(assigns(:prize).draw_order).to eq(0)
+        end
+
+        it('assigns prize#nth_before_last') do
+          patch_update
+          expect(assigns(:prize).nth_before_last).to eq(125)
+        end
+
+        it('assigns prize#amount') do
+          patch_update
+          expect(assigns(:prize).amount).to eq(-1)
+        end
+
+        it('returns an http :success status') do
+          patch_update
+          expect(response).to have_http_status(:success)
+        end
+
+        it('renders :edit') do
+          patch_update
+          expect(response).to render_template(:edit)
+        end
       end
     end
 

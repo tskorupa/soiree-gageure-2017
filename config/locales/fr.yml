@@ -37,6 +37,8 @@ fr:
       capacity: 'Capacité'
       tickets_count: 'Places assignées'
     prize:
+      draw_order: 'Prix'
+      nth_before_last: 'N-ième avant dernier'
       amount: 'Montant'
     seller:
       full_name: 'Nom du vendeur'
@@ -67,6 +69,7 @@ fr:
         taken: 'a déjà été assigné'
         inclusion: "n'est pas valide"
         too_short: 'est trop court (minimum de %{count} charactères)'
+        not_an_integer: 'doit être un nombre entier'
       template:
         header:
           one: "1 erreur empêche la sauvegarde de ce %{model}:"
@@ -136,6 +139,7 @@ fr:
         tickets_count: 'No. places assignées'
       prize:
         draw_order: "L'ordre de pige"
+        nth_before_last: 'Le n-ième avant dernier'
         amount: 'Le montant'
       user:
         email: "L'adresse courriel"

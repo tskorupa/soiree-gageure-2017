@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170202014054) do
+ActiveRecord::Schema.define(version: 20170220023647) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,13 +42,15 @@ ActiveRecord::Schema.define(version: 20170202014054) do
   end
 
   create_table "prizes", force: :cascade do |t|
-    t.integer  "lottery_id",                         null: false
-    t.integer  "draw_order",                         null: false
-    t.decimal  "amount",     precision: 6, scale: 2, null: false
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.integer  "lottery_id",                              null: false
+    t.integer  "draw_order",                              null: false
+    t.decimal  "amount",          precision: 6, scale: 2, null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
+    t.integer  "nth_before_last"
     t.index ["draw_order"], name: "index_prizes_on_draw_order", using: :btree
     t.index ["lottery_id", "draw_order"], name: "index_prizes_on_lottery_id_and_draw_order", unique: true, using: :btree
+    t.index ["lottery_id", "nth_before_last"], name: "index_prizes_on_lottery_id_and_nth_before_last", unique: true, using: :btree
     t.index ["lottery_id"], name: "index_prizes_on_lottery_id", using: :btree
   end
 
