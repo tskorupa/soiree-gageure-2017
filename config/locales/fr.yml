@@ -40,6 +40,8 @@ fr:
       draw_order: 'Prix'
       nth_before_last: 'N-ième avant dernier'
       amount: 'Montant'
+      first_announced: 'Premier annoncé'
+      grand_prize: 'Dernier grand prix'
     seller:
       full_name: 'Nom du vendeur'
     guest:

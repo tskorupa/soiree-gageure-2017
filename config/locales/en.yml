@@ -34,6 +34,8 @@ en:
       draw_order: 'Prize'
       nth_before_last: 'Nth before last'
       amount: 'Amount'
+      first_announced: 'First announced'
+      grand_prize: 'Grand prize'
     seller:
       full_name: 'Seller name'
     guest:

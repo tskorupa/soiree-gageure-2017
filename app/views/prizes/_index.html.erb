@@ -32,7 +32,7 @@
       <% @prizes.each do |prize| %>
         <tr>
           <td><%= prize.draw_order %></td>
-          <td><%= prize.nth_before_last %></td>
+          <td><%= display_draw_position(prize) %></td>
           <td><%= number_to_currency(prize.amount) %></td>
           <td>
             <%= link_to(
