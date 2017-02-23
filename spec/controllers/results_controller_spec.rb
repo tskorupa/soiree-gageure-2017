@@ -15,13 +15,9 @@ RSpec.describe(ResultsController, type: :controller) do
     Ticket.create!(
       lottery: lottery,
       number: 1,
-      guest: guest,
       state: 'paid',
       ticket_type: 'meal_and_lottery',
-      registered: true,
-      dropped_off: true,
-      drawn: true,
-      drawn_at: Time.now.utc,
+      drawn_position: 13,
     )
   end
 
@@ -114,45 +110,31 @@ RSpec.describe(ResultsController, type: :controller) do
         @ticket_1 = Ticket.create!(
           lottery: lottery,
           number: 3,
-          state: 'reserved',
+          state: 'paid',
           ticket_type: 'meal_and_lottery',
-          registered: false,
-          dropped_off: false,
-          drawn: false,
-          drawn_at: nil,
+          drawn_position: nil,
         )
         @ticket_2 = Ticket.create!(
           lottery: lottery,
           number: 1,
-          guest: guest,
           state: 'paid',
           ticket_type: 'meal_and_lottery',
           registered: true,
-          dropped_off: false,
-          drawn: false,
-          drawn_at: nil,
+          drawn_position: nil,
         )
         @ticket_3 = Ticket.create!(
           lottery: lottery,
           number: 2,
-          guest: guest,
           state: 'paid',
           ticket_type: 'meal_and_lottery',
-          registered: true,
-          dropped_off: true,
-          drawn: true,
-          drawn_at: 5.minutes.ago.utc,
+          drawn_position: 13,
         )
         @ticket_4 = Ticket.create!(
           lottery: lottery,
           number: 4,
-          guest: guest,
           state: 'paid',
           ticket_type: 'meal_and_lottery',
-          registered: true,
-          dropped_off: true,
-          drawn: true,
-          drawn_at: Time.now.utc,
+          drawn_position: 23
         )
       end
 
@@ -184,10 +166,7 @@ RSpec.describe(ResultsController, type: :controller) do
 
       context('when no drawn ticket exists') do
         before(:each) do
-          Ticket.update_all(
-            drawn: false,
-            drawn_at: nil,
-          )
+          Ticket.update_all(drawn_position: nil)
           get_index
         end
 

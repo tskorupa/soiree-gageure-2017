@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe(Ticket, type: :model) do
+  include I18nHelper
+
   let(:lottery) do
     Lottery.create!(event_date: Date.today)
   end
@@ -69,6 +71,80 @@ RSpec.describe(Ticket, type: :model) do
         new_ticket.valid?
         expect(new_ticket.errors[:state]).to be_empty
       end
+    end
+  end
+
+  describe('#drawn_position') do
+    before(:each) do
+      ticket.update!(drawn_position: 13)
+    end
+
+    it('has a unique index on [:lottery_id, :drawn_position]') do
+      expect(
+        ActiveRecord::Base.connection.index_exists?(
+          :tickets,
+          [:lottery_id, :drawn_position],
+          unique: true,
+        ),
+      ).to be(true)
+    end
+
+    it('allows nil as a value') do
+      new_ticket = Ticket.new(drawn_position: nil)
+      new_ticket.valid?
+      expect(new_ticket.errors[:drawn_position]).to be_empty
+    end
+
+    it('allows "" as a value') do
+      new_ticket = Ticket.new(drawn_position: '')
+      new_ticket.valid?
+      expect(new_ticket.errors[:drawn_position]).to be_empty
+    end
+
+    it('does not allow 0 as a value') do
+      new_ticket = Ticket.new(drawn_position: 0)
+      new_ticket.valid?
+      expect(new_ticket.errors[:drawn_position]).to be_present
+    end
+
+    it('does not allow a negative value') do
+      new_ticket = Ticket.new(drawn_position: -1)
+      new_ticket.valid?
+      expect(new_ticket.errors[:drawn_position]).to be_present
+    end
+
+    it('does not allow a decimal value') do
+      new_ticket = Ticket.new(drawn_position: 0.123)
+      new_ticket.valid?
+      expect(new_ticket.errors[:drawn_position]).to be_present
+    end
+
+    it('does not allow a duplicate value for the same lottery') do
+      new_ticket = Ticket.new(
+        lottery: lottery,
+        drawn_position: ticket.drawn_position,
+      )
+      new_ticket.valid?
+      expect(new_ticket.errors[:drawn_position]).to be_present
+    end
+
+    it('allows a duplicate value when the lottery is different') do
+      new_ticket = Ticket.new(
+        lottery: Lottery.create!(event_date: Date.tomorrow),
+        drawn_position: ticket.drawn_position,
+      )
+      new_ticket.valid?
+      expect(new_ticket.errors[:drawn_position]).to be_empty
+    end
+
+    it('allows a duplicate value for the same lottery when the value is nil') do
+      ticket.update!(drawn_position: nil)
+      new_ticket = Ticket.new(
+        lottery: ticket.lottery,
+        drawn_position: nil,
+      )
+      new_ticket.valid?
+      expect(new_ticket.errors[:drawn_position]).to be_empty
     end
   end
 

@@ -18,6 +18,8 @@ RSpec.describe(LotteriesController, type: :controller) do
       number: 1,
       state: 'paid',
       ticket_type: 'meal_and_lottery',
+      dropped_off: true,
+      drawn_position: nil,
     )
   end
 
@@ -80,8 +82,8 @@ RSpec.describe(LotteriesController, type: :controller) do
 
     describe('GET #index') do
       it('returns all lotteries ordered by event_date: :desc') do
-        lottery_1 = Lottery.create!(event_date: Date.yesterday)
-        lottery_2 = Lottery.create!(event_date: Date.tomorrow)
+        lottery_1 = Lottery.create!(event_date: 3.days.ago)
+        lottery_2 = Lottery.create!(event_date: 4.days.from_now)
         lottery_3 = Lottery.create!(event_date: Date.today)
 
         get(:index, params: { locale: I18n.locale })
@@ -123,7 +125,11 @@ RSpec.describe(LotteriesController, type: :controller) do
 
       context('when the lottery contains 1 unregistered ticket') do
         before(:each) do
-          ticket.update!(registered: false)
+          ticket.update!(
+            registered: false,
+            dropped_off: false,
+            drawn_position: nil,
+          )
           get_show
         end
 
@@ -158,7 +164,11 @@ RSpec.describe(LotteriesController, type: :controller) do
 
       context('when the lottery contains 1 registered ticket') do
         before(:each) do
-          ticket.update!(registered: true)
+          ticket.update!(
+            registered: true,
+            dropped_off: false,
+            drawn_position: nil,
+          )
           get_show
         end
 
@@ -228,7 +238,11 @@ RSpec.describe(LotteriesController, type: :controller) do
 
       context('when the lottery contains 1 drawn ticket') do
         before(:each) do
-          ticket.update!(registered: true, dropped_off: true, drawn: true)
+          ticket.update!(
+            registered: true,
+            dropped_off: true,
+            drawn_position: 6,
+          )
           get_show
         end
 

@@ -6,16 +6,8 @@ class DrawnTicketsController < ApplicationController
     return no_tickets_message if num_participating_tickets.zero?
 
     positions = (1..num_participating_tickets).to_a
-    tickets = drawn_tickets.order(:drawn_at)
+    tickets = drawn_tickets.order(:drawn_position)
     @draw_positions = positions.zip(tickets)
-
-    calculator = PrizeCalculator.new(@lottery)
-    if positions = calculator.draw_positions
-      positions.each do |(position, prize)|
-        index = position - 1
-        @draw_positions[index] = @draw_positions[index] << prize
-      end
-    end
 
     render(
       'lotteries/lottery_child_index',
@@ -25,10 +17,7 @@ class DrawnTicketsController < ApplicationController
 
   def update
     @ticket = drawn_tickets.find(params[:id])
-    @ticket.update_attributes(
-      drawn: false,
-      drawn_at: nil,
-    )
+    @ticket.update!(drawn_position: nil)
     redirect_to(lottery_drawn_tickets_path(@lottery))
   end
 
@@ -42,6 +31,6 @@ class DrawnTicketsController < ApplicationController
   end
 
   def drawn_tickets
-    @lottery.tickets.where(drawn: true)
+    @lottery.tickets.where.not(drawn_position: nil)
   end
 end

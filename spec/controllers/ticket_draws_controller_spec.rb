@@ -8,19 +8,14 @@ RSpec.describe(TicketDrawsController, type: :controller) do
     Lottery.create!(event_date: Date.today)
   end
 
-  let(:guest) do
-    Guest.create!(full_name: 'Bubbles')
-  end
-
   let(:ticket) do
     Ticket.create!(
       lottery: lottery,
       number: 1,
-      guest: guest,
       state: 'paid',
       ticket_type: 'meal_and_lottery',
       dropped_off: true,
-      drawn: false,
+      drawn_position: 13,
     )
   end
 
@@ -115,34 +110,31 @@ RSpec.describe(TicketDrawsController, type: :controller) do
           state: 'reserved',
           ticket_type: 'meal_and_lottery',
           dropped_off: false,
-          drawn: false,
+          drawn_position: nil,
         )
         @ticket_2 = Ticket.create!(
           lottery: lottery,
           number: 1,
-          guest: guest,
           state: 'paid',
           ticket_type: 'meal_and_lottery',
-          dropped_off: false,
-          drawn: false,
+          dropped_off: true,
+          drawn_position: nil,
         )
         @ticket_3 = Ticket.create!(
           lottery: lottery,
           number: 2,
-          guest: guest,
           state: 'paid',
           ticket_type: 'meal_and_lottery',
           dropped_off: true,
-          drawn: false,
+          drawn_position: nil,
         )
         @ticket_4 = Ticket.create!(
           lottery: lottery,
           number: 4,
-          guest: guest,
           state: 'paid',
           ticket_type: 'meal_and_lottery',
           dropped_off: true,
-          drawn: true,
+          drawn_position: 1,
         )
       end
 
@@ -156,7 +148,7 @@ RSpec.describe(TicketDrawsController, type: :controller) do
         end
 
         it('returns all dropped off and not drawn tickets when :number is not specified in the params') do
-          expect(assigns(:tickets)).to eq([@ticket_3])
+          expect(assigns(:tickets)).to eq([@ticket_2, @ticket_3])
         end
 
         it('renders the template lotteries/lottery_child_index') do
@@ -257,6 +249,13 @@ RSpec.describe(TicketDrawsController, type: :controller) do
     end
 
     describe('PATCH #update') do
+      before(:each) do
+        ticket.update!(
+          dropped_off: true,
+          drawn_position: nil,
+        )
+      end
+
       let(:update) do
         patch(
           :update,
@@ -285,13 +284,13 @@ RSpec.describe(TicketDrawsController, type: :controller) do
           lottery.update!(locked: true)
         end
 
-        it('raises a "RecordNotFound" when ticket#drawn == true') do
-          ticket.update!(drawn: true)
+        it('raises a "RecordNotFound" when ticket#dropped_off is false') do
+          ticket.update!(dropped_off: false)
           expect { update }.to raise_error(ActiveRecord::RecordNotFound)
         end
 
-        it('raises a "RecordNotFound" when ticket#dropped_off == false') do
-          ticket.update!(dropped_off: false)
+        it('raises a "RecordNotFound" when ticket#drawn_position is set') do
+          ticket.update!(drawn_position: 13)
           expect { update }.to raise_error(ActiveRecord::RecordNotFound)
         end
 
@@ -300,14 +299,18 @@ RSpec.describe(TicketDrawsController, type: :controller) do
           expect(response).to redirect_to(lottery_ticket_draws_path(lottery))
         end
 
-        it('sets ticket#drawn = true') do
-          expect { update }.to change { ticket.reload.drawn }.from(false).to(true)
+        it('sets ticket#drawn_position') do
+          expect { update }.to change { ticket.reload.drawn_position }.from(nil).to(1)
         end
 
-        it('sets ticket#drawn_at = Time.now.utc') do
-          travel_to Time.new(2004, 11, 24, 01, 04, 44)
-          allow(Time).to receive(:now).and_return(Time.now.utc)
-          expect { update }.to change { ticket.reload.drawn_at }.from(nil).to(Time.now.utc)
+        it('sets ticket#prize') do
+          prize = Prize.create!(
+            lottery: lottery,
+            draw_order: 1,
+            nth_before_last: nil,
+            amount: 1.00,
+          )
+          expect { update }.to change { ticket.reload.prize }.from(nil).to(prize)
         end
       end
     end

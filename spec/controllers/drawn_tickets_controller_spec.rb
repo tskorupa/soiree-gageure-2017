@@ -15,11 +15,8 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
     Ticket.create!(
       lottery: lottery,
       number: 1,
-      guest: guest,
       state: 'paid',
       ticket_type: 'meal_and_lottery',
-      drawn: true,
-      drawn_at: Time.now.utc,
     )
   end
 
@@ -113,7 +110,8 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
           number: 1,
           state: 'reserved',
           ticket_type: 'meal_and_lottery',
-          drawn: false,
+          dropped_off: false,
+          drawn_position: nil,
         )
         @ticket_2 = Ticket.create!(
           lottery: lottery,
@@ -121,7 +119,8 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
           guest: guest,
           state: 'paid',
           ticket_type: 'meal_and_lottery',
-          drawn: false,
+          dropped_off: true,
+          drawn_position: nil,
         )
         @ticket_3 = Ticket.create!(
           lottery: lottery,
@@ -130,8 +129,7 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
           state: 'paid',
           ticket_type: 'meal_and_lottery',
           dropped_off: true,
-          drawn: true,
-          drawn_at: Time.now.utc,
+          drawn_position: 2,
         )
         @ticket_4 = Ticket.create!(
           lottery: lottery,
@@ -140,8 +138,7 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
           state: 'paid',
           ticket_type: 'meal_and_lottery',
           dropped_off: true,
-          drawn: true,
-          drawn_at: 5.minutes.ago.utc,
+          drawn_position: 1,
         )
       end
 
@@ -168,9 +165,9 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
         end
       end
 
-      context('when some tickets have ticket#dropped_off == true and all tickets are ticket#drawn == false') do
+      context('when some tickets have ticket#dropped_off == true and all tickets are ticket#drawn_position == nil') do
         before(:each) do
-          Ticket.update_all(drawn: false)
+          Ticket.update_all(drawn_position: nil)
           get_index
         end
 
@@ -178,8 +175,8 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
           expect(response).to have_http_status(:success)
         end
 
-        it('returns a draw position for each dropped off ticket and sets the drawn ticket to nil') do
-          expect(assigns(:draw_positions)).to eq([[1, nil],[2, nil]])
+        it('returns a draw position for each dropped off ticket along with nil as ticket placeholders') do
+          expect(assigns(:draw_positions)).to eq([[1, nil],[2, nil], [3, nil]])
         end
 
         it('renders the template lotteries/lottery_child_index') do
@@ -191,7 +188,7 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
         end
       end
 
-      context('when some tickets have ticket#dropped_off == true and some tickets are ticket#drawn == true') do
+      context('when some tickets have ticket#dropped_off == true and some tickets have ticket#drawn_position set') do
         before(:each) do
           get_index
         end
@@ -201,7 +198,7 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
         end
 
         it('returns a draw position for each dropped off ticket and sets the drawn ticket') do
-          expect(assigns(:draw_positions)).to eq([[1, @ticket_4],[2, @ticket_3]])
+          expect(assigns(:draw_positions)).to eq([[1, @ticket_4],[2, @ticket_3], [3, nil]])
         end
 
         it('renders the template lotteries/lottery_child_index') do
@@ -258,8 +255,8 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
     end
 
     describe('PATCH #update') do
-      it('raises a "RecordNotFound" when ticket#drawn = false') do
-        ticket.update!(drawn: false)
+      it('raises a "RecordNotFound" when ticket#drawn_position is nil') do
+        ticket.update!(drawn_position: nil)
         expect do
           patch(
             :update,
@@ -272,7 +269,7 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
         end.to raise_error(ActiveRecord::RecordNotFound)
       end
 
-      context('when ticket#drawn = true') do
+      context('when ticket#drawn_position is not nil') do
         let(:update) do
           patch(
             :update,
@@ -284,18 +281,17 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
           )
         end
 
+        before(:each) do
+          ticket.update!(drawn_position: 13)
+        end
+
         it('redirects to the lottery_drawn_tickets_path') do
           update
           expect(response).to redirect_to(lottery_drawn_tickets_path(lottery))
         end
 
-        it('sets ticket#drawn = false') do
-          expect { update }.to change { ticket.reload.drawn }.from(true).to(false)
-        end
-
-        it('sets ticket#drawn_at = nil') do
-          expect(ticket.drawn_at).not_to be_nil
-          expect { update }.to change { ticket.reload.drawn_at }.to(nil)
+        it('sets ticket#drawn_position to nil') do
+          expect { update }.to change { ticket.reload.drawn_position }.to(nil)
         end
       end
     end

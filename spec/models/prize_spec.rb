@@ -63,20 +63,28 @@ RSpec.describe(Prize, type: :model) do
       expect(new_prize.errors[:nth_before_last]).to be_empty
     end
 
-    it('allows 0 as a value') do
-      new_prize = Prize.new(nth_before_last: 0)
+    it('allows "" as a value') do
+      new_prize = Prize.new(nth_before_last: '')
       new_prize.valid?
       expect(new_prize.errors[:nth_before_last]).to be_empty
     end
 
+    it('does not allow 0 as a value') do
+      new_prize = Prize.new(nth_before_last: 0)
+      new_prize.valid?
+      expect(new_prize.errors[:nth_before_last]).to be_present
+    end
+
     it('does not allow a negative value') do
       new_prize = Prize.new(nth_before_last: -1)
-      expect(new_prize.valid?).to be(false)
+      new_prize.valid?
+      expect(new_prize.errors[:nth_before_last]).to be_present
     end
 
     it('does not allow a decimal value') do
       new_prize = Prize.new(nth_before_last: 0.123)
-      expect(new_prize.valid?).to be(false)
+      new_prize.valid?
+      expect(new_prize.errors[:nth_before_last]).to be_present
     end
 
     it('does not allow a duplicate value for the same lottery') do
@@ -84,7 +92,8 @@ RSpec.describe(Prize, type: :model) do
         lottery: lottery,
         nth_before_last: prize.nth_before_last,
       )
-      expect(new_prize.valid?).to be(false)
+      new_prize.valid?
+      expect(new_prize.errors[:nth_before_last]).to be_present
     end
 
     it('allows a duplicate value when the lottery is different') do
@@ -92,6 +101,7 @@ RSpec.describe(Prize, type: :model) do
         lottery: Lottery.create!(event_date: Date.tomorrow),
         nth_before_last: prize.nth_before_last,
       )
+      new_prize.valid?
       expect(new_prize.errors[:nth_before_last]).to be_empty
     end
 
@@ -101,6 +111,7 @@ RSpec.describe(Prize, type: :model) do
         lottery: prize.lottery,
         nth_before_last: nil,
       )
+      new_prize.valid?
       expect(new_prize.errors[:nth_before_last]).to be_empty
     end
 
@@ -108,7 +119,7 @@ RSpec.describe(Prize, type: :model) do
       it('sets an error message when :nth_before_last is a negative value') do
         new_prize = Prize.new(nth_before_last: -1)
         new_prize.valid?
-        expect(new_prize.errors.full_messages_for(:nth_before_last)).to eq(['Nth before last must be greater than or equal to 0'])
+        expect(new_prize.errors.full_messages_for(:nth_before_last)).to eq(['Nth before last must be greater than 0'])
       end
 
       it('sets an error message when :nth_before_last is not an integer') do
@@ -137,7 +148,7 @@ RSpec.describe(Prize, type: :model) do
       it('sets an error message when :nth_before_last is a negative value') do
         new_prize = Prize.new(nth_before_last: -1)
         new_prize.valid?
-        expect(new_prize.errors.full_messages_for(:nth_before_last)).to eq(['Le n-ième avant dernier doit être au minimum 0'])
+        expect(new_prize.errors.full_messages_for(:nth_before_last)).to eq(['Le n-ième avant dernier doit être supérieur à 0'])
       end
 
       it('sets an error message when :nth_before_last is not an integer') do

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170220023647) do
+ActiveRecord::Schema.define(version: 20170222235503) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,10 +48,12 @@ ActiveRecord::Schema.define(version: 20170220023647) do
     t.datetime "created_at",                              null: false
     t.datetime "updated_at",                              null: false
     t.integer  "nth_before_last"
+    t.integer  "ticket_id"
     t.index ["draw_order"], name: "index_prizes_on_draw_order", using: :btree
     t.index ["lottery_id", "draw_order"], name: "index_prizes_on_lottery_id_and_draw_order", unique: true, using: :btree
     t.index ["lottery_id", "nth_before_last"], name: "index_prizes_on_lottery_id_and_nth_before_last", unique: true, using: :btree
     t.index ["lottery_id"], name: "index_prizes_on_lottery_id", using: :btree
+    t.index ["ticket_id"], name: "index_prizes_on_ticket_id", unique: true, using: :btree
   end
 
   create_table "sellers", force: :cascade do |t|
@@ -83,23 +85,22 @@ ActiveRecord::Schema.define(version: 20170220023647) do
   end
 
   create_table "tickets", force: :cascade do |t|
-    t.integer  "lottery_id",                  null: false
+    t.integer  "lottery_id",                     null: false
     t.integer  "seller_id"
     t.integer  "guest_id"
-    t.integer  "number",                      null: false
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.integer  "number",                         null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
     t.integer  "sponsor_id"
-    t.string   "state",                       null: false
-    t.string   "ticket_type",                 null: false
-    t.boolean  "registered",  default: false, null: false
+    t.string   "state",                          null: false
+    t.string   "ticket_type",                    null: false
+    t.boolean  "registered",     default: false, null: false
     t.integer  "table_id"
-    t.boolean  "dropped_off", default: false, null: false
-    t.boolean  "drawn",       default: false, null: false
-    t.datetime "drawn_at"
+    t.boolean  "dropped_off",    default: false, null: false
+    t.integer  "drawn_position"
     t.index ["guest_id"], name: "index_tickets_on_guest_id", using: :btree
+    t.index ["lottery_id", "drawn_position"], name: "index_tickets_on_lottery_id_and_drawn_position", unique: true, using: :btree
     t.index ["lottery_id", "number"], name: "index_tickets_on_lottery_id_and_number", unique: true, using: :btree
-    t.index ["lottery_id", "registered", "dropped_off", "drawn", "drawn_at"], name: "by_registration_and_draw", using: :btree
     t.index ["lottery_id"], name: "index_tickets_on_lottery_id", using: :btree
     t.index ["number"], name: "index_tickets_on_number", using: :btree
     t.index ["seller_id"], name: "index_tickets_on_seller_id", using: :btree

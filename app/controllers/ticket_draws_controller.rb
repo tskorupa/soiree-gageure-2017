@@ -15,11 +15,8 @@ class TicketDrawsController < ApplicationController
   def update
     return head(:no_content) unless @lottery.locked?
 
-    @ticket = tickets_for_draw.find(params[:id])
-    @ticket.update_attributes(
-      drawn: true,
-      drawn_at: Time.now.utc,
-    )
+    @ticket = tickets_for_draw.includes(:lottery).find(params[:id])
+    TicketDrawUpdater.new(ticket: @ticket).update
     redirect_to(lottery_ticket_draws_path(@lottery))
   end
 
@@ -28,7 +25,7 @@ class TicketDrawsController < ApplicationController
   def tickets_for_draw
     @lottery.tickets.where(
       dropped_off: true,
-      drawn: false,
+      drawn_position: nil,
     )
   end
 end
