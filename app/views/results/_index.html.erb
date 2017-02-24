@@ -20,7 +20,7 @@
   <% if @ticket.prize %>
     <div class="panel panel-success">
       <div class="panel-heading">
-        <h2><%= Prize.model_name.human %> <%= number_to_currency(@ticket.prize) %></h2>
+        <h2><%= Prize.model_name.human %> <%= number_to_currency(@ticket.prize.amount) %></h2>
       </div>
     </div>
   <% end %>

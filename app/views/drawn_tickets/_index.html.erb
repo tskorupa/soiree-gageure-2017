@@ -14,7 +14,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @draw_positions.each do |(position, ticket, prize)| %>
+    <% @draw_results.each do |(position, ticket, prize)| %>
       <tr class='<%= prize ? "success" : "" %>'>
         <td><%= position %></td>
         <td><%= ticket&.number %></td>

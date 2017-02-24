@@ -2,13 +2,14 @@ class DrawnTicketsController < ApplicationController
   include LotteryLookup
 
   def index
-    num_participating_tickets = @lottery.tickets.where(dropped_off: true).count
-    return no_tickets_message if num_participating_tickets.zero?
+    dropped_off_tickets_count = @lottery.tickets.where(dropped_off: true).count
+    return no_tickets_message if dropped_off_tickets_count.zero?
 
-    positions = (1..num_participating_tickets).to_a
-    tickets = drawn_tickets.order(:drawn_position)
-    @draw_positions = positions.zip(tickets)
-
+    @draw_results = DrawResultsListing.draw_results(
+      drawn_tickets: drawn_tickets,
+      prizes: @lottery.prizes,
+      dropped_off_tickets_count: dropped_off_tickets_count,
+    )
     render(
       'lotteries/lottery_child_index',
       locals: { main_partial: 'drawn_tickets/index' },

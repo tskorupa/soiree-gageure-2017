@@ -176,7 +176,7 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
         end
 
         it('returns a draw position for each dropped off ticket along with nil as ticket placeholders') do
-          expect(assigns(:draw_positions)).to eq([[1, nil],[2, nil], [3, nil]])
+          expect(assigns(:draw_results)).to eq([[1, nil], [2, nil], [3, nil]])
         end
 
         it('renders the template lotteries/lottery_child_index') do
@@ -188,8 +188,9 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
         end
       end
 
-      context('when some tickets have ticket#dropped_off == true and some tickets have ticket#drawn_position set') do
+      context('when some tickets have ticket#dropped_off == true and some tickets have ticket#drawn_position set and a prize exists for the first drawn ticket') do
         before(:each) do
+          lottery.prizes.create!(draw_order: 1, nth_before_last: nil, amount: 3.00)
           get_index
         end
 
@@ -198,7 +199,7 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
         end
 
         it('returns a draw position for each dropped off ticket and sets the drawn ticket') do
-          expect(assigns(:draw_positions)).to eq([[1, @ticket_4],[2, @ticket_3], [3, nil]])
+          expect(assigns(:draw_results)).to eq([[1, @ticket_4, 3.0],[2, @ticket_3], [3, nil]])
         end
 
         it('renders the template lotteries/lottery_child_index') do
