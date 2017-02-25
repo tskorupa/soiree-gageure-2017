@@ -46,10 +46,7 @@ class TicketPdf
   attr_reader :ticket
 
   def padded_ticket_number
-    ticket_number = ticket.number
-    return format('00%i', ticket_number) if ticket_number < 10
-    return format('0%i', ticket_number) if ticket_number < 100
-    ticket_number.to_s
+    PaddedNumber.pad_number(ticket.number)
   end
 
   def table_number

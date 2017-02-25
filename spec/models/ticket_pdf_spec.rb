@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe(TicketPdf, type: :pdf) do
+RSpec.describe(TicketPdf, type: :model) do
   include I18nHelper
 
   let(:lottery) do
