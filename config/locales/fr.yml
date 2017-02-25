@@ -1,4 +1,10 @@
 fr:
+  number:
+    currency:
+      format:
+        delimiter: ' '
+        separator: ','
+        format: '%n %u'
   search_placeholder: 'Recherche...'
   number_filter_placeholder: 'Numéro de billet...'
   warning_notice: 'Attention!'
