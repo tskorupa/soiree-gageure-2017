@@ -16,7 +16,6 @@ class TicketPdf
 
   def render
     pdf = Prawn::Document.new(margin: 0, page_size: [WIDTH, HEIGHT])
-    pdf.stroke_bounds
     pdf.bounding_box([0, pdf.cursor], width: WIDTH, height: HEIGHT) do
       pdf.move_down(8)
       pdf.text(
@@ -36,7 +35,6 @@ class TicketPdf
         align: :center,
         valign: :bottom,
       )
-      pdf.stroke_bounds
     end
     pdf.render
   end
