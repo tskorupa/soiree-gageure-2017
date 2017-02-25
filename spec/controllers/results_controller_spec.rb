@@ -7,20 +7,6 @@ RSpec.describe(ResultsController, type: :controller) do
     Lottery.create!(event_date: Date.today)
   end
 
-  let(:guest) do
-    Guest.create!(full_name: 'Bubbles')
-  end
-
-  let(:ticket) do
-    Ticket.create!(
-      lottery: lottery,
-      number: 1,
-      state: 'paid',
-      ticket_type: 'meal_and_lottery',
-      drawn_position: 13,
-    )
-  end
-
   let(:user) do
     User.create!(
       email: 'abc@def.com',
@@ -37,65 +23,6 @@ RSpec.describe(ResultsController, type: :controller) do
       it('redirects to the user log in') do
         get(:index, params: { locale: I18n.locale, lottery_id: lottery.id })
         expect(response).to redirect_to(new_user_session_path)
-      end
-    end
-
-    describe('GET #new') do
-      it('raises a "No route matches" error') do
-        expect do
-          get(:new, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
-    describe('POST #create') do
-      it('raises a "No route matches" error') do
-        expect do
-          post(
-            :create,
-            params: {
-              locale: I18n.locale,
-              lottery_id: lottery.id,
-              ticket: {
-                number: 1,
-                state: 'reserved',
-                ticket_type: 'meal_and_lottery',
-              },
-            },
-          )
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
-    describe('GET #show') do
-      it('raises a "No route matches" error') do
-        expect do
-          get(:show, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
-    describe('GET #edit') do
-      it('raises a "No route matches" error') do
-        expect do
-          get(:edit, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
-    describe('PATCH #update') do
-      it('raises a "No route matches" error') do
-        expect do
-          patch(:update, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id, ticket: { number: 1 } })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
-    describe('DELETE #destroy') do
-      it('raises a "No route matches" error') do
-        expect do
-          delete(:destroy, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
       end
     end
   end
@@ -159,6 +86,10 @@ RSpec.describe(ResultsController, type: :controller) do
           expect(response).to render_template('lotteries/lottery_child_index')
         end
 
+        it('renders the partial results/index_header') do
+          expect(response).to render_template('results/_index_header')
+        end
+
         it('renders the partial results/index') do
           expect(response).to render_template('results/_index')
         end
@@ -174,7 +105,7 @@ RSpec.describe(ResultsController, type: :controller) do
           expect(response).to have_http_status(:success)
         end
 
-        it('returns the last drawn ticket') do
+        it('does not assign @ticket') do
           expect(assigns(:ticket)).to be_nil
         end
 
@@ -182,75 +113,13 @@ RSpec.describe(ResultsController, type: :controller) do
           expect(response).to render_template('lotteries/lottery_child_index')
         end
 
-        it('renders the partial results/index') do
-          expect(response).to render_template('results/_index')
+        it('renders the partial results/index_header') do
+          expect(response).to render_template('results/_index_header')
         end
-      end
-    end
 
-    describe('GET #new') do
-      it('raises a "No route matches" error') do
-        expect do
-          get(:new, params: { locale: I18n.locale, lottery_id: lottery.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
-    describe('POST #create') do
-      it('raises a "No route matches" error') do
-        expect do
-          post(
-            :create,
-            params: {
-              locale: I18n.locale,
-              lottery_id: lottery.id,
-              ticket: {
-                number: 1,
-                state: 'reserved',
-                ticket_type: 'meal_and_lottery',
-              },
-            },
-          )
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
-    describe('GET #show') do
-      it('raises a "No route matches" error') do
-        expect do
-          get(:show, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
-    describe('GET #edit') do
-      it('raises a "No route matches" error') do
-        expect do
-          get(:edit, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
-    describe('PATCH #update') do
-      it('raises a "No route matches" error') do
-        expect do
-          patch(
-            :update,
-            params: {
-              locale: I18n.locale,
-              lottery_id: lottery.id,
-              id: ticket.id,
-            },
-          )
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
-    describe('DELETE #destroy') do
-      it('raises a "No route matches" error') do
-        expect do
-          delete(:destroy, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
+        it('renders the partial results/empty_index') do
+          expect(response).to render_template('results/_empty_index')
+        end
       end
     end
   end

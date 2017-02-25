@@ -1,29 +1,20 @@
-<%- model_class = Ticket -%>
-<div class='page-header'>
-  <div class='row-fluid'>
-    <h1><%= t('.title') %></h1>
+<%= render(partial: 'index_header') %>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h1><%= Ticket.model_name.human %> <%= @ticket.number %></h1>
+    <h3><%= Ticket.human_attribute_name('ticket_type.%s' % @ticket.ticket_type) %></h3>
+    <% if @ticket.ticket_type == 'meal_and_lottery' %>
+      <h2><%= @ticket.guest.try!(:full_name) %></h2>
+      <% if (table_number = @ticket.table.try!(:number)).present? %>
+        <h3><%= Table.model_name.human %> <%= table_number %></h3>
+      <% end %>
+    <% end %>
   </div>
 </div>
-<% if @ticket %>
-  <div class="panel panel-primary">
+<% if @ticket.prize %>
+  <div class="panel panel-success">
     <div class="panel-heading">
-      <h1><%= model_class.model_name.human %> <%= @ticket.number %></h1>
-      <h3><%= model_class.human_attribute_name('ticket_type.%s' % @ticket.ticket_type) %></h3>
-      <% if @ticket.ticket_type == 'meal_and_lottery' %>
-        <h2><%= @ticket.guest.try!(:full_name) %></h2>
-        <% if (table_number = @ticket.table.try!(:number)).present? %>
-          <h3><%= Table.model_name.human %> <%= table_number %></h3>
-        <% end %>
-      <% end %>
+      <h2><%= Prize.model_name.human %> <%= number_to_currency(@ticket.prize.amount) %></h2>
     </div>
   </div>
-  <% if @ticket.prize %>
-    <div class="panel panel-success">
-      <div class="panel-heading">
-        <h2><%= Prize.model_name.human %> <%= number_to_currency(@ticket.prize.amount) %></h2>
-      </div>
-    </div>
-  <% end %>
-<% else %>
-  <div class='row-fluid'><%= t('.no_drawn_tickets') %></div>
 <% end %>
