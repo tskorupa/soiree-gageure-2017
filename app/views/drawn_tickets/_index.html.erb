@@ -17,7 +17,7 @@
     <% @draw_results.each do |(position, ticket, prize)| %>
       <tr class='<%= prize ? "success" : "" %>'>
         <td><%= position %></td>
-        <td><%= ticket&.number %></td>
+        <td><%= PaddedNumber.pad_number(ticket.number) if ticket&.number %></td>
         <td><%= ticket&.guest&.full_name %></td>
         <td><%= number_to_currency(prize) if prize %></td>
         <td><%= link_to(
