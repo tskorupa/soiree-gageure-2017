@@ -5,6 +5,8 @@ fr:
         delimiter: ' '
         separator: ','
         format: '%n %u'
+        precision: 2
+        unit: '$'
   search_placeholder: 'Recherche...'
   number_filter_placeholder: 'Numéro de billet...'
   warning_notice: 'Attention!'
