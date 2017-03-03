@@ -267,9 +267,6 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
             id: ticket.id,
             guest_name: 'FOO',
             table_number: table.number,
-            ticket: {
-              ticket_type: 'lottery_only',
-            },
           },
         )
       end
@@ -309,9 +306,6 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
               id: ticket.id,
               guest_name: '',
               table_number: -1,
-              ticket: {
-                ticket_type: 'does not exist',
-              },
             },
           )
         end
@@ -330,10 +324,6 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
 
         it('preserves the submitted value for :table_number') do
           expect(assigns(:builder).table_number).to eq('-1')
-        end
-
-        it('preserves the submitted value for ticket#ticket_type') do
-          expect(assigns(:ticket).ticket_type).to eq('does not exist')
         end
 
         it('does not change ticket#registered when the update fails') do
@@ -355,10 +345,6 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
           expect { patch_update }
             .to change { ticket.reload.table_id }
             .from(nil).to(table.id)
-        end
-
-        it('permits to change ticket#ticket_type') do
-          expect { patch_update }.to change { ticket.reload.ticket_type }.from('meal_and_lottery').to('lottery_only')
         end
 
         it('sets ticket#registered to true') do

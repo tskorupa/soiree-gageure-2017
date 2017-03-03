@@ -41,12 +41,9 @@ class TicketRegistrationsController < ApplicationController
   end
 
   def builder_params
-    ticket_params = params.fetch(:ticket, {})
-      .permit(:ticket_type)
-
     params.permit(
       :guest_name,
       :table_number,
-    ).merge(ticket_params.to_h)
+    )
   end
 end
