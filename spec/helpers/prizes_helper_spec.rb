@@ -27,8 +27,8 @@ RSpec.describe(PrizesHelper, type: :helper) do
         expect(display_draw_position(prize)).to eq('First announced')
       end
 
-      it('returns "Grand prize" when prize#nth_before_last is 1') do
-        prize.nth_before_last = 1
+      it('returns "Grand prize" when prize#nth_before_last is 0') do
+        prize.nth_before_last = 0
         expect(display_draw_position(prize)).to eq('Grand prize')
       end
     end
@@ -43,8 +43,8 @@ RSpec.describe(PrizesHelper, type: :helper) do
         expect(display_draw_position(prize)).to eq('Premier annoncé')
       end
 
-      it('returns "Dernier grand prix" when prize#nth_before_last is 1') do
-        prize.nth_before_last = 1
+      it('returns "Dernier grand prix" when prize#nth_before_last is 0') do
+        prize.nth_before_last = 0
         expect(display_draw_position(prize)).to eq('Dernier grand prix')
       end
     end

@@ -50,10 +50,10 @@ RSpec.describe(DrawResultsListing, type: :model) do
       expect(draw_results).to eq([[1, ticket, 3.51], [2, nil], [3, nil]])
     end
 
-    it('returns [[1, <ticket>], [2, nil], [3, nil, $3.51]] when drawn_tickets: [<ticket>] and dropped_off_tickets_count: 3 and prizes: [<prize nth_before_last: 1>]') do
+    it('returns [[1, <ticket>], [2, nil], [3, nil, $3.51]] when drawn_tickets: [<ticket>] and dropped_off_tickets_count: 3 and prizes: [<prize nth_before_last: 0>]') do
       @drawn_tickets = Ticket.where(id: ticket.id)
       @dropped_off_tickets_count = 3
-      lottery.prizes.create!(draw_order: 22, amount: 3.51, nth_before_last: 1)
+      lottery.prizes.create!(draw_order: 22, amount: 3.51, nth_before_last: 0)
       @prizes = lottery.prizes
       expect(draw_results).to eq([[1, ticket], [2, nil], [3, nil, 3.51]])
     end

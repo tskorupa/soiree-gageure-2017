@@ -69,10 +69,10 @@ RSpec.describe(Prize, type: :model) do
       expect(new_prize.errors[:nth_before_last]).to be_empty
     end
 
-    it('does not allow 0 as a value') do
+    it('allows 0 as a value') do
       new_prize = Prize.new(nth_before_last: 0)
       new_prize.valid?
-      expect(new_prize.errors[:nth_before_last]).to be_present
+      expect(new_prize.errors[:nth_before_last]).to be_empty
     end
 
     it('does not allow a negative value') do
@@ -119,7 +119,7 @@ RSpec.describe(Prize, type: :model) do
       it('sets an error message when :nth_before_last is a negative value') do
         new_prize = Prize.new(nth_before_last: -1)
         new_prize.valid?
-        expect(new_prize.errors.full_messages_for(:nth_before_last)).to eq(['Nth before last must be greater than 0'])
+        expect(new_prize.errors.full_messages_for(:nth_before_last)).to eq(['Nth before last must be greater than or equal to 0'])
       end
 
       it('sets an error message when :nth_before_last is not an integer') do
@@ -148,7 +148,7 @@ RSpec.describe(Prize, type: :model) do
       it('sets an error message when :nth_before_last is a negative value') do
         new_prize = Prize.new(nth_before_last: -1)
         new_prize.valid?
-        expect(new_prize.errors.full_messages_for(:nth_before_last)).to eq(['Le n-ième avant dernier doit être supérieur à 0'])
+        expect(new_prize.errors.full_messages_for(:nth_before_last)).to eq(['Le n-ième avant dernier doit être au minimum 0'])
       end
 
       it('sets an error message when :nth_before_last is not an integer') do

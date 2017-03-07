@@ -22,9 +22,8 @@ module DrawResultsListing
 
   def winning_position(prize, dropped_off_tickets_count)
     nth_before_last = prize.nth_before_last
-
     return 1 if nth_before_last.nil?
-    return dropped_off_tickets_count if nth_before_last == 1
+
     dropped_off_tickets_count - nth_before_last
   end
 end
