@@ -17,8 +17,8 @@ class DrawnTicketsController < ApplicationController
   end
 
   def update
-    @ticket = drawn_tickets.find(params[:id])
-    @ticket.update!(drawn_position: nil)
+    @ticket = drawn_tickets.includes(:lottery).find(params[:id])
+    DrawnTicketUpdater.update(ticket: @ticket)
     redirect_to(lottery_drawn_tickets_path(@lottery))
   end
 

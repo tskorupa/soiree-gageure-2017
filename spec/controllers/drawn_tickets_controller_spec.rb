@@ -291,8 +291,9 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
           expect(response).to redirect_to(lottery_drawn_tickets_path(lottery))
         end
 
-        it('sets ticket#drawn_position to nil') do
-          expect { update }.to change { ticket.reload.drawn_position }.to(nil)
+        it('delegates to DrawnTicketUpdater.update') do
+          expect(DrawnTicketUpdater).to receive(:update).with(ticket: ticket)
+          update
         end
       end
     end
