@@ -5,6 +5,7 @@ en:
         precision: 0
   search_placeholder: 'Search...'
   number_filter_placeholder: 'Ticket number...'
+  info_notice: 'Info:'
   warning_notice: 'Warning!'
   layouts:
     application:
@@ -23,7 +24,9 @@ en:
         registered: 'must be registered'
         dropped_off: 'is already dropped off'
   ticket_draws:
-    warnings:
+    info:
+      ticket_draw_instructions: 'Enter ticket number to display the "draw" button'
+    warning:
       lottery_is_unlocked: 'Tickets may be drawn once the lottery is locked'
   column_names:
     draw_order: 'Draw order'

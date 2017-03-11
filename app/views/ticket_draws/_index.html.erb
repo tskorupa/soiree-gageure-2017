@@ -16,9 +16,13 @@
     </h1>
   </div>
 </div>
-<% unless @lottery.locked? %>
+<% if @lottery.locked? %>
+  <div class="alert alert-info" data-ticket-draw-instructions>
+    <strong><%= t('info_notice') %></strong> <%= t('ticket_draws.info.ticket_draw_instructions') %>
+  </div>
+<% else %>
   <div class="alert alert-warning">
-    <strong><%= t('warning_notice') %></strong> <%= t('ticket_draws.warnings.lottery_is_unlocked') %>
+    <strong><%= t('warning_notice') %></strong> <%= t('ticket_draws.warning.lottery_is_unlocked') %>
   </div>
 <% end %>
 <% if @tickets.present? %>
@@ -44,6 +48,7 @@
             lottery_ticket_draw_path(@lottery, ticket),
             method: :patch,
             class: 'btn btn-xs btn-primary',
+            'data-draw-ticket-id' => ticket.id,
           ) if @lottery.locked? %></td>
         </tr>
       <% end %>
