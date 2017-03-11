@@ -33,27 +33,14 @@ RSpec.describe(DrawnTicketBroadcastJob, type: :job) do
       end.to raise_exception(ActiveRecord::RecordNotFound)
     end
 
-    it('does not delegate to ActionCable.server.broadcast when no ticket with ticket#drawn_position != nil exists') do
+    it('does not delegate to ActionCable.server.broadcast when lottery#last_drawn_ticket is nil') do
       expect(ActionCable.server).not_to receive(:broadcast)
+      expect_any_instance_of(Lottery).to receive(:last_drawn_ticket)
+        .and_return(nil)
       perform
     end
 
-    it('picks the ticket with the largest ticket#drawn_position belonging to the lottery') do
-      ticket.update!(drawn_position: 2)
-      lottery.tickets.create!(
-        number: 2,
-        state: 'paid',
-        ticket_type: 'meal_and_lottery',
-        drawn_position: 1,
-      )
-      Lottery.create!(
-        event_date: Date.tomorrow
-      ).tickets.create!(
-        number: 1,
-        state: 'paid',
-        ticket_type: 'meal_and_lottery',
-        drawn_position: 3,
-      )
+    it('delegates to ActionCable.server.broadcast when lottery#last_drawn_ticket == ticket') do
       expected_partial = ApplicationController.renderer.render(
         partial: 'results/drawn_ticket',
         assigns: { ticket: ticket },
@@ -63,6 +50,8 @@ RSpec.describe(DrawnTicketBroadcastJob, type: :job) do
           "lottery_#{lottery.id}_drawn_ticket_channel",
           message: expected_partial,
         )
+      expect_any_instance_of(Lottery).to receive(:last_drawn_ticket)
+        .and_return(ticket)
       perform
     end
   end

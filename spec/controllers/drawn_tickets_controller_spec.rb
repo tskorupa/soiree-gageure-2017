@@ -256,45 +256,25 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
     end
 
     describe('PATCH #update') do
-      it('raises a "RecordNotFound" when ticket#drawn_position is nil') do
-        ticket.update!(drawn_position: nil)
-        expect do
-          patch(
-            :update,
-            params: {
-              locale: I18n.locale,
-              lottery_id: lottery.id,
-              id: ticket.id,
-            },
-          )
-        end.to raise_error(ActiveRecord::RecordNotFound)
+      let(:update) do
+        patch(
+          :update,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            id: ticket.id,
+          },
+        )
       end
 
-      context('when ticket#drawn_position is not nil') do
-        let(:update) do
-          patch(
-            :update,
-            params: {
-              locale: I18n.locale,
-              lottery_id: lottery.id,
-              id: ticket.id,
-            },
-          )
-        end
+      it('delegates to DrawnTicketUpdater.update') do
+        expect(DrawnTicketUpdater).to receive(:update).with(lottery: lottery)
+        update
+      end
 
-        before(:each) do
-          ticket.update!(drawn_position: 13)
-        end
-
-        it('redirects to the lottery_drawn_tickets_path') do
-          update
-          expect(response).to redirect_to(lottery_drawn_tickets_path(lottery))
-        end
-
-        it('delegates to DrawnTicketUpdater.update') do
-          expect(DrawnTicketUpdater).to receive(:update).with(ticket: ticket)
-          update
-        end
+      it('redirects to the lottery_drawn_tickets_path') do
+        update
+        expect(response).to redirect_to(lottery_drawn_tickets_path(lottery))
       end
     end
 

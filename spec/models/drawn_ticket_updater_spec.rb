@@ -24,39 +24,82 @@ RSpec.describe(DrawnTicketUpdater, type: :model) do
     )
   end
 
-  describe('#update') do
+  describe('.update') do
     let(:update) do
-      DrawnTicketUpdater.update(ticket: ticket)
+      DrawnTicketUpdater.update(lottery: lottery)
     end
 
-    before(:each) do
-      ticket.update!(drawn_position: 13)
-      prize.update!(ticket: ticket)
+    context('when lottery#last_drawn_ticket is nil') do
+      before(:each) do
+        expect(lottery).to receive(:last_drawn_ticket)
+          .and_return(nil)
+      end
+
+      it('does not trigger Prize#update!') do
+        expect_any_instance_of(Prize).not_to receive(:update!)
+        update
+      end
+
+      it('does not trigger Ticket#update!') do
+        expect_any_instance_of(Ticket).not_to receive(:update!)
+        update
+      end
+
+      it('does not delegate to DrawnTicketBroadcastJob.perform_later') do
+        expect(DrawnTicketBroadcastJob).not_to receive(:perform_later)
+        update
+      end
     end
 
-    it('updates ticket#drawn_position to nil') do
-      expect { update }.to change { ticket.reload.drawn_position }.from(13).to(nil)
-    end
+    context('when lottery#last_drawn_ticket == ticket') do
+      before(:each) do
+        ticket.update!(drawn_position: 13)
+        expect(lottery).to receive(:last_drawn_ticket)
+          .and_return(ticket)
+      end
 
-    it('updates prize#ticket to nil') do
-      expect { update }.to change { prize.reload.ticket }.from(ticket).to(nil)
-    end
+      it('persists ticket#drawn_position = nil') do
+        expect { update }.to change { ticket.reload.drawn_position }.to(nil)
+      end
 
-    it('does not update prize#ticket when updating ticket#drawn_position raises an exception') do
-      expect_any_instance_of(Ticket).to receive(:update!).and_raise('foo')
-      expect { update }.to raise_exception('foo')
-      expect(prize.reload.ticket).to eq(ticket)
-    end
+      context('when prize#ticket is nil') do
+        before(:each) do
+          prize.update!(ticket: nil)
+        end
 
-    it('does not update ticket#drawn_position when updating prize#ticket raises an exception') do
-      expect_any_instance_of(Prize).to receive(:update!).and_raise('foo')
-      expect { update }.to raise_exception('foo')
-      expect(ticket.reload.drawn_position).to eq(13)
-    end
+        it('does not trigger Prize#update!') do
+          expect_any_instance_of(Prize).not_to receive(:update!)
+          update
+        end
+      end
 
-    it('delegates to DrawnTicketBroadcastJob.perform_later') do
-      expect(DrawnTicketBroadcastJob).to receive(:perform_later).with(lottery_id: lottery.id)
-      update
+      context('when prize#ticket == ticket') do
+        before(:each) do
+          prize.update!(ticket: ticket)
+        end
+
+        it('persists prize#ticket = nil') do
+          expect { update }.to change { prize.reload.ticket }.to(nil)
+        end
+
+        it('does not persist prize#ticket = nil if ticket#update! raises an exception') do
+          expect_any_instance_of(Ticket).to receive(:update!).and_raise('foo')
+          expect { update }.to raise_exception('foo')
+          expect(prize.reload.ticket).to eq(ticket)
+        end
+
+        it('does not persist ticket#drawn_position = nil if prize#update! raises an exception') do
+          expect_any_instance_of(Prize).to receive(:update!).and_raise('foo')
+          expect { update }.to raise_exception('foo')
+          expect(ticket.reload.drawn_position).not_to be_nil
+        end
+      end
+
+      it('delegates to DrawnTicketBroadcastJob.perform_later') do
+        expect(DrawnTicketBroadcastJob).to receive(:perform_later)
+          .with(lottery_id: lottery.id)
+        update
+      end
     end
   end
 end

@@ -1,8 +1,10 @@
 module DrawnTicketUpdater
   extend self
 
-  def update(ticket:)
-    lottery = ticket.lottery
+  def update(lottery:)
+    ticket = lottery.last_drawn_ticket
+    return unless ticket
+
     prize = lottery.prizes.find_by(ticket_id: ticket.id)
 
     Ticket.connection.transaction do

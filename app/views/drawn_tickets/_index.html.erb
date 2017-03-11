@@ -25,6 +25,7 @@
           lottery_drawn_ticket_path(@lottery, ticket),
           method: :patch,
           class: 'btn btn-xs btn-primary',
+          'data-drawn-position' => position,
         ) if ticket %></td>
       </tr>
     <% end %>

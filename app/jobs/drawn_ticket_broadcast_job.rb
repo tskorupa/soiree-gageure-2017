@@ -2,11 +2,7 @@ class DrawnTicketBroadcastJob < ApplicationJob
   queue_as :default
 
   def perform(lottery_id:)
-    ticket = Lottery.find(lottery_id)
-      .tickets
-      .where.not(drawn_position: nil)
-      .order(:drawn_position)
-      .last
+    ticket = Lottery.find(lottery_id).last_drawn_ticket
     return unless ticket
 
     ActionCable.server.broadcast(

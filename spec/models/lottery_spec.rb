@@ -5,6 +5,32 @@ RSpec.describe(Lottery, type: :model) do
     Lottery.create!(event_date: Date.today)
   end
 
+  describe('#last_drawn_ticket') do
+    before(:each) do
+      lottery.tickets.create!(
+        number: 1,
+        state: 'paid',
+        ticket_type: 'meal_and_lottery',
+        drawn_position: 13,
+      )
+      @last_drawn_ticket = lottery.tickets.create!(
+        number: 2,
+        state: 'paid',
+        ticket_type: 'meal_and_lottery',
+        drawn_position: 14,
+      )
+      @other_lottery = Lottery.create!(event_date: Date.tomorrow)
+    end
+
+    it('returns nil when all tickets belonging to the lottery have ticket#drawn_position == nil') do
+      expect(@other_lottery.last_drawn_ticket).to be_nil
+    end
+
+    it('returns the ticket belonging to the lottery with the largest ticket#drawn_position') do
+      expect(lottery.last_drawn_ticket).to eq(@last_drawn_ticket)
+    end
+  end
+
   describe('#event_date') do
     it('is indexed') do
       expect(ActiveRecord::Base.connection.index_exists?(:lotteries, :event_date)).to be(true)
