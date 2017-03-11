@@ -31,4 +31,6 @@ Rails.application.routes.draw do
 
     root 'lotteries#index'
   end
+
+  mount(ActionCable.server => '/cable')
 end

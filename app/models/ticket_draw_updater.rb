@@ -12,6 +12,8 @@ class TicketDrawUpdater
       prize.update!(ticket: ticket) if prize
       ticket.update!(drawn_position: position)
     end
+
+    DrawnTicketBroadcastJob.perform_later(lottery_id: lottery.id)
   end
 
   private

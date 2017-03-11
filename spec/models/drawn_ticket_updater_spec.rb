@@ -53,5 +53,10 @@ RSpec.describe(DrawnTicketUpdater, type: :model) do
       expect { update }.to raise_exception('foo')
       expect(ticket.reload.drawn_position).to eq(13)
     end
+
+    it('delegates to DrawnTicketBroadcastJob.perform_later') do
+      expect(DrawnTicketBroadcastJob).to receive(:perform_later).with(lottery_id: lottery.id)
+      update
+    end
   end
 end

@@ -9,5 +9,7 @@ module DrawnTicketUpdater
       prize.update!(ticket_id: nil) if prize
       ticket.update!(drawn_position: nil)
     end
+
+    DrawnTicketBroadcastJob.perform_later(lottery_id: lottery.id)
   end
 end
