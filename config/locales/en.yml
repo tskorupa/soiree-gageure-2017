@@ -7,6 +7,8 @@ en:
   number_filter_placeholder: 'Ticket number...'
   info_notice: 'Info:'
   warning_notice: 'Warning!'
+  go_fullscreen: 'Fullscreen'
+  return_from_fullscreen: 'Show menus'
   layouts:
     application:
       title: 'Gambling event 2017'

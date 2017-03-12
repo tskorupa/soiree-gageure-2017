@@ -90,6 +90,10 @@ RSpec.describe(ResultsController, type: :controller) do
           expect(response).to render_template('results/_index_header')
         end
 
+        it('renders the partial results/fullscreen') do
+          expect(response).to render_template('results/_fullscreen')
+        end
+
         it('renders the partial results/index') do
           expect(response).to render_template('results/_index')
         end
@@ -115,6 +119,10 @@ RSpec.describe(ResultsController, type: :controller) do
 
         it('renders the partial results/index_header') do
           expect(response).to render_template('results/_index_header')
+        end
+
+        it('renders the partial results/fullscreen') do
+          expect(response).to render_template('results/_fullscreen')
         end
 
         it('renders the partial results/empty_index') do

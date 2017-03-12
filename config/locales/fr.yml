@@ -11,6 +11,8 @@ fr:
   number_filter_placeholder: 'Numéro de billet...'
   info_notice: 'Info:'
   warning_notice: 'Attention!'
+  go_fullscreen: 'Plein écran'
+  return_from_fullscreen: 'Montrer menus'
   layouts:
     application:
       title: 'Soirée gageure 2017'
