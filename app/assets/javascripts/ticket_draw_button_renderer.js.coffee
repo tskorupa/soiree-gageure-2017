@@ -1,4 +1,4 @@
-$(document).ready ->
+jQuery(document).on 'turbolinks:load', ->
   draw_buttons = $('[data-draw-ticket-id]')
   instructions = $('[data-ticket-draw-instructions]')
   if draw_buttons.length == 1

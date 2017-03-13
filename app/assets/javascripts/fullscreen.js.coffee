@@ -1,4 +1,4 @@
-$(document).ready ->
+jQuery(document).on 'turbolinks:load', ->
   fullscreen_button = $('[data-fullscreen]')
   if fullscreen_button.length > 0
     timeout = null;
