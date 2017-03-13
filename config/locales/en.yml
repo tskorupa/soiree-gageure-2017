@@ -21,15 +21,19 @@ en:
       ticket:
         guest: "can't be blank"
   ticket_drop_offs:
+    info:
+      instructions: 'Enter ticket number to display the "Drop off" button'
+    warning:
+      lottery_is_unlocked: 'Tickets may be drawn when the lottery is unlocked'
     errors:
       ticket:
         registered: 'must be registered'
         dropped_off: 'is already dropped off'
   ticket_draws:
     info:
-      ticket_draw_instructions: 'Enter ticket number to display the "draw" button'
+      instructions: 'Enter ticket number to display the "draw" button'
     warning:
-      lottery_is_unlocked: 'Tickets may be drawn once the lottery is locked'
+      lottery_is_unlocked: 'Tickets may be drawn when the lottery is locked'
   column_names:
     draw_order: 'Draw order'
     table_number: 'Table number'

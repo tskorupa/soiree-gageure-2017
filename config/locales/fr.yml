@@ -27,15 +27,19 @@ fr:
       ticket:
         guest: 'doit être spécifié'
   ticket_drop_offs:
+    info:
+      instructions: "Entrez un numéro de billet pour afficher l'option << Mettre en boulier >>"
+    warning:
+      lottery_is_unlocked: 'Les billets peuvent être mis en boulier lorsque le tirage est ouvert'
     errors:
       ticket:
         registered: 'doit être enregistré'
         dropped_off: 'à déjà été mis en boulier'
   ticket_draws:
     info:
-      ticket_draw_instructions: "Entrez un numéro de billet pour afficher l'option << Tirer >>"
+      instructions: "Entrez un numéro de billet pour afficher l'option << Tirer >>"
     warning:
-      lottery_is_unlocked: 'Les billets ne peuvent être tirés que lorsque le tirage est fermé'
+      lottery_is_unlocked: 'Les billets peuvent être tirés lorsque le tirage est fermé'
   column_names:
     number: 'Numéro'
     draw_order: 'Ordre de pige'

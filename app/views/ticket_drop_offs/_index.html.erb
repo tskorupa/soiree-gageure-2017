@@ -16,6 +16,15 @@
     </h1>
   </div>
 </div>
+<% if @lottery.locked? %>
+  <div class="alert alert-warning">
+    <strong><%= t('warning_notice') %></strong> <%= t('ticket_drop_offs.warning.lottery_is_unlocked') %>
+  </div>
+<% else %>
+  <div class="alert alert-info" data-instructions>
+    <strong><%= t('info_notice') %></strong> <%= t('ticket_drop_offs.info.instructions') %>
+  </div>
+<% end %>
 <% if @tickets.present? %>
   <table class='table table-striped'>
     <thead>
@@ -37,6 +46,7 @@
             lottery_ticket_drop_off_path(@lottery, ticket),
             method: :patch,
             class: 'btn btn-xs btn-primary',
+            'data-update-ticket-id' => ticket.id,
           ) unless @lottery.locked? %></td>
         </tr>
       <% end %>
