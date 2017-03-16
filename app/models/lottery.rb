@@ -11,9 +11,11 @@ class Lottery < ApplicationRecord
     allow_nil: true,
   )
 
-  def last_drawn_ticket
+  def drawn_tickets
     tickets.where.not(drawn_position: nil)
-      .order(:drawn_position)
-      .last
+  end
+
+  def last_drawn_ticket
+    drawn_tickets.order(:drawn_position).last
   end
 end

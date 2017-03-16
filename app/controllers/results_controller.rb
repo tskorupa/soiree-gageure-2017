@@ -2,11 +2,7 @@ class ResultsController < ApplicationController
   include LotteryLookup
 
   def index
-    @ticket = @lottery.tickets
-      .includes(:prize)
-      .where.not(drawn_position: nil)
-      .order(:drawn_position)
-      .last
+    @ticket = @lottery.last_drawn_ticket
     return empty_index unless @ticket
 
     render(

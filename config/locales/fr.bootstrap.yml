@@ -96,3 +96,9 @@ fr:
     index:
       title: 'Dernier billet tiré'
       no_drawn_tickets: "Aucun billet n'a été tiré."
+  results_dashboards:
+    index:
+      title:
+        ordered_by_drawn_position: 'Tableau des résultats (par ordre de pige)'
+        ordered_by_number: 'Tableau des résultats (par numéro de billet)'
+      no_drawn_tickets: "Aucun billet n'a été tiré."

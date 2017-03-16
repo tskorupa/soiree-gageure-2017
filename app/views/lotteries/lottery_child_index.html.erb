@@ -2,6 +2,14 @@
   <div class='col-sm-2 sidebar'>
     <ul class='nav nav-sidebar'>
       <%= menu_item(
+        t('results_dashboards.index.title.ordered_by_drawn_position'),
+        lottery_results_dashboards_path(@lottery, order_by: :drawn_position),
+      ) %>
+      <%= menu_item(
+        t('results_dashboards.index.title.ordered_by_number'),
+        lottery_results_dashboards_path(@lottery, order_by: :number),
+      ) %>
+      <%= menu_item(
         t('results.index.title'),
         lottery_results_path(@lottery),
       ) %>

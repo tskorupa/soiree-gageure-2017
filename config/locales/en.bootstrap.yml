@@ -83,3 +83,9 @@ en:
     index:
       title: 'Last drawn ticket'
       no_drawn_tickets: 'No tickets were drawn.'
+  results_dashboards:
+    index:
+      title:
+        ordered_by_drawn_position: 'Results dashboard (ordered by drawn position)'
+        ordered_by_number: 'Results dashboard (ordered by ticket number)'
+      no_drawn_tickets: 'No tickets were drawn.'

@@ -1,0 +1,13 @@
+<% @draw_results.each_with_index do |ticket, index| %>
+  <% new_row = (index + 1) % 12 == 0 %>
+  <% if new_row %>
+    <div class='row'>
+  <% end %>
+  <div class='col-md-1 text-center' style='border: 1px solid black'>
+    <%= ticket&.number || '&nbsp;'.html_safe %>
+  </div>
+  <% if new_row %>
+    </div>
+  <% end %>
+<% end %>
+<%= render(partial: 'results/fullscreen' ) %>

@@ -6,7 +6,7 @@ class DrawnTicketsController < ApplicationController
     return no_tickets_message if dropped_off_tickets_count.zero?
 
     @draw_results = DrawResultsListing.draw_results(
-      drawn_tickets: drawn_tickets,
+      drawn_tickets: @lottery.drawn_tickets,
       prizes: @lottery.prizes,
       dropped_off_tickets_count: dropped_off_tickets_count,
     )
@@ -28,9 +28,5 @@ class DrawnTicketsController < ApplicationController
       'lotteries/lottery_child_index',
       locals: { main_partial: 'drawn_tickets/no_tickets_index' },
     )
-  end
-
-  def drawn_tickets
-    @lottery.tickets.where.not(drawn_position: nil)
   end
 end

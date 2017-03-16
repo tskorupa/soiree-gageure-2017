@@ -5,22 +5,38 @@ RSpec.describe(Lottery, type: :model) do
     Lottery.create!(event_date: Date.today)
   end
 
-  describe('#last_drawn_ticket') do
-    before(:each) do
-      lottery.tickets.create!(
-        number: 1,
-        state: 'paid',
-        ticket_type: 'meal_and_lottery',
-        drawn_position: 13,
-      )
-      @last_drawn_ticket = lottery.tickets.create!(
-        number: 2,
-        state: 'paid',
-        ticket_type: 'meal_and_lottery',
-        drawn_position: 14,
-      )
-      @other_lottery = Lottery.create!(event_date: Date.tomorrow)
+  let(:create_tickets) do
+    @ticket_1 = lottery.tickets.create!(
+      number: 1,
+      state: 'paid',
+      ticket_type: 'meal_and_lottery',
+      drawn_position: 13,
+    )
+    @last_drawn_ticket = lottery.tickets.create!(
+      number: 2,
+      state: 'paid',
+      ticket_type: 'meal_and_lottery',
+      drawn_position: 14,
+    )
+    lottery.tickets.create!(
+      number: 3,
+      state: 'paid',
+      ticket_type: 'meal_and_lottery',
+      drawn_position: nil,
+    )
+    @other_lottery = Lottery.create!(event_date: Date.tomorrow)
+  end
+
+  describe('#drawn_tickets') do
+    before(:each) { create_tickets }
+
+    it('returns all tickets with ticket#drawn_position != nil corresponding to the lottery') do
+      expect(lottery.drawn_tickets.order(:number)).to eq([@ticket_1, @last_drawn_ticket])
     end
+  end
+
+  describe('#last_drawn_ticket') do
+    before(:each) { create_tickets }
 
     it('returns nil when all tickets belonging to the lottery have ticket#drawn_position == nil') do
       expect(@other_lottery.last_drawn_ticket).to be_nil
