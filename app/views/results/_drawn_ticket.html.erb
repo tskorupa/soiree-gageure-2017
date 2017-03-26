@@ -3,7 +3,9 @@
     <div class='panel-heading'>
       <h1><%= @ticket.guest&.full_name %></h1>
       <h2><%= Ticket.model_name.human %> <%= PaddedNumber.pad_number(@ticket.number) %></h2>
-      <h3><%= Ticket.human_attribute_name('ticket_type.%s' % @ticket.ticket_type) %></h3>
+      <% if @ticket.ticket_type == 'lottery_only' %>
+        <h3><%= Ticket.human_attribute_name('ticket_type.%s' % @ticket.ticket_type) %></h3>
+      <% end %>
       <% if @ticket.ticket_type == 'meal_and_lottery' && (table_number = @ticket.table&.number).present? %>
         <h3><%= Table.model_name.human %> <%= table_number %></h3>
       <% end %>
