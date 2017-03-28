@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe(ResultsDashboardsController, type: :controller) do
+  include I18nHelper
   render_views
 
   let(:lottery) do
@@ -73,33 +74,51 @@ RSpec.describe(ResultsDashboardsController, type: :controller) do
       end
 
       context('when a drawn ticket exists and the params are empty') do
-        before(:each) do
-          get_index
-        end
-
         it('returns an http :success status') do
+          get_index
           expect(response).to have_http_status(:success)
         end
 
         it('assigns @draw_results') do
+          get_index
           expect(assigns(:draw_results)).to eq([@ticket_4, @ticket_3, nil])
         end
 
         it('renders the template lotteries/lottery_child_index') do
+          get_index
           expect(response).to render_template('lotteries/lottery_child_index')
         end
 
         it('renders the partial results/fullscreen') do
+          get_index
           expect(response).to render_template('results/_fullscreen')
         end
 
         it('renders the partial results_dashboards/index') do
+          get_index
           expect(response).to render_template('results_dashboards/_index')
+        end
+
+        it('renders the partial results/index_header') do
+          get_index
+          expect(response).to render_template('results_dashboards/_index_header')
+        end
+
+        it('assigns @title when I18n.locale == :en') do
+          get_index
+          expect(assigns(:title)).to eq('Results dashboard (ordered by drawn position)')
+        end
+
+        it('assigns @title when I18n.locale == :fr') do
+          with_locale(:fr) do
+            get_index
+            expect(assigns(:title)).to eq('Tableau des résultats (par ordre de pige)')
+          end
         end
       end
 
       context('when a drawn ticket exists and the params include order_by: "number"') do
-        before(:each) do
+        let(:get_index) do
           get(
             :index,
             params: {
@@ -111,23 +130,45 @@ RSpec.describe(ResultsDashboardsController, type: :controller) do
         end
 
         it('returns an http :success status') do
+          get_index
           expect(response).to have_http_status(:success)
         end
 
         it('assigns @draw_results') do
+          get_index
           expect(assigns(:draw_results)).to eq([nil, @ticket_3, @ticket_4])
         end
 
         it('renders the template lotteries/lottery_child_index') do
+          get_index
           expect(response).to render_template('lotteries/lottery_child_index')
         end
 
         it('renders the partial results/fullscreen') do
+          get_index
           expect(response).to render_template('results/_fullscreen')
         end
 
         it('renders the partial results_dashboards/index') do
+          get_index
           expect(response).to render_template('results_dashboards/_index')
+        end
+
+        it('renders the partial results/index_header') do
+          get_index
+          expect(response).to render_template('results_dashboards/_index_header')
+        end
+
+        it('assigns @title when I18n.locale == :en') do
+          get_index
+          expect(assigns(:title)).to eq('Results dashboard (ordered by ticket number)')
+        end
+
+        it('assigns @title when I18n.locale == :fr') do
+          with_locale(:fr) do
+            get_index
+            expect(assigns(:title)).to eq('Tableau des résultats (par numéro de billet)')
+          end
         end
       end
 
@@ -155,6 +196,14 @@ RSpec.describe(ResultsDashboardsController, type: :controller) do
 
         it('renders the partial results_dashboards/no_tickets_index') do
           expect(response).to render_template('results_dashboards/_no_tickets_index')
+        end
+
+        it('renders the partial results/index_header') do
+          expect(response).to render_template('results_dashboards/_index_header')
+        end
+
+        it('does not assign @title') do
+          expect(assigns(:title)).to be_nil
         end
       end
     end

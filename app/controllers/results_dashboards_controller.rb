@@ -10,6 +10,7 @@ class ResultsDashboardsController < ApplicationController
       drawn_ticket = ticket.drawn_position ? ticket : nil
     end
 
+    @title = set_title
     render(
       'lotteries/lottery_child_index',
       locals: { main_partial: 'results_dashboards/index' },
@@ -25,8 +26,21 @@ class ResultsDashboardsController < ApplicationController
     )
   end
 
+  def set_title
+    variant = if order_by == :number
+      'ordered_by_number'
+    else
+      'ordered_by_drawn_position'
+    end
+
+    t('results_dashboards.index.title.%s' % variant)
+  end
+
   def order_by
-    return :number if params[:order_by] == 'number'
-    :drawn_position
+    @order_by ||= if params[:order_by] == 'number'
+      :number
+    else
+      :drawn_position
+    end
   end
 end
