@@ -15,6 +15,7 @@ class TicketPdf
   end
 
   def render
+    Prawn::Font::AFM.hide_m17n_warning = true
     pdf = Prawn::Document.new(margin: 0, page_size: [WIDTH, HEIGHT])
     pdf.bounding_box([0, pdf.cursor], width: WIDTH, height: HEIGHT) do
       pdf.move_down(8)
