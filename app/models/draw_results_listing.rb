@@ -9,6 +9,7 @@ module DrawResultsListing
 
     prizes.each do |prize|
       index = winning_position(prize, dropped_off_tickets_count) - 1
+      next if index < 0
       next unless results[index]
       results[index] << prize.amount
     end
