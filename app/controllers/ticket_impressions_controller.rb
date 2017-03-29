@@ -3,7 +3,7 @@ class TicketImpressionsController < ApplicationController
 
   def index
     @number = params[:number]
-    @tickets = printable_tickets.order(:number)
+    @tickets = printable_tickets.includes(:guest, :table).order(:number)
     @tickets = @tickets.where(number: @number) if @number.present?
 
     render(

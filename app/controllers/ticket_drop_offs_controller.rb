@@ -3,7 +3,7 @@ class TicketDropOffsController < ApplicationController
 
   def index
     @number = params[:number]
-    @tickets = tickets_for_drop_off.order(:number)
+    @tickets = tickets_for_drop_off.includes(:guest).order(:number)
     @tickets = @tickets.where(number: @number) if @number.present?
 
     render(

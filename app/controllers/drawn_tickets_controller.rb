@@ -6,7 +6,7 @@ class DrawnTicketsController < ApplicationController
     return no_tickets_message if dropped_off_tickets_count.zero?
 
     @draw_results = DrawResultsListing.draw_results(
-      drawn_tickets: @lottery.drawn_tickets,
+      drawn_tickets: @lottery.drawn_tickets.includes(:guest),
       prizes: @lottery.prizes,
       dropped_off_tickets_count: dropped_off_tickets_count,
     )
