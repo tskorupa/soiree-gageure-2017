@@ -12,7 +12,7 @@ class TicketSearch < ApplicationRecord
       where_attributes[:id] = ticket_ids
     end
 
-    Ticket.where(where_attributes)
+    Ticket.includes(:seller, :guest, :sponsor, :table).where(where_attributes)
   end
 
   private
