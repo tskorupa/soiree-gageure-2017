@@ -15,8 +15,9 @@ class TicketDrawsController < ApplicationController
   def update
     return head(:no_content) unless @lottery.locked?
 
-    @ticket = tickets_for_draw.includes(:lottery).find(params[:id])
-    TicketDrawUpdater.new(ticket: @ticket).update
+    ticket = tickets_for_draw.find(params[:id])
+    @lottery.draw(ticket: ticket)
+
     redirect_to(lottery_ticket_draws_path(@lottery))
   end
 
