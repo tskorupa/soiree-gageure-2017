@@ -38,61 +38,10 @@ RSpec.describe(TicketDrawsController, type: :controller) do
       end
     end
 
-    describe('GET #new') do
-      it('raises a "No route matches" error') do
-        expect do
-          get(:new, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
-    describe('POST #create') do
-      it('raises a "No route matches" error') do
-        expect do
-          post(
-            :create,
-            params: {
-              locale: I18n.locale,
-              lottery_id: lottery.id,
-              ticket: {
-                number: 1,
-                state: 'reserved',
-                ticket_type: 'meal_and_lottery',
-              },
-            },
-          )
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
-    describe('GET #show') do
-      it('raises a "No route matches" error') do
-        expect do
-          get(:show, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
-    describe('GET #edit') do
-      it('raises a "No route matches" error') do
-        expect do
-          get(:edit, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
     describe('PATCH #update') do
       it('redirects to the user log in') do
-        patch(:update, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id, ticket: { number: 1 } })
+        patch(:update, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
         expect(response).to redirect_to(new_user_session_path)
-      end
-    end
-
-    describe('DELETE #destroy') do
-      it('raises a "No route matches" error') do
-        expect do
-          delete(:destroy, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
       end
     end
   end
@@ -205,58 +154,8 @@ RSpec.describe(TicketDrawsController, type: :controller) do
       end
     end
 
-    describe('GET #new') do
-      it('raises a "No route matches" error') do
-        expect do
-          get(:new, params: { locale: I18n.locale, lottery_id: lottery.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
-    describe('POST #create') do
-      it('raises a "No route matches" error') do
-        expect do
-          post(
-            :create,
-            params: {
-              locale: I18n.locale,
-              lottery_id: lottery.id,
-              ticket: {
-                number: 1,
-                state: 'reserved',
-                ticket_type: 'meal_and_lottery',
-              },
-            },
-          )
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
-    describe('GET #show') do
-      it('raises a "No route matches" error') do
-        expect do
-          get(:show, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
-    describe('GET #edit') do
-      it('raises a "No route matches" error') do
-        expect do
-          get(:edit, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
     describe('PATCH #update') do
-      before(:each) do
-        ticket.update!(
-          dropped_off: true,
-          drawn_position: nil,
-        )
-      end
-
-      let(:update) do
+      let(:patch_update) do
         patch(
           :update,
           params: {
@@ -267,59 +166,42 @@ RSpec.describe(TicketDrawsController, type: :controller) do
         )
       end
 
-      context('when lottery#locked == false') do
+      context('when lottery#locked? returns false') do
+        before(:each) do
+          expect_any_instance_of(Lottery).to receive(:locked?).and_return(false)
+          patch_update
+        end
+
         it('returns http :no_content status') do
-          update
           expect(response).to have_http_status(:no_content)
         end
 
         it('contains no body') do
-          update
           expect(response.body).to be_empty
         end
       end
 
-      context('when lottery#locked == true') do
+      context('when lottery#locked? returns true') do
         before(:each) do
-          lottery.update!(locked: true)
+          expect_any_instance_of(Lottery).to receive(:locked?).and_return(true)
         end
 
-        it('raises a "RecordNotFound" when ticket#dropped_off is false') do
-          ticket.update!(dropped_off: false)
-          expect { update }.to raise_error(ActiveRecord::RecordNotFound)
+        it('raises an exception when the ticket is not included in lottery#drawable_tickets') do
+          expect_any_instance_of(Lottery).to receive(:drawable_tickets).and_return(Ticket.none)
+          expect { patch_update }.to raise_error(ActiveRecord::RecordNotFound)
         end
 
-        it('raises a "RecordNotFound" when ticket#drawn_position is set') do
-          ticket.update!(drawn_position: 13)
-          expect { update }.to raise_error(ActiveRecord::RecordNotFound)
+        it('delegates to lottery#draw') do
+          expect_any_instance_of(Lottery).to receive(:drawable_tickets).and_return(Ticket.where(id: ticket.id))
+          expect_any_instance_of(Lottery).to receive(:draw).with(ticket: ticket)
+          patch_update
         end
 
         it('redirects to the lottery_ticket_draws_path') do
-          update
+          expect_any_instance_of(Lottery).to receive(:drawable_tickets).and_return(Ticket.where(id: ticket.id))
+          patch_update
           expect(response).to redirect_to(lottery_ticket_draws_path(lottery))
         end
-
-        it('sets ticket#drawn_position') do
-          expect { update }.to change { ticket.reload.drawn_position }.from(nil).to(1)
-        end
-
-        it('sets ticket#prize') do
-          prize = Prize.create!(
-            lottery: lottery,
-            draw_order: 1,
-            nth_before_last: nil,
-            amount: 1.00,
-          )
-          expect { update }.to change { ticket.reload.prize }.from(nil).to(prize)
-        end
-      end
-    end
-
-    describe('DELETE #destroy') do
-      it('raises a "No route matches" error') do
-        expect do
-          delete(:destroy, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
       end
     end
   end

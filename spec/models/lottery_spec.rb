@@ -5,45 +5,112 @@ RSpec.describe(Lottery, type: :model) do
     Lottery.create!(event_date: Date.today)
   end
 
-  let(:create_tickets) do
-    @ticket_1 = lottery.tickets.create!(
-      number: 1,
-      state: 'paid',
-      ticket_type: 'meal_and_lottery',
-      drawn_position: 13,
-    )
-    @last_drawn_ticket = lottery.tickets.create!(
-      number: 2,
-      state: 'paid',
-      ticket_type: 'meal_and_lottery',
-      drawn_position: 14,
-    )
-    lottery.tickets.create!(
-      number: 3,
-      state: 'paid',
-      ticket_type: 'meal_and_lottery',
-      drawn_position: nil,
-    )
-    @other_lottery = Lottery.create!(event_date: Date.tomorrow)
+  describe('#create_ticket') do
+    it('returns a persisted ticket') do
+      expect(lottery.create_ticket).to be_persisted
+    end
+
+    it('returns a ticket belonging to the lottery') do
+      ticket = lottery.create_ticket
+      expect(ticket.lottery).to eq(lottery)
+    end
+
+    it('returns a ticket where #number defaults to the largest existing ticket number + 1') do
+      lottery.create_ticket(number: 300)
+      ticket = lottery.create_ticket
+      expect(ticket.number).to eq(301)
+    end
+
+    it('returns a ticket where #state == "reserved"') do
+      ticket = lottery.create_ticket
+      expect(ticket.state).to eq('reserved')
+    end
+
+    it('returns a ticket where #ticket_type == "meal_and_lottery"') do
+      ticket = lottery.create_ticket
+      expect(ticket.ticket_type).to eq('meal_and_lottery')
+    end
+
+    it('returns a ticket with configurable attributes') do
+      ticket = lottery.create_ticket(
+        number: 300,
+        state: 'paid',
+        ticket_type: 'lottery_only',
+        dropped_off: true,
+      )
+      expect(ticket.number).to eq(300)
+      expect(ticket.state).to eq('paid')
+      expect(ticket.ticket_type).to eq('lottery_only')
+      expect(ticket.dropped_off).to be(true)
+    end
+  end
+
+  describe('#drawable_tickets') do
+    it('returns all tickets belonging to the lottery where ticket#dropped_off == true and ticket#drawn_position is nil') do
+      ticket = lottery.create_ticket(
+        dropped_off: true,
+        drawn_position: nil,
+      )
+      expect(lottery.drawable_tickets).to eq([ticket])
+    end
+
+    it('does not return tickets belonging to a different lottery where ticket#dropped_off == true and ticket#drawn_position is nil') do
+      Lottery.create(event_date: Date.today).create_ticket(
+        dropped_off: false,
+        drawn_position: nil,
+      )
+      expect(lottery.drawable_tickets).to be_empty
+    end
+
+    it('does not return tickets belonging to the lottery where ticket#dropped_off != true and ticket#drawn_position is nil') do
+      lottery.create_ticket(
+        dropped_off: false,
+        drawn_position: nil,
+      )
+      expect(lottery.drawable_tickets).to be_empty
+    end
+
+    it('does not return tickets belonging to the lottery where ticket#dropped_off == true and ticket#drawn_position is not nil') do
+      lottery.create_ticket(
+        dropped_off: true,
+        drawn_position: 1,
+      )
+      expect(lottery.drawable_tickets).to be_empty
+    end
   end
 
   describe('#drawn_tickets') do
-    before(:each) { create_tickets }
+    it('returns all tickets belonging to the lottery where ticket#drawn_position != nil') do
+      ticket = lottery.create_ticket(drawn_position: 1)
+      expect(lottery.drawn_tickets).to eq([ticket])
+    end
 
-    it('returns all tickets with ticket#drawn_position != nil corresponding to the lottery') do
-      expect(lottery.drawn_tickets.order(:number)).to eq([@ticket_1, @last_drawn_ticket])
+    it('does not return tickets belonging to the lottery where ticket#drawn_position == nil') do
+      lottery.create_ticket(drawn_position: nil)
+      expect(lottery.drawn_tickets).to be_empty
+    end
+
+    it('does not return tickets belonging to another lottery where ticket#drawn_position != nil') do
+      Lottery.create!(event_date: Date.today).create_ticket(drawn_position: 1)
+      expect(lottery.drawn_tickets).to be_empty
     end
   end
 
   describe('#last_drawn_ticket') do
-    before(:each) { create_tickets }
-
-    it('returns nil when all tickets belonging to the lottery have ticket#drawn_position == nil') do
-      expect(@other_lottery.last_drawn_ticket).to be_nil
+    it('returns the ticket belonging to the lottery with the largest ticket#drawn_position') do
+      ticket = lottery.create_ticket(drawn_position: 3)
+      lottery.create_ticket(drawn_position: 2)
+      expect(lottery.last_drawn_ticket).to eq(ticket)
     end
 
-    it('returns the ticket belonging to the lottery with the largest ticket#drawn_position') do
-      expect(lottery.last_drawn_ticket).to eq(@last_drawn_ticket)
+    it('returns nil when all tickets belonging to the lottery have ticket#drawn_position == nil') do
+      lottery.create_ticket(drawn_position: nil)
+      expect(lottery.last_drawn_ticket).to be_nil
+    end
+
+    it('returns nil when the lottery has no tickets') do
+      Lottery.create(event_date: Date.today).create_ticket(drawn_position: 1)
+      expect(lottery.last_drawn_ticket).to be_nil
     end
   end
 

@@ -11,6 +11,23 @@ class Lottery < ApplicationRecord
     allow_nil: true,
   )
 
+  def create_ticket(attributes = {})
+    number = attributes.fetch(:number) { next_ticket_number }
+    tickets.create!(
+      number: number,
+      state: 'reserved',
+      ticket_type: 'meal_and_lottery',
+      **attributes,
+    )
+  end
+
+  def drawable_tickets
+    tickets.where(
+      dropped_off: true,
+      drawn_position: nil,
+    )
+  end
+
   def drawn_tickets
     tickets.where.not(drawn_position: nil)
   end
@@ -32,6 +49,12 @@ class Lottery < ApplicationRecord
   end
 
   private
+
+  def next_ticket_number
+    number = tickets.order(:number).last&.number
+    number ||= 0
+    number + 1
+  end
 
   def pick_prize(drawn_position:, ticket:)
     Prize.transaction do
