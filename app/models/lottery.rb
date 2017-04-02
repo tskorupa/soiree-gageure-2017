@@ -1,4 +1,10 @@
 class Lottery < ApplicationRecord
+  class DrawError < StandardError
+    def initialize(message:)
+      super(message)
+    end
+  end
+
   has_many :prizes
   has_many :tables
   has_many :tickets
@@ -37,18 +43,31 @@ class Lottery < ApplicationRecord
   end
 
   def draw(ticket:)
+    raise DrawError.new(message: 'Ticket has already been drawn') if ticket.drawn_position.present?
+
     Ticket.transaction do
-      drawn_position = drawn_tickets.count + 1
+      drawn_position = next_drawn_position
       pick_prize(drawn_position: drawn_position, ticket: ticket)
       ticket.update!(drawn_position: drawn_position)
     end
-
     DrawnTicketBroadcastJob.perform_later(lottery_id: id)
 
     true
   end
 
   private
+
+  def next_draw_order
+    draw_order = prizes.order(:draw_order).last&.number
+    draw_order ||= 0
+    draw_order + 1
+  end
+
+  def next_drawn_position
+    drawn_position = last_drawn_ticket&.drawn_position
+    drawn_position ||= 0
+    drawn_position + 1
+  end
 
   def next_ticket_number
     number = tickets.order(:number).last&.number

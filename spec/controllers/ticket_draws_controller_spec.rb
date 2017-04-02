@@ -15,7 +15,7 @@ RSpec.describe(TicketDrawsController, type: :controller) do
       state: 'paid',
       ticket_type: 'meal_and_lottery',
       dropped_off: true,
-      drawn_position: 13,
+      drawn_position: nil,
     )
   end
 
