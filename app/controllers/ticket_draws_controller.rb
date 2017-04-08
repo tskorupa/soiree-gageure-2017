@@ -3,7 +3,7 @@ class TicketDrawsController < ApplicationController
 
   def index
     @number = params[:number]
-    @tickets = tickets_for_draw.includes(:guest).order(:number)
+    @tickets = @lottery.drawable_tickets.includes(:guest).order(:number)
     @tickets = @tickets.where(number: @number) if @number.present?
 
     render(
@@ -15,17 +15,9 @@ class TicketDrawsController < ApplicationController
   def update
     return head(:no_content) unless @lottery.locked?
 
-    @ticket = tickets_for_draw.includes(:lottery).find(params[:id])
-    TicketDrawUpdater.new(ticket: @ticket).update
+    ticket = @lottery.drawable_tickets.find(params[:id])
+    @lottery.draw(ticket: ticket)
+
     redirect_to(lottery_ticket_draws_path(@lottery))
-  end
-
-  private
-
-  def tickets_for_draw
-    @lottery.tickets.where(
-      dropped_off: true,
-      drawn_position: nil,
-    )
   end
 end
