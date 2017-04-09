@@ -17,7 +17,7 @@ class DrawnTicketsController < ApplicationController
   end
 
   def update
-    DrawnTicketUpdater.update(lottery: @lottery)
+    @lottery.return_last_drawn_ticket
     redirect_to(lottery_drawn_tickets_path(@lottery))
   end
 

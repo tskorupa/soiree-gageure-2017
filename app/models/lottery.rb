@@ -1,10 +1,4 @@
 class Lottery < ApplicationRecord
-  class DrawError < StandardError
-    def initialize(message:)
-      super(message)
-    end
-  end
-
   has_many :prizes
   has_many :tables
   has_many :tickets
@@ -43,13 +37,29 @@ class Lottery < ApplicationRecord
   end
 
   def draw(ticket:)
-    raise DrawError.new(message: 'Ticket has already been drawn') if ticket.drawn_position.present?
+    raise ArgumentError.new(message: 'Ticket has already been drawn') if ticket.drawn_position.present?
 
     Ticket.transaction do
       drawn_position = next_drawn_position
       pick_prize(drawn_position: drawn_position, ticket: ticket)
       ticket.update!(drawn_position: drawn_position)
     end
+    DrawnTicketBroadcastJob.perform_later(lottery_id: id)
+
+    true
+  end
+
+  def return_last_drawn_ticket
+    ticket = last_drawn_ticket
+    raise ArgumentError.new(message: 'The lottery contains no drawn tickets') unless ticket
+
+    prize = prizes.find_by(ticket_id: ticket.id)
+
+    Ticket.transaction do
+      prize.update!(ticket_id: nil) if prize
+      ticket.update!(drawn_position: nil)
+    end
+
     DrawnTicketBroadcastJob.perform_later(lottery_id: id)
 
     true

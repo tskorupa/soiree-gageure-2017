@@ -123,7 +123,7 @@ RSpec.describe(Lottery, type: :model) do
   describe('#draw') do
     it('raises an exception when the ticket has already been drawn') do
       ticket = lottery.create_ticket(drawn_position: 13)
-      expect { lottery.draw(ticket: ticket) }.to raise_exception(Lottery::DrawError, 'Ticket has already been drawn')
+      expect { lottery.draw(ticket: ticket) }.to raise_exception(ArgumentError, /Ticket has already been drawn/)
     end
 
     context('when the first ticket is drawn') do
@@ -182,6 +182,73 @@ RSpec.describe(Lottery, type: :model) do
     it('returns true on success') do
       ticket = lottery.create_ticket
       expect(lottery.draw(ticket: ticket)).to be(true)
+    end
+
+    it('leaves ticket#prize set to nil when the ticket raises an exception') do
+      ticket = lottery.create_ticket
+      prize = lottery.prizes.create!(nth_before_last: nil, amount: 1.0, draw_order: 1)
+
+      ticket.stub(:update!) { raise 'Some error' }
+
+      expect { lottery.draw(ticket: ticket) }.to raise_exception('Some error')
+      expect(prize.reload.ticket).to be_nil
+    end
+
+    it('leaves ticket#drawn_position set to nil when the prize raises an exception') do
+      ticket = lottery.create_ticket
+      lottery.prizes.create!(nth_before_last: nil, amount: 1.0, draw_order: 1)
+
+      expect_any_instance_of(Prize).to receive(:update!).and_raise('Some error')
+
+      expect { lottery.draw(ticket: ticket) }.to raise_exception('Some error')
+      expect(ticket.reload.drawn_position).to be_nil
+    end
+  end
+
+  describe('#return_last_drawn_ticket') do
+    context('when ticket#last_drawn_ticket is nil') do
+      it('raises an exception') do
+        expect { lottery.return_last_drawn_ticket }.to raise_exception(ArgumentError, /The lottery contains no drawn tickets/)
+      end
+    end
+
+    context('when ticket#last_drawn_ticket is present') do
+      before(:each) do
+        ticket = lottery.create_ticket(dropped_off: true)
+        lottery.prizes.create!(nth_before_last: nil, amount: 1.0, draw_order: 1)
+        lottery.draw(ticket: ticket)
+      end
+
+      it('sets ticket#drawn_position to nil') do
+        ticket = lottery.last_drawn_ticket
+        expect { lottery.return_last_drawn_ticket }
+          .to change { ticket.reload.drawn_position }.to(nil)
+      end
+
+      it('sets ticket#prize to nil') do
+        ticket = lottery.last_drawn_ticket
+        expect { lottery.return_last_drawn_ticket }
+          .to change { ticket.reload.prize }.to(nil)
+      end
+
+      it('delegates to DrawnTicketBroadcastJob.perform_later') do
+        expect(DrawnTicketBroadcastJob).to receive(:perform_later).with(lottery_id: lottery.id)
+        lottery.return_last_drawn_ticket
+      end
+
+      it('maintains the relationship ticket#prize when ticket#update! raises an exception') do
+        ticket = lottery.last_drawn_ticket
+        expect_any_instance_of(Ticket).to receive(:update!).and_raise('Some error')
+        expect { lottery.return_last_drawn_ticket }.to raise_exception('Some error')
+        expect(ticket.reload.prize).to be_present
+      end
+
+      it('maintains the attribute ticket#drawn_position when prize#update! raises an exception') do
+        ticket = lottery.last_drawn_ticket
+        expect_any_instance_of(Prize).to receive(:update!).and_raise('Some error')
+        expect { lottery.return_last_drawn_ticket }.to raise_exception('Some error')
+        expect(ticket.reload.drawn_position).to be_present
+      end
     end
   end
 
