@@ -21,6 +21,11 @@ class Lottery < ApplicationRecord
     )
   end
 
+  def registerable_tickets
+    tickets.where(registered: false)
+      .where.not(state: 'reserved')
+  end
+
   def drawable_tickets
     tickets.where(
       dropped_off: true,

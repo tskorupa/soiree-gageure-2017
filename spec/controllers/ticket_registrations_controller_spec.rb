@@ -48,40 +48,6 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
       end
     end
 
-    describe('GET #new') do
-      it('raises an exception') do
-        expect do
-          get(:new, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
-    describe('POST #create') do
-      it('raises an exception') do
-        expect do
-          post(
-            :create,
-            params: {
-              locale: I18n.locale,
-              lottery_id: lottery.id,
-              ticket: {
-                number: 1,
-                ticket_type: 'meal_and_lottery',
-              },
-            },
-          )
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
-    describe('GET #show') do
-      it('raises an exception') do
-        expect do
-          get(:show, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
     describe('GET #edit') do
       it('redirects to the user log in') do
         get(:edit, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
@@ -93,14 +59,6 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
       it('redirects to the user log in') do
         patch(:update, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id, ticket: { number: 1 } })
         expect(response).to redirect_to(new_user_session_path)
-      end
-    end
-
-    describe('DELETE #destroy') do
-      it('raises an exception') do
-        expect do
-          delete(:destroy, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
       end
     end
   end
@@ -185,30 +143,6 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
       end
     end
 
-    describe('GET #new') do
-      it('raises an exception') do
-        expect do
-          get(:new, params: { locale: I18n.locale, lottery_id: lottery.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
-    describe('POST #create') do
-      it('raises an exception') do
-        expect do
-          post(:create, params: { locale: I18n.locale, lottery_id: lottery.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
-    describe('GET #show') do
-      it('raises an exception') do
-        expect do
-          get(:show, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
-      end
-    end
-
     describe('GET #edit') do
       let(:get_edit) do
         get(:edit, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
@@ -217,15 +151,10 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
       context('when lottery#locked == true') do
         before(:each) do
           lottery.update!(locked: true)
-          get_edit
         end
 
-        it('returns http :no_content status') do
-          expect(response).to have_http_status(:no_content)
-        end
-
-        it('has an empty body') do
-          expect(response.body).to be_empty
+        it('raises an exception') do
+          expect { get_edit }.to raise_error(ArgumentError, 'Lottery is locked')
         end
       end
 
@@ -274,15 +203,10 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
       context('when lottery#locked == true') do
         before(:each) do
           lottery.update!(locked: true)
-          patch_update
         end
 
-        it('returns http :no_content status') do
-          expect(response).to have_http_status(:no_content)
-        end
-
-        it('has an empty body') do
-          expect(response.body).to be_empty
+        it('raises an exception') do
+          expect { patch_update }.to raise_error(ArgumentError, 'Lottery is locked')
         end
       end
 
@@ -350,14 +274,6 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
         it('sets ticket#registered to true') do
           expect { patch_update }.to change { ticket.reload.registered }.from(false).to(true)
         end
-      end
-    end
-
-    describe('DELETE #destroy') do
-      it('raises an exception') do
-        expect do
-          delete(:destroy, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id })
-        end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
       end
     end
   end

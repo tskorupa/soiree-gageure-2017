@@ -3,7 +3,7 @@ class TicketRegistrationsController < ApplicationController
 
   def index
     @number = params[:number]
-    @tickets = ticket_for_registration.includes(:guest, :table).order(:number)
+    @tickets = @lottery.registerable_tickets.includes(:guest, :table).order(:number)
     @tickets = @tickets.where(number: @number) if @number.present?
 
     render(
@@ -13,15 +13,15 @@ class TicketRegistrationsController < ApplicationController
   end
 
   def edit
-    return head(:no_content) if @lottery.locked?
-    @ticket = ticket_for_registration.find(params[:id])
+    raise ArgumentError.new('Lottery is locked') if @lottery.locked?
+    @ticket = @lottery.registerable_tickets.find(params[:id])
   end
 
   def update
-    return head(:no_content) if @lottery.locked?
+    raise ArgumentError.new('Lottery is locked') if @lottery.locked?
 
     @builder = TicketBuilder.new(lottery: @lottery)
-    ticket = ticket_for_registration.find(params[:id])
+    ticket = @lottery.registerable_tickets.find(params[:id])
     @ticket = @builder.build(builder_params.merge(id: ticket.id))
 
     @ticket = TicketRegistrationValidator.validate(@ticket)
@@ -33,12 +33,6 @@ class TicketRegistrationsController < ApplicationController
   end
 
   private
-
-  def ticket_for_registration
-    @lottery.tickets
-      .where(registered: false)
-      .where.not(state: 'reserved')
-  end
 
   def builder_params
     params.permit(

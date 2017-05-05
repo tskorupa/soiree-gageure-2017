@@ -5,6 +5,50 @@ RSpec.describe(Lottery, type: :model) do
     Lottery.create!(event_date: Date.today)
   end
 
+  describe('#registerable_tickets') do
+    it('does not return tickets when ticket#registered == true') do
+      lottery.create_ticket(registered: true)
+      expect(lottery.registerable_tickets).to be_empty
+    end
+
+    it('does not return tickets when ticket#state == "reserved"') do
+      lottery.create_ticket(state: 'reserved')
+      expect(lottery.registerable_tickets).to be_empty
+    end
+
+    it('returns tickets when ticket#registered == false and ticket#state == "authorized"') do
+      ticket = lottery.create_ticket(
+        registered: false,
+        state: 'authorized',
+      )
+      expect(lottery.registerable_tickets).to eq([ticket])
+    end
+
+    it('does not return tickets belonging to a different lottery when ticket#registered == false and ticket#state == "authorized"') do
+      Lottery.create(event_date: Date.tomorrow).create_ticket(
+        registered: false,
+        state: 'authorized',
+      )
+      expect(lottery.registerable_tickets).to be_empty
+    end
+
+    it('returns tickets when ticket#registered == false and ticket#state == "paid"') do
+      ticket = lottery.create_ticket(
+        registered: false,
+        state: 'paid',
+      )
+      expect(lottery.registerable_tickets).to eq([ticket])
+    end
+
+    it('does not return tickets belonging to a different lottery when ticket#registered == false and ticket#state == "paid"') do
+      Lottery.create(event_date: Date.tomorrow).create_ticket(
+        registered: false,
+        state: 'paid',
+      )
+      expect(lottery.registerable_tickets).to be_empty
+    end
+  end
+
   describe('#create_ticket') do
     it('returns a persisted ticket') do
       expect(lottery.create_ticket).to be_persisted
@@ -188,7 +232,7 @@ RSpec.describe(Lottery, type: :model) do
       ticket = lottery.create_ticket
       prize = lottery.prizes.create!(nth_before_last: nil, amount: 1.0, draw_order: 1)
 
-      ticket.stub(:update!) { raise 'Some error' }
+      expect(ticket).to receive(:update!).and_raise('Some error')
 
       expect { lottery.draw(ticket: ticket) }.to raise_exception('Some error')
       expect(prize.reload.ticket).to be_nil
