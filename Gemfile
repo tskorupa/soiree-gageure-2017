@@ -42,6 +42,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.5'
   gem 'pry-byebug'
   gem 'rails-controller-testing'
+  gem 'rubocop', require: false
 end
 
 group :development do
