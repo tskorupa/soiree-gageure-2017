@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddLockedToLotteries < ActiveRecord::Migration[5.0]
   def change
     add_column(:lotteries, :locked, :boolean, null: false, default: false)

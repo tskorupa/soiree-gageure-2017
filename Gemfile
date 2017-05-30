@@ -1,17 +1,19 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 ruby '> 2.3.0'
 
-gem 'twitter-bootstrap-rails'
 gem 'devise'
-gem 'textacular'
-gem 'scenic'
-gem 'raygun4ruby'
 gem 'prawn'
+gem 'raygun4ruby'
+gem 'scenic'
+gem 'textacular'
+gem 'twitter-bootstrap-rails'
 gem 'wicked_pdf'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.0.0', '>= 5.0.0.1'
 gem 'pg'
+gem 'rails', '~> 5.0.0', '>= 5.0.0.1'
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
 # Use SCSS for stylesheets
@@ -39,20 +41,20 @@ gem 'redis', '~> 3.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'rspec-rails', '~> 3.5'
   gem 'pry-byebug'
   gem 'rails-controller-testing'
+  gem 'rspec-rails', '~> 3.5'
   gem 'rubocop', require: false
 end
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
-  gem 'web-console'
   gem 'listen', '~> 3.0.5'
+  gem 'web-console'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data', platforms: %i(mingw mswin x64_mingw jruby)

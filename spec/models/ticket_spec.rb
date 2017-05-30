@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe(Ticket, type: :model) do
   include I18nHelper
 
   let(:lottery) do
-    Lottery.create!(event_date: Date.today)
+    Lottery.create!(event_date: Time.zone.today)
   end
 
   let(:ticket) do
@@ -26,7 +28,7 @@ RSpec.describe(Ticket, type: :model) do
 
   describe('::STATES') do
     it('defines a list of allowed states') do
-      expect(Ticket::STATES).to eq(%w( reserved authorized paid ))
+      expect(Ticket::STATES).to eq(%w(reserved authorized paid))
     end
 
     it('returns a frozen array of frozen strings') do
@@ -39,10 +41,10 @@ RSpec.describe(Ticket, type: :model) do
 
   describe('#lottery_id') do
     it('is read-only') do
-      other_lottery = Lottery.create!(event_date: Date.tomorrow)
+      other_lottery = Lottery.create!(event_date: Time.zone.tomorrow)
       expect do
         ticket.update!(lottery_id: other_lottery.id)
-      end.not_to change { ticket.reload.lottery_id }
+      end.not_to(change { ticket.reload.lottery_id })
     end
   end
 
@@ -57,7 +59,7 @@ RSpec.describe(Ticket, type: :model) do
       expect(
         ActiveRecord::Base.connection.index_exists?(
           :tickets,
-          [:lottery_id, :number],
+          %i(lottery_id number),
           unique: true,
         ),
       ).to be(true)
@@ -83,7 +85,7 @@ RSpec.describe(Ticket, type: :model) do
       expect(
         ActiveRecord::Base.connection.index_exists?(
           :tickets,
-          [:lottery_id, :drawn_position],
+          %i(lottery_id drawn_position),
           unique: true,
         ),
       ).to be(true)
@@ -130,7 +132,7 @@ RSpec.describe(Ticket, type: :model) do
 
     it('allows a duplicate value when the lottery is different') do
       new_ticket = Ticket.new(
-        lottery: Lottery.create!(event_date: Date.tomorrow),
+        lottery: Lottery.create!(event_date: Time.zone.tomorrow),
         drawn_position: ticket.drawn_position,
       )
       new_ticket.valid?
@@ -149,10 +151,10 @@ RSpec.describe(Ticket, type: :model) do
   end
 
   describe('#valid?') do
-    it ('requires a lottery') do
+    it('requires a lottery') do
       new_ticket = Ticket.new
       expect(new_ticket).not_to be_valid
-      expect(new_ticket.errors[:lottery]).to include("must exist")
+      expect(new_ticket.errors[:lottery]).to include('must exist')
     end
 
     it('requires :number to be a number') do
@@ -185,13 +187,13 @@ RSpec.describe(Ticket, type: :model) do
     it('requires :state to be present') do
       new_ticket = Ticket.new
       expect(new_ticket).not_to be_valid
-      expect(new_ticket.errors[:state]).to include("is not included in the list")
+      expect(new_ticket.errors[:state]).to include('is not included in the list')
     end
 
     it('requires :ticket_type to be present') do
       new_ticket = Ticket.new
       expect(new_ticket).not_to be_valid
-      expect(new_ticket.errors[:ticket_type]).to include("is not included in the list")
+      expect(new_ticket.errors[:ticket_type]).to include('is not included in the list')
     end
   end
 
@@ -208,17 +210,15 @@ RSpec.describe(Ticket, type: :model) do
     end
 
     it('increment table#tickets_count when the table is added to the ticket') do
-      expect do
-        ticket.update!(table: table)
-      end.to change { table.reload.tickets_count }
+      expect { ticket.update!(table: table) }
+        .to(change { table.reload.tickets_count })
     end
 
     it('decrement table#tickets_count when the table is removed from the ticket') do
       ticket.update!(table: table)
       ticket.reload
-      expect do
-        ticket.update!(table: nil)
-      end.to change { table.reload.tickets_count }
+      expect { ticket.update!(table: nil) }
+        .to(change { table.reload.tickets_count })
     end
   end
 end

@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 class SponsorsController < ApplicationController
   def index
     @sponsors = Sponsor.order('LOWER(full_name) ASC')
 
     respond_to do |format|
       format.html
-      format.json { render(json: @sponsors.pluck(:full_name) ) }
+      format.json { render(json: @sponsors.pluck(:full_name)) }
     end
   end
 

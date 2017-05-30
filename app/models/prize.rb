@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Prize < ApplicationRecord
   belongs_to :lottery, required: true
   belongs_to :ticket

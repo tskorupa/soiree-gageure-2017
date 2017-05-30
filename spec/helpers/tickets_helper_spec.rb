@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe(TicketsHelper, type: :helper) do
@@ -27,10 +29,10 @@ RSpec.describe(TicketsHelper, type: :helper) do
     it('returns english terms when locale is set to :en') do
       expect(helper.options_for_state_select).to eq(
         [
-          ['Reserved', 'reserved'],
-          ['Authorized', 'authorized'],
-          ['Paid', 'paid'],
-        ]
+          %w(Reserved reserved),
+          %w(Authorized authorized),
+          %w(Paid paid),
+        ],
       )
     end
 
@@ -38,10 +40,10 @@ RSpec.describe(TicketsHelper, type: :helper) do
       I18n.locale = :fr
       expect(helper.options_for_state_select).to eq(
         [
-          ['Réservé', 'reserved'],
-          ['Authorisé', 'authorized'],
-          ['Payé', 'paid'],
-        ]
+          %w(Réservé reserved),
+          %w(Authorisé authorized),
+          %w(Payé paid),
+        ],
       )
       I18n.locale = :en
     end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LotteriesController < ApplicationController
   def index
     @lotteries = Lottery.order(event_date: :desc)

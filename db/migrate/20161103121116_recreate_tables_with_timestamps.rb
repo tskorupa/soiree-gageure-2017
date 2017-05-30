@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class RecreateTablesWithTimestamps < ActiveRecord::Migration[5.0]
-  def change
+  def up
     drop_table :sellers
     drop_table :guests
 

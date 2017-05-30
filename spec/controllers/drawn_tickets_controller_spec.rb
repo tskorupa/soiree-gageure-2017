@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe(DrawnTicketsController, type: :controller) do
   render_views
 
   let(:lottery) do
-    Lottery.create!(event_date: Date.today)
+    Lottery.create!(event_date: Time.zone.today)
   end
 
   let(:guest) do
@@ -143,7 +145,7 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
         end
 
         it('returns a draw position for each dropped off ticket and sets the drawn ticket') do
-          expect(assigns(:draw_results)).to eq([[1, @ticket_4, 3.0],[2, @ticket_3], [3, nil]])
+          expect(assigns(:draw_results)).to eq([[1, @ticket_4, 3.0], [2, @ticket_3], [3, nil]])
         end
 
         it('renders the template lotteries/lottery_child_index') do

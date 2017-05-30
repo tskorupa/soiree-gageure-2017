@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddTableNumberToTicket < ActiveRecord::Migration[5.0]
   def change
     add_reference(:tickets, :table, index: true)

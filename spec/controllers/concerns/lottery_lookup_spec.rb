@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 class LotteryLookupTestController < ActionController::Base
@@ -12,7 +14,7 @@ RSpec.describe(LotteryLookupTestController, type: :controller) do
   end
 
   let(:lottery) do
-    Lottery.create!(event_date: Date.today)
+    Lottery.create!(event_date: Time.zone.today)
   end
 
   it('assigns @lottery when the params contain :lottery_id and it corresponds to an existing lottery') do

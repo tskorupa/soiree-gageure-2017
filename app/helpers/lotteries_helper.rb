@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module LotteriesHelper
   def lock_or_unlock(lottery)
     action = if lottery.locked?
@@ -6,6 +8,6 @@ module LotteriesHelper
       'lock'
     end
 
-    t('helpers.submit.lock_lotteries.update.%s' % action)
+    t(format('helpers.submit.lock_lotteries.update.%s', action))
   end
 end

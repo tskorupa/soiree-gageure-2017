@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe(ResultsDashboardsController, type: :controller) do
@@ -5,7 +7,7 @@ RSpec.describe(ResultsDashboardsController, type: :controller) do
   render_views
 
   let(:lottery) do
-    Lottery.create!(event_date: Date.today)
+    Lottery.create!(event_date: Time.zone.today)
   end
 
   let(:user) do
@@ -69,7 +71,7 @@ RSpec.describe(ResultsDashboardsController, type: :controller) do
           state: 'paid',
           ticket_type: 'meal_and_lottery',
           dropped_off: true,
-          drawn_position: 1
+          drawn_position: 1,
         )
       end
 

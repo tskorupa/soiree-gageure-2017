@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe(Table, type: :model) do
   let(:lottery) do
-    Lottery.create!(event_date: Date.today)
+    Lottery.create!(event_date: Time.zone.today)
   end
 
   let(:table) do
@@ -15,10 +17,9 @@ RSpec.describe(Table, type: :model) do
 
   describe('#lottery_id') do
     it('is read-only') do
-      other_lottery = Lottery.create!(event_date: Date.tomorrow)
-      expect do
-        table.update!(lottery_id: other_lottery.id)
-      end.not_to change { table.reload.lottery_id }
+      other_lottery = Lottery.create!(event_date: Time.zone.tomorrow)
+      expect { table.update!(lottery_id: other_lottery.id) }
+        .not_to(change { table.reload.lottery_id })
     end
   end
 
@@ -33,7 +34,7 @@ RSpec.describe(Table, type: :model) do
       expect(
         ActiveRecord::Base.connection.index_exists?(
           :tables,
-          [:lottery_id, :number],
+          %i(lottery_id number),
           unique: true,
         ),
       ).to be(true)
@@ -41,10 +42,10 @@ RSpec.describe(Table, type: :model) do
   end
 
   describe('#valid?') do
-    it ('requires a lottery') do
+    it('requires a lottery') do
       new_table = Table.new
       expect(new_table).not_to be_valid
-      expect(new_table.errors[:lottery]).to include("must exist")
+      expect(new_table.errors[:lottery]).to include('must exist')
     end
 
     it('requires :number to be a number') do

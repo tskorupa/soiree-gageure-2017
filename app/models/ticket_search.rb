@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TicketSearch < ApplicationRecord
   belongs_to(:ticket)
 
@@ -5,7 +7,7 @@ class TicketSearch < ApplicationRecord
     query = query.to_s
     where_attributes = { lottery_id: lottery_id }
 
-    ticket_ids = if query.to_i > 0
+    if query.to_i.positive?
       where_attributes[:number] = query
     elsif query.present?
       ticket_ids = TicketSearch.fuzzy_search(query).map(&:ticket_id)

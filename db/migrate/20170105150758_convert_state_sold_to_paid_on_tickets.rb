@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ConvertStateSoldToPaidOnTickets < ActiveRecord::Migration[5.0]
   def up
     Ticket.where(state: 'sold').update_all(state: 'paid')

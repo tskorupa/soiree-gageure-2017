@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe(TicketsController, type: :controller) do
   render_views
 
   let(:lottery) do
-    Lottery.create!(event_date: Date.today)
+    Lottery.create!(event_date: Time.zone.today)
   end
 
   let(:ticket) do
@@ -405,7 +407,17 @@ RSpec.describe(TicketsController, type: :controller) do
       end
 
       it('redirects to lottery_tickets_path when :state is updated') do
-        patch(:update, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id, ticket: { state: 'authorized' } })
+        patch(
+          :update,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            id: ticket.id,
+            ticket: {
+              state: 'authorized',
+            },
+          },
+        )
         expect(ticket.reload.state).to eq('authorized')
         expect(response).to redirect_to(lottery_tickets_path(lottery))
       end
@@ -429,7 +441,17 @@ RSpec.describe(TicketsController, type: :controller) do
       end
 
       it('redirects to lottery_tickets_path when :ticket_type is updated') do
-        patch(:update, params: { locale: I18n.locale, lottery_id: lottery.id, id: ticket.id, ticket: { ticket_type: 'lottery_only' } })
+        patch(
+          :update,
+          params: {
+            locale: I18n.locale,
+            lottery_id: lottery.id,
+            id: ticket.id,
+            ticket: {
+              ticket_type: 'lottery_only',
+            },
+          },
+        )
         expect(ticket.reload.ticket_type).to eq('lottery_only')
         expect(response).to redirect_to(lottery_tickets_path(lottery))
       end

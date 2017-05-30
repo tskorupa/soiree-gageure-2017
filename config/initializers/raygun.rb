@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Raygun.setup do |config|
   config.api_key = ENV['RAIGUN_API_KEY']
   config.filter_parameters = Rails.application.config.filter_parameters

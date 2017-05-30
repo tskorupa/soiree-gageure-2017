@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddSellerNameAndGuestNameAndSponsorNameToTickets < ActiveRecord::Migration[5.0]
   def change
     add_column(:tickets, :seller_name, :string)

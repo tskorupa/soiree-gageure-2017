@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe(TicketBuilder, type: :model) do
   let(:lottery) do
-    Lottery.create!(event_date: Date.today)
+    Lottery.create!(event_date: Time.zone.today)
   end
 
   let(:seller) do
@@ -66,7 +68,7 @@ RSpec.describe(TicketBuilder, type: :model) do
 
         let(:table_from_different_lottery) do
           Table.create!(
-            lottery: Lottery.create!(event_date: Date.today),
+            lottery: Lottery.create!(event_date: Time.zone.today),
             number: 3,
             capacity: 6,
           )
@@ -116,18 +118,18 @@ RSpec.describe(TicketBuilder, type: :model) do
     end
 
     it('raises an exception when the ticket with the given :id is not found') do
-      expect {
+      expect do
         ticket_builder.build(id: 0)
-      }.to raise_error(ActiveRecord::RecordNotFound)
+      end.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it('raises an exception when the ticket with the given :id does not belong to the lottery') do
-      other_lottery = Lottery.create!(event_date: Date.tomorrow)
+      other_lottery = Lottery.create!(event_date: Time.zone.tomorrow)
       ticket_builder = TicketBuilder.new(lottery: other_lottery)
 
-      expect {
+      expect do
         ticket_builder.build(id: ticket.id)
-      }.to raise_error(ActiveRecord::RecordNotFound)
+      end.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it('returns a new ticket with ticket#number assigned when an :id is not provided and a :number is provided') do

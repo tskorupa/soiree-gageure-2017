@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe(TicketRegistrationValidator, type: :model) do
@@ -8,7 +10,7 @@ RSpec.describe(TicketRegistrationValidator, type: :model) do
   end
 
   let(:lottery) do
-    Lottery.create!(event_date: Date.today)
+    Lottery.create!(event_date: Time.zone.today)
   end
 
   let(:table) do
@@ -41,7 +43,7 @@ RSpec.describe(TicketRegistrationValidator, type: :model) do
 
       it('sets the error code :blank on ticket.errors[:guest]') do
         validate_ticket
-        expect(@ticket.errors.details[:guest]).to eq([{:error=>:blank}])
+        expect(@ticket.errors.details[:guest]).to eq([{ error: :blank }])
       end
 
       it('sets the error message "Guest name can\'t be blank" on ticket') do

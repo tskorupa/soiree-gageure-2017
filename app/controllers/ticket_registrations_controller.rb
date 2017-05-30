@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TicketRegistrationsController < ApplicationController
   include LotteryLookup
 
@@ -13,12 +15,12 @@ class TicketRegistrationsController < ApplicationController
   end
 
   def edit
-    raise ArgumentError.new('Lottery is locked') if @lottery.locked?
+    raise(ArgumentError, 'Lottery is locked') if @lottery.locked?
     @ticket = @lottery.registerable_tickets.find(params[:id])
   end
 
   def update
-    raise ArgumentError.new('Lottery is locked') if @lottery.locked?
+    raise(ArgumentError, 'Lottery is locked') if @lottery.locked?
 
     @builder = TicketBuilder.new(lottery: @lottery)
     ticket = @lottery.registerable_tickets.find(params[:id])

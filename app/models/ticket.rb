@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class Ticket < ApplicationRecord
-  STATES = %w(reserved authorized paid).map(&:freeze).freeze
-  TICKET_TYPES = %w(meal_and_lottery lottery_only).map(&:freeze).freeze
+  STATES = %w(reserved authorized paid).freeze
+  TICKET_TYPES = %w(meal_and_lottery lottery_only).freeze
 
   belongs_to :lottery, required: true
   belongs_to :seller

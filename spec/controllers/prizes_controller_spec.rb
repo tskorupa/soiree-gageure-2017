@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe(PrizesController, type: :controller) do
   let(:lottery) do
-    Lottery.create!(event_date: Date.today)
+    Lottery.create!(event_date: Time.zone.today)
   end
 
   let(:prize) do
@@ -41,7 +43,7 @@ RSpec.describe(PrizesController, type: :controller) do
 
     describe('POST #create') do
       it('redirects to the user log in') do
-        post(:create, params: { locale: I18n.locale, lottery_id: lottery.id, prize: { draw_order: 1, amount: 100.00} })
+        post(:create, params: { locale: I18n.locale, lottery_id: lottery.id, prize: { draw_order: 1, amount: 100.00 } })
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -157,7 +159,7 @@ RSpec.describe(PrizesController, type: :controller) do
         end
 
         it('does not change the prize count') do
-          expect { post_create }.not_to change { Prize.count }
+          expect { post_create }.not_to(change { Prize.count })
         end
 
         it('assigns prize#draw_order') do
