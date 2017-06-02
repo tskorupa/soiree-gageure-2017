@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170222235503) do
+ActiveRecord::Schema.define(version: 20170602214354) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -115,27 +115,5 @@ ActiveRecord::Schema.define(version: 20170222235503) do
     t.datetime "updated_at",         null: false
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
   end
-
-
-  create_view :ticket_searches,  sql_definition: <<-SQL
-      SELECT tickets.id AS ticket_id,
-      ((''::text || tickets.number) || ''::text) AS term
-     FROM tickets
-  UNION
-   SELECT tickets.id AS ticket_id,
-      sellers.full_name AS term
-     FROM (tickets
-       JOIN sellers ON ((tickets.seller_id = sellers.id)))
-  UNION
-   SELECT tickets.id AS ticket_id,
-      guests.full_name AS term
-     FROM (tickets
-       JOIN guests ON ((tickets.guest_id = guests.id)))
-  UNION
-   SELECT tickets.id AS ticket_id,
-      sponsors.full_name AS term
-     FROM (tickets
-       JOIN sponsors ON ((tickets.sponsor_id = sponsors.id)));
-  SQL
 
 end

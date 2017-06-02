@@ -7,7 +7,6 @@ gem 'devise'
 gem 'prawn'
 gem 'raygun4ruby'
 gem 'scenic'
-gem 'textacular'
 gem 'twitter-bootstrap-rails'
 gem 'wicked_pdf'
 
