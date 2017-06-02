@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ResultsDashboardsController < ApplicationController
   include LotteryLookup
 
@@ -7,7 +9,7 @@ class ResultsDashboardsController < ApplicationController
 
     ordered_tickets = dropped_off_tickets.order(order_by)
     @draw_results = ordered_tickets.map do |ticket|
-      drawn_ticket = ticket.drawn_position ? ticket : nil
+      ticket.drawn_position ? ticket : nil
     end
 
     @title = set_title
@@ -33,7 +35,7 @@ class ResultsDashboardsController < ApplicationController
       'ordered_by_drawn_position'
     end
 
-    t('results_dashboards.index.title.%s' % variant)
+    t(format('results_dashboards.index.title.%s', variant))
   end
 
   def order_by

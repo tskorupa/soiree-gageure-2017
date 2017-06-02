@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe(GuestsController, type: :controller) do
@@ -93,13 +95,13 @@ RSpec.describe(GuestsController, type: :controller) do
 
     describe('GET #index with format: :json') do
       it('returns all guest full names') do
-        guest_1 = Guest.create!(full_name: 'Foo')
-        guest_2 = Guest.create!(full_name: 'Bar')
-        guest_3 = Guest.create!(full_name: 'Baz')
+        Guest.create!(full_name: 'Foo')
+        Guest.create!(full_name: 'Bar')
+        Guest.create!(full_name: 'Baz')
 
         get(:index, format: :json)
         expect(response).to have_http_status(:success)
-        expect(ActiveSupport::JSON.decode(response.body)).to eq(['Bar', 'Baz', 'Foo'])
+        expect(ActiveSupport::JSON.decode(response.body)).to eq(%w(Bar Baz Foo))
       end
     end
 

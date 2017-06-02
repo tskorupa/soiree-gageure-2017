@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe(SponsorsController, type: :controller) do
@@ -93,13 +95,13 @@ RSpec.describe(SponsorsController, type: :controller) do
 
     describe('GET #index with format: :json') do
       it('returns all sponsor full names') do
-        guest_1 = Sponsor.create!(full_name: 'Foo')
-        guest_2 = Sponsor.create!(full_name: 'Bar')
-        guest_3 = Sponsor.create!(full_name: 'Baz')
+        Sponsor.create!(full_name: 'Foo')
+        Sponsor.create!(full_name: 'Bar')
+        Sponsor.create!(full_name: 'Baz')
 
         get(:index, format: :json)
         expect(response).to have_http_status(:success)
-        expect(ActiveSupport::JSON.decode(response.body)).to eq(['Bar', 'Baz', 'Foo'])
+        expect(ActiveSupport::JSON.decode(response.body)).to eq(%w(Bar Baz Foo))
       end
     end
 

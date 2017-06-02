@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TicketPdf
   WIDTH = 175.748
   HEIGHT = 79.3701
@@ -30,7 +32,7 @@ class TicketPdf
       pdf.formatted_text(
         [
           { text: padded_ticket_number, size: 32 },
-          { text: "   " },
+          { text: '   ' },
           { text: table_number, size: 12 },
         ],
         align: :center,

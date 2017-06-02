@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddFullTextSearchIndicesOnSellersAndGuestsAndSponsors < ActiveRecord::Migration[5.0]
   def up
     execute("CREATE INDEX full_text_en_on_sellers ON sellers USING gin(to_tsvector('english', 'full_name'));")

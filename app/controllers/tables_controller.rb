@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TablesController < ApplicationController
   include LotteryLookup
 
@@ -15,9 +17,7 @@ class TablesController < ApplicationController
 
   def create
     @table = @lottery.tables.new(table_params)
-    return(
-      redirect_to(lottery_tables_path(@table.lottery))
-    ) if @table.save
+    return(to_index) if @table.save
 
     render(:new)
   end
@@ -33,14 +33,16 @@ class TablesController < ApplicationController
 
   def update
     @table = @lottery.tables.find(params[:id])
-    return(
-      redirect_to(lottery_tables_path(@table.lottery))
-    ) if @table.update(table_params)
+    return(to_index) if @table.update(table_params)
 
     render(:edit)
   end
 
   private
+
+  def to_index
+    redirect_to lottery_tables_path(@table.lottery)
+  end
 
   def table_params
     params.require(:table).permit(:number, :capacity)

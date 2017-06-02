@@ -1,0 +1,47 @@
+AllCops:
+  Exclude:
+    - 'bin/**/*'
+    - 'db/schema.rb'
+    - 'vendor/**/*'
+
+Lint/EndAlignment:
+  EnforcedStyleAlignWith: 'variable'
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: 'indented'
+Lint/RequireParentheses:
+  Enabled: true
+Metrics/AbcSize:
+  Enabled: false
+Metrics/BlockLength:
+  ExcludedMethods:
+    - 'context' # rspec context block
+    - 'describe' # rspec describe block
+    - 'before' # rspec before block
+    - 'draw' # Rails.application.routes.draw
+Metrics/LineLength:
+  Max: 120
+  IgnoredPatterns:
+    - '\A\s+#' # Comment-only lines
+    - '\A\s+(it|expect|context)(\(?|\s?)' # rspec 'it(', 'it ', 'expect(', 'expect ', 'context(' and 'context '
+Metrics/MethodLength:
+  Enabled: false
+Rails/Date:
+  EnforcedStyle: 'strict'
+Rails/SkipsModelValidations:
+  Enabled: false
+Style/Documentation:
+  Enabled: false
+Style/ModuleFunction:
+  Enabled: false
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    '%i': '()'
+    '%I': '()'
+    '%w': '()'
+    '%W': '()'
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: 'comma'
+Style/TrailingCommaInLiteral:
+  EnforcedStyleForMultiline: 'comma'
+Style/VariableNumber:
+  EnforcedStyle: 'snake_case'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PrizesHelper
   def display_draw_position(prize)
     nth_before_last = prize.nth_before_last

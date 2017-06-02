@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Lottery < ApplicationRecord
   has_many :prizes
   has_many :tables
@@ -61,7 +63,7 @@ class Lottery < ApplicationRecord
     prize = prizes.find_by(ticket_id: ticket.id)
 
     Ticket.transaction do
-      prize.update!(ticket_id: nil) if prize
+      prize&.update!(ticket_id: nil)
       ticket.update!(drawn_position: nil)
     end
 
@@ -99,7 +101,7 @@ class Lottery < ApplicationRecord
       end
 
       prize = prizes.find_by(nth_before_last: nth_before_last)
-      prize.update!(ticket: ticket) if prize
+      prize&.update!(ticket: ticket)
     end
   end
 end

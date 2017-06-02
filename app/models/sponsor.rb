@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Sponsor < ApplicationRecord
   before_validation(:clean_full_name)
   validates(:full_name, presence: true)

@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe(TicketSearch, type: :model) do
   let(:lottery1) do
-    Lottery.create!(event_date: Date.today)
+    Lottery.create!(event_date: Time.zone.today)
   end
 
   let(:lottery2) do
-    Lottery.create!(event_date: Date.yesterday)
+    Lottery.create!(event_date: Time.zone.yesterday)
   end
 
   let(:ticket1) do

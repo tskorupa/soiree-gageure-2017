@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe(LotteriesController, type: :controller) do
   let(:lottery) do
-    Lottery.create!(event_date: Date.today)
+    Lottery.create!(event_date: Time.zone.today)
   end
 
   let(:user) do
@@ -84,7 +86,7 @@ RSpec.describe(LotteriesController, type: :controller) do
       it('returns all lotteries ordered by event_date: :desc') do
         lottery_1 = Lottery.create!(event_date: 3.days.ago)
         lottery_2 = Lottery.create!(event_date: 4.days.from_now)
-        lottery_3 = Lottery.create!(event_date: Date.today)
+        lottery_3 = Lottery.create!(event_date: Time.zone.today)
 
         get(:index, params: { locale: I18n.locale })
         expect(response).to have_http_status(:success)
@@ -295,7 +297,16 @@ RSpec.describe(LotteriesController, type: :controller) do
 
       it('redirects to lotteries_path when :meal_voucher_price is updated') do
         new_meal_voucher_price = 125.00
-        patch(:update, params: { locale: I18n.locale, id: lottery.id, lottery: { meal_voucher_price: new_meal_voucher_price } })
+        patch(
+          :update,
+          params: {
+            locale: I18n.locale,
+            id: lottery.id,
+            lottery: {
+              meal_voucher_price: new_meal_voucher_price,
+            },
+          },
+        )
         expect(lottery.reload.meal_voucher_price).to eq(new_meal_voucher_price)
         expect(response).to redirect_to(lotteries_path)
       end

@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 class GuestsController < ApplicationController
   def index
     @guests = Guest.order('LOWER(full_name) ASC')
 
     respond_to do |format|
       format.html
-      format.json { render(json: @guests.pluck(:full_name) ) }
+      format.json { render(json: @guests.pluck(:full_name)) }
     end
   end
 

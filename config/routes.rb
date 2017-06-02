@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   with_options(defaults: { format: :json }) do |actions|
     actions.get('seller_names', to: 'sellers#index')

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 include ActiveSupport::Testing::TimeHelpers
 
@@ -5,7 +7,7 @@ RSpec.describe(TicketDrawsController, type: :controller) do
   render_views
 
   let(:lottery) do
-    Lottery.create!(event_date: Date.today)
+    Lottery.create!(event_date: Time.zone.today)
   end
 
   let(:ticket) do

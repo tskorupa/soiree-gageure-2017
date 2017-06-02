@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateRecords < ActiveRecord::Migration[5.0]
   def change
     create_table(:guests) do |t|
@@ -33,7 +35,7 @@ class CreateRecords < ActiveRecord::Migration[5.0]
 
       t.timestamps(null: false)
     end
-    add_index(:tables, [:lottery_id, :number], unique: true)
+    add_index(:tables, %i(lottery_id number), unique: true)
 
     create_table(:tickets) do |t|
       t.belongs_to(:lottery, null: false, index: true)
@@ -44,6 +46,6 @@ class CreateRecords < ActiveRecord::Migration[5.0]
 
       t.timestamps(null: false)
     end
-    add_index(:tickets, [:lottery_id, :number], unique: true)
+    add_index(:tickets, %i(lottery_id number), unique: true)
   end
 end

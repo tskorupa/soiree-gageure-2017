@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PrizesController < ApplicationController
   include LotteryLookup
 
@@ -15,9 +17,7 @@ class PrizesController < ApplicationController
 
   def create
     @prize = @lottery.prizes.new(prize_params)
-    return(
-      redirect_to(lottery_prizes_path(@prize.lottery))
-    ) if @prize.save
+    return(to_index) if @prize.save
 
     render(:new)
   end
@@ -28,14 +28,16 @@ class PrizesController < ApplicationController
 
   def update
     @prize = @lottery.prizes.find(params[:id])
-    return(
-      redirect_to(lottery_prizes_path(@prize.lottery))
-    ) if @prize.update(prize_params)
+    return(to_index) if @prize.update(prize_params)
 
     render(:edit)
   end
 
   private
+
+  def to_index
+    redirect_to lottery_prizes_path(@prize.lottery)
+  end
 
   def prize_params
     params.require(:prize).permit(

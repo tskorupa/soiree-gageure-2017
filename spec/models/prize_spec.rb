@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe(Prize, type: :model) do
   include I18nHelper
 
   let(:lottery) do
-    Lottery.create!(event_date: Date.today)
+    Lottery.create!(event_date: Time.zone.today)
   end
 
   let(:prize) do
@@ -17,10 +19,9 @@ RSpec.describe(Prize, type: :model) do
 
   describe('#lottery_id') do
     it('is read-only') do
-      other_lottery = Lottery.create!(event_date: Date.tomorrow)
-      expect do
-        prize.update!(lottery_id: other_lottery.id)
-      end.not_to change { prize.reload.lottery_id }
+      other_lottery = Lottery.create!(event_date: Time.zone.tomorrow)
+      expect { prize.update!(lottery_id: other_lottery.id) }
+        .not_to(change { prize.reload.lottery_id })
     end
   end
 
@@ -35,7 +36,7 @@ RSpec.describe(Prize, type: :model) do
       expect(
         ActiveRecord::Base.connection.index_exists?(
           :prizes,
-          [:lottery_id, :draw_order],
+          %i(lottery_id draw_order),
           unique: true,
         ),
       ).to be(true)
@@ -51,7 +52,7 @@ RSpec.describe(Prize, type: :model) do
       expect(
         ActiveRecord::Base.connection.index_exists?(
           :prizes,
-          [:lottery_id, :nth_before_last],
+          %i(lottery_id nth_before_last),
           unique: true,
         ),
       ).to be(true)
@@ -98,7 +99,7 @@ RSpec.describe(Prize, type: :model) do
 
     it('allows a duplicate value when the lottery is different') do
       new_prize = Prize.new(
-        lottery: Lottery.create!(event_date: Date.tomorrow),
+        lottery: Lottery.create!(event_date: Time.zone.tomorrow),
         nth_before_last: prize.nth_before_last,
       )
       new_prize.valid?
@@ -169,10 +170,10 @@ RSpec.describe(Prize, type: :model) do
   end
 
   describe('#valid?') do
-    it ('requires a lottery') do
+    it('requires a lottery') do
       new_prize = Prize.new
       expect(new_prize).not_to be_valid
-      expect(new_prize.errors[:lottery]).to include("must exist")
+      expect(new_prize.errors[:lottery]).to include('must exist')
     end
 
     it('requires :draw_order to be a number') do

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe(Lottery, type: :model) do
   let(:lottery) do
-    Lottery.create!(event_date: Date.today)
+    Lottery.create!(event_date: Time.zone.today)
   end
 
   describe('#registerable_tickets') do
@@ -25,7 +27,7 @@ RSpec.describe(Lottery, type: :model) do
     end
 
     it('does not return tickets belonging to a different lottery when ticket#registered == false and ticket#state == "authorized"') do
-      Lottery.create(event_date: Date.tomorrow).create_ticket(
+      Lottery.create(event_date: Time.zone.tomorrow).create_ticket(
         registered: false,
         state: 'authorized',
       )
@@ -41,7 +43,7 @@ RSpec.describe(Lottery, type: :model) do
     end
 
     it('does not return tickets belonging to a different lottery when ticket#registered == false and ticket#state == "paid"') do
-      Lottery.create(event_date: Date.tomorrow).create_ticket(
+      Lottery.create(event_date: Time.zone.tomorrow).create_ticket(
         registered: false,
         state: 'paid',
       )
@@ -62,7 +64,7 @@ RSpec.describe(Lottery, type: :model) do
     it('returns a ticket where the ticket#number is set to the largest existing ticketr number belonging to the lottery + 1') do
       lottery.create_ticket(number: 300)
       lottery.create_ticket(number: 13)
-      Lottery.create!(event_date: Date.today).create_ticket(number: 999)
+      Lottery.create!(event_date: Time.zone.today).create_ticket(number: 999)
       ticket = lottery.create_ticket
       expect(ticket.number).to eq(301)
     end
@@ -105,7 +107,7 @@ RSpec.describe(Lottery, type: :model) do
     end
 
     it('does not return tickets belonging to a different lottery where ticket#dropped_off == true and ticket#drawn_position is nil') do
-      Lottery.create!(event_date: Date.today).create_ticket(
+      Lottery.create!(event_date: Time.zone.today).create_ticket(
         dropped_off: false,
         drawn_position: nil,
       )
@@ -141,7 +143,7 @@ RSpec.describe(Lottery, type: :model) do
     end
 
     it('does not return tickets belonging to another lottery where ticket#drawn_position != nil') do
-      Lottery.create!(event_date: Date.today).create_ticket(drawn_position: 1)
+      Lottery.create!(event_date: Time.zone.today).create_ticket(drawn_position: 1)
       expect(lottery.drawn_tickets).to be_empty
     end
   end
@@ -159,7 +161,7 @@ RSpec.describe(Lottery, type: :model) do
     end
 
     it('returns nil when the lottery has no tickets') do
-      Lottery.create!(event_date: Date.today).create_ticket(drawn_position: 1)
+      Lottery.create!(event_date: Time.zone.today).create_ticket(drawn_position: 1)
       expect(lottery.last_drawn_ticket).to be_nil
     end
   end
@@ -173,7 +175,7 @@ RSpec.describe(Lottery, type: :model) do
     context('when the first ticket is drawn') do
       it('assigns the ticket to the prize with prize#nth_before_last == nil belonging to the lottery') do
         prize = lottery.prizes.create!(nth_before_last: nil, amount: 1.0, draw_order: 1)
-        Lottery.create!(event_date: Date.today).prizes.create!(nth_before_last: nil, amount: 1.0, draw_order: 1)
+        Lottery.create!(event_date: Time.zone.today).prizes.create!(nth_before_last: nil, amount: 1.0, draw_order: 1)
         ticket = lottery.create_ticket
 
         expect { lottery.draw(ticket: ticket) }.to change { prize.reload.ticket }.from(nil).to(ticket)
@@ -181,17 +183,18 @@ RSpec.describe(Lottery, type: :model) do
 
       it('does not assign the ticket to the prize when there are no prizes with prize#nth_before_last = nil belonging to the lottery') do
         prize = lottery.prizes.create!(nth_before_last: 0, amount: 1.0, draw_order: 1)
-        Lottery.create!(event_date: Date.today).prizes.create!(nth_before_last: nil, amount: 1.0, draw_order: 1)
+        Lottery.create!(event_date: Time.zone.today).prizes.create!(nth_before_last: nil, amount: 1.0, draw_order: 1)
         ticket = lottery.create_ticket
 
-        expect { lottery.draw(ticket: ticket) }.not_to change { prize.reload.ticket }
+        expect { lottery.draw(ticket: ticket) }
+          .not_to(change { prize.reload.ticket })
       end
     end
 
     context('when a ticket is drawn and it is not the first one to be drawn') do
       it('assigns the ticket to the prize with prize#nth_before_last == number of dropped of tickets - currently drawn position') do
         prize = lottery.prizes.create!(nth_before_last: 0, amount: 1.0, draw_order: 2)
-        Lottery.create!(event_date: Date.today).prizes.create!(nth_before_last: 0, amount: 1.0, draw_order: 2)
+        Lottery.create!(event_date: Time.zone.today).prizes.create!(nth_before_last: 0, amount: 1.0, draw_order: 2)
         lottery.create_ticket(dropped_off: true, drawn_position: 1)
         ticket = lottery.create_ticket(dropped_off: true)
 
@@ -200,18 +203,19 @@ RSpec.describe(Lottery, type: :model) do
 
       it('does not assign the ticket to the prize when there are no prizes with prize#nth_before_last == number of dropped of tickets - currently drawn position') do
         prize = lottery.prizes.create!(nth_before_last: 2, amount: 1.0, draw_order: 2)
-        Lottery.create!(event_date: Date.today).prizes.create!(nth_before_last: 0, amount: 1.0, draw_order: 2)
+        Lottery.create!(event_date: Time.zone.today).prizes.create!(nth_before_last: 0, amount: 1.0, draw_order: 2)
         lottery.create_ticket(dropped_off: true, drawn_position: 1)
         ticket = lottery.create_ticket(dropped_off: true)
 
-        expect { lottery.draw(ticket: ticket) }.not_to change { prize.reload.ticket }
+        expect { lottery.draw(ticket: ticket) }
+          .not_to(change { prize.reload.ticket })
       end
     end
 
     it('persists ticket#drawn_position to the largest ticket#drawn_position belonging to the lottery + 1') do
       lottery.create_ticket(drawn_position: 13)
       lottery.create_ticket(drawn_position: 6)
-      Lottery.create!(event_date: Date.today).create_ticket(drawn_position: 21)
+      Lottery.create!(event_date: Time.zone.today).create_ticket(drawn_position: 21)
 
       ticket = lottery.create_ticket
       expect { lottery.draw(ticket: ticket) }.to change { ticket.reload.drawn_position }.to(14)
@@ -312,13 +316,13 @@ RSpec.describe(Lottery, type: :model) do
     it('requires :ticket_price to be greater than 0 when attribute present') do
       new_lottery = Lottery.new(ticket_price: 0)
       expect(new_lottery).not_to be_valid
-      expect(new_lottery.errors[:ticket_price]).to include("must be greater than 0")
+      expect(new_lottery.errors[:ticket_price]).to include('must be greater than 0')
     end
 
     it('requires :ticket_price to be less than 10_000 when attribute present') do
       new_lottery = Lottery.new(ticket_price: 10_000)
       expect(new_lottery).not_to be_valid
-      expect(new_lottery.errors[:ticket_price]).to include("must be less than 10000")
+      expect(new_lottery.errors[:ticket_price]).to include('must be less than 10000')
     end
 
     it('does not validate :ticket_price when attribute is nil') do
@@ -330,13 +334,13 @@ RSpec.describe(Lottery, type: :model) do
     it('requires :meal_voucher_price to be greater than 0 when attribute present') do
       new_lottery = Lottery.new(meal_voucher_price: 0)
       expect(new_lottery).not_to be_valid
-      expect(new_lottery.errors[:meal_voucher_price]).to include("must be greater than 0")
+      expect(new_lottery.errors[:meal_voucher_price]).to include('must be greater than 0')
     end
 
     it('requires :meal_voucher_price to be less than 10_000 when attribute present') do
       new_lottery = Lottery.new(meal_voucher_price: 10_000)
       expect(new_lottery).not_to be_valid
-      expect(new_lottery.errors[:meal_voucher_price]).to include("must be less than 10000")
+      expect(new_lottery.errors[:meal_voucher_price]).to include('must be less than 10000')
     end
 
     it('does not validate :meal_voucher_price when attribute is nil') do
