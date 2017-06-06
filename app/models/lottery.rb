@@ -74,12 +74,6 @@ class Lottery < ApplicationRecord
 
   private
 
-  def next_draw_order
-    draw_order = prizes.order(:draw_order).last&.number
-    draw_order ||= 0
-    draw_order + 1
-  end
-
   def next_drawn_position
     drawn_position = last_drawn_ticket&.drawn_position
     drawn_position ||= 0
