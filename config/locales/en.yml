@@ -3,7 +3,6 @@ en:
     currency:
       format:
         precision: 0
-  search_placeholder: 'Search...'
   number_filter_placeholder: 'Ticket number...'
   info_notice: 'Info:'
   warning_notice: 'Warning!'

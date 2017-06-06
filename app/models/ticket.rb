@@ -4,11 +4,11 @@ class Ticket < ApplicationRecord
   STATES = %w(reserved authorized paid).freeze
   TICKET_TYPES = %w(meal_and_lottery lottery_only).freeze
 
-  belongs_to :lottery, required: true
-  belongs_to :seller
-  belongs_to :guest
-  belongs_to :sponsor
-  belongs_to :table, counter_cache: true
+  belongs_to :lottery
+  belongs_to :seller, optional: true
+  belongs_to :guest, optional: true
+  belongs_to :sponsor, optional: true
+  belongs_to :table, optional: true, counter_cache: true
 
   has_one :prize
 

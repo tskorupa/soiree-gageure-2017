@@ -5,9 +5,8 @@ class TicketsController < ApplicationController
 
   def index
     @q = params[:q]
-    @tickets = TicketSearch
-      .new(lottery_id: @lottery.id, query: @q)
-      .order(:number)
+    @tickets = @lottery.tickets.includes(:seller, :guest, :sponsor, :table).order(:number)
+    @tickets = @tickets.where(id: @q) if @q.present?
 
     render(
       'lotteries/lottery_child_index',
