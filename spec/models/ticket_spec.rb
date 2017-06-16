@@ -26,6 +26,10 @@ RSpec.describe(Ticket, type: :model) do
     )
   end
 
+  let(:guest) do
+    Guest.create!(full_name: 'Bubbles')
+  end
+
   describe('::STATES') do
     it('defines a list of allowed states') do
       expect(Ticket::STATES).to eq(%w(reserved authorized paid))
@@ -147,6 +151,151 @@ RSpec.describe(Ticket, type: :model) do
       )
       new_ticket.valid?
       expect(new_ticket.errors[:drawn_position]).to be_empty
+    end
+  end
+
+  describe('#can_be_registered?') do
+    context('when ticket#registered? is false and ticket#guest is present and ticket#table is required but present') do
+      let(:ticket) do
+        Ticket.new(
+          registered: false,
+          guest: guest,
+          ticket_type: 'meal_and_lottery',
+          table: table,
+        )
+      end
+
+      it('returns true') do
+        expect(ticket.can_be_registered?).to be(true)
+      end
+
+      it('adds no errors') do
+        ticket.can_be_registered?
+        expect(ticket.errors).to be_empty
+      end
+    end
+
+    context('when ticket#registered? is false and ticket#guest is present and ticket#table is not required but missing') do
+      let(:ticket) do
+        Ticket.new(
+          registered: false,
+          guest: guest,
+          ticket_type: 'lottery_only',
+          table: nil,
+        )
+      end
+
+      it('returns true') do
+        expect(ticket.can_be_registered?).to be(true)
+      end
+
+      it('adds no errors') do
+        ticket.can_be_registered?
+        expect(ticket.errors).to be_empty
+      end
+    end
+
+    context('when ticket#registered? is true') do
+      let(:ticket) do
+        Ticket.new(registered: true)
+      end
+
+      it('returns false') do
+        expect(ticket.can_be_registered?).to be(false)
+      end
+
+      it('adds the error "Ticket is already registered" when  the locale is :en') do
+        with_locale(:en) do
+          ticket.can_be_registered?
+          expect(ticket.errors.full_messages_for(:base)).to include('Ticket is already registered')
+        end
+      end
+
+      it('adds the error "Le billet est déjà enregistré" when the locale is :fr') do
+        with_locale(:fr) do
+          ticket.can_be_registered?
+          expect(ticket.errors.full_messages_for(:base)).to include('Le billet est déjà enregistré')
+        end
+      end
+    end
+
+    context('when ticket#guest is missing') do
+      let(:ticket) do
+        Ticket.new(guest: nil)
+      end
+
+      it('returns false') do
+        expect(ticket.can_be_registered?).to be(false)
+      end
+
+      it('adds the error "Guest name can\'t be blank" when the locale is :en') do
+        with_locale(:en) do
+          ticket.can_be_registered?
+          expect(ticket.errors.full_messages_for(:guest)).to include('Guest name can\'t be blank')
+        end
+      end
+
+      it('adds the error "Le nom de l\'invité doit être spécifié" when the locale is :fr') do
+        with_locale(:fr) do
+          ticket.can_be_registered?
+          expect(ticket.errors.full_messages_for(:guest)).to include('Le nom de l\'invité doit être spécifié')
+        end
+      end
+    end
+
+    context('when ticket#table is required but missing') do
+      let(:ticket) do
+        Ticket.new(ticket_type: 'meal_and_lottery', table: nil)
+      end
+
+      it('returns false') do
+        expect(ticket.can_be_registered?).to be(false)
+      end
+
+      it('adds the error "Table number must be specified" when the locale is :en') do
+        with_locale(:en) do
+          ticket.can_be_registered?
+          expect(ticket.errors.full_messages_for(:base)).to include('Table number must be specified')
+        end
+      end
+
+      it('adds the error "Le numéro de table doit être spécifié" when the locale is :fr') do
+        with_locale(:fr) do
+          ticket.can_be_registered?
+          expect(ticket.errors.full_messages_for(:base)).to include('Le numéro de table doit être spécifié')
+        end
+      end
+    end
+  end
+
+  describe('#register') do
+    context('when ticket#registered? is true') do
+      let(:ticket) do
+        Ticket.new(registered: true)
+      end
+
+      it('raises an exception when the locale is :en') do
+        with_locale(:en) do
+          expect { ticket.register }.to raise_exception(ArgumentError, /Ticket is already registered/)
+        end
+      end
+
+      it('raises an exception when the locale is :fr') do
+        with_locale(:fr) do
+          expect { ticket.register }.to raise_exception(ArgumentError, /Le billet est déjà enregistré/)
+        end
+      end
+    end
+
+    it('changes ticket#registered to true when ticket#registered? is false') do
+      ticket = lottery.create_ticket(
+        registered: false,
+        ticket_type: 'lottery_only',
+        guest: guest,
+      )
+
+      expect { ticket.register }
+        .to(change { ticket.reload.registered }.from(false).to(true))
     end
   end
 

@@ -44,7 +44,7 @@ class Lottery < ApplicationRecord
   end
 
   def draw(ticket:)
-    raise ArgumentError.new(message: 'Ticket has already been drawn') if ticket.drawn_position.present?
+    raise(ArgumentError, 'Ticket has already been drawn') if ticket.drawn_position.present?
 
     Ticket.transaction do
       drawn_position = next_drawn_position

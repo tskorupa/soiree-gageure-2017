@@ -23,6 +23,7 @@ fr:
   ticket_registrations:
     errors:
       table_number: 'Le numéro de table doit être spécifié'
+      already_registered: 'Le billet est déjà enregistré'
       ticket:
         guest: 'doit être spécifié'
   ticket_drop_offs:

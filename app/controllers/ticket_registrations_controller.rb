@@ -24,13 +24,11 @@ class TicketRegistrationsController < ApplicationController
 
     @builder = TicketBuilder.new(lottery: @lottery)
     ticket = @lottery.registerable_tickets.find(params[:id])
+
     @ticket = @builder.build(builder_params.merge(id: ticket.id))
+    return render(:edit) unless @ticket.can_be_registered?
 
-    @ticket = TicketRegistrationValidator.validate(@ticket)
-    return render(:edit) if @ticket.errors.any?
-
-    @ticket.registered = true
-    @ticket.save!
+    @ticket.register
     redirect_to(lottery_ticket_registrations_path(@lottery))
   end
 

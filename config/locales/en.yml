@@ -17,6 +17,7 @@ en:
   ticket_registrations:
     errors:
       table_number: 'Table number must be specified'
+      already_registered: 'Ticket is already registered'
       ticket:
         guest: "can't be blank"
   ticket_drop_offs:

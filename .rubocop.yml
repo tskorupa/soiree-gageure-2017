@@ -39,6 +39,8 @@ Style/PercentLiteralDelimiters:
     '%I': '()'
     '%w': '()'
     '%W': '()'
+Style/RaiseArgs:
+  EnforcedStyle: 'exploded'
 Style/TrailingCommaInArguments:
   EnforcedStyleForMultiline: 'comma'
 Style/TrailingCommaInLiteral:
