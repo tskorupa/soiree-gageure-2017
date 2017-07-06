@@ -16,17 +16,17 @@ class TicketBuilder
 
     ticket = find_or_build_ticket(ticket_id, attributes)
 
-    ticket.seller = HandleRelation.find_or_build(
+    ticket.seller = find_or_build(
       klass: Seller,
       actual_entity: ticket.seller,
       supplied_full_name: seller_name,
     )
-    ticket.guest = HandleRelation.find_or_build(
+    ticket.guest = find_or_build(
       klass: Guest,
       actual_entity: ticket.guest,
       supplied_full_name: guest_name,
     )
-    ticket.sponsor = HandleRelation.find_or_build(
+    ticket.sponsor = find_or_build(
       klass: Sponsor,
       actual_entity: ticket.sponsor,
       supplied_full_name: sponsor_name,
@@ -59,5 +59,15 @@ class TicketBuilder
     ticket.assign_attributes(attributes)
 
     ticket
+  end
+
+  def find_or_build(klass:, supplied_full_name:, actual_entity: nil)
+    return if supplied_full_name.blank?
+    return(actual_entity) if actual_entity.try(:full_name) == supplied_full_name
+
+    existing_entity = klass.find_by(full_name: supplied_full_name)
+    return(existing_entity) if existing_entity
+
+    klass.new(full_name: supplied_full_name)
   end
 end

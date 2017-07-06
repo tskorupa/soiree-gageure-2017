@@ -19,8 +19,8 @@ class TicketsController < ApplicationController
   end
 
   def create
-    @builder = TicketBuilder.new(lottery: @lottery)
-    @ticket = @builder.build(builder_params)
+    builder = TicketBuilder.new(lottery: @lottery)
+    @ticket = builder.build(builder_params)
 
     return(render(:new)) if @ticket.errors.any?
     @ticket.save!

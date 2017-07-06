@@ -22,9 +22,9 @@ class TicketRegistrationsController < ApplicationController
   def update
     raise(ArgumentError, 'Lottery is locked') if @lottery.locked?
 
-    @builder = TicketBuilder.new(lottery: @lottery)
     ticket = @lottery.registerable_tickets.find(params[:id])
 
+    @builder = TicketBuilder.new(lottery: @lottery)
     @ticket = @builder.build(builder_params.merge(id: ticket.id))
     return render(:edit) unless @ticket.can_be_registered?
 

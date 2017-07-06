@@ -2,7 +2,7 @@
 
 module TicketsHelper
   def table_number(ticket)
-    @builder&.table_number || ticket.table&.number
+    ticket.table&.number
   end
 
   def registration_step_label(ticket)
