@@ -60,11 +60,12 @@ en:
       meal_voucher_price: 'Meal voucher price'
       ticket_price: 'Ticket price'
   lotteries:
-    total_num_tickets: 'Total number of tickets'
-    num_unregistered_tickets: 'unregistered tickets'
-    num_tickets_in_circulation: 'tickets to drop off'
-    num_tickets_in_container: 'tickets in container'
-    num_drawn_tickets: 'tickets drawn'
+    total_tickets_count: 'total tickets'
+    reserved_tickets_count: 'reserved tickets'
+    registerable_tickets_count: 'registerable tickets'
+    droppable_tickets_count: 'dropable tickets'
+    drawable_tickets_count: 'drawable tickets'
+    drawn_tickets_count: 'drawn tickets'
   activerecord:
     errors:
       template:

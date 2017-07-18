@@ -24,6 +24,7 @@ Rails.application.routes.draw do
         resources(:drawn_tickets, only: %i(index update))
         resources(:results, only: :index)
         resources(:results_dashboards, only: :index)
+        resource :tickets_dashboard, only: :show
       end
       actions.resources(:sellers)
       actions.resources(:guests)

@@ -1,0 +1,74 @@
+<div class="row">
+  <div class="col-md-2">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="text-center">
+            <div><h3><%= @tickets_dashboard.total_tickets_count %></h3></div>
+            <div><%= t('lotteries.total_tickets_count') %></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="text-center">
+            <div><h3><%= @tickets_dashboard.reserved_tickets_count %></h3></div>
+            <div><%= t('lotteries.reserved_tickets_count') %></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="text-center">
+            <div><h3><%= @tickets_dashboard.registerable_tickets_count %></h3></div>
+            <div><%= t('lotteries.registerable_tickets_count') %></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="text-center">
+            <div><h3><%= @tickets_dashboard.droppable_tickets_count %></h3></div>
+            <div><%= t('lotteries.droppable_tickets_count') %></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="text-center">
+            <div><h3><%= @tickets_dashboard.drawable_tickets_count %></h3></div>
+            <div><%= t('lotteries.drawable_tickets_count') %></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="text-center">
+            <div><h3><%= @tickets_dashboard.drawn_tickets_count %></h3></div>
+            <div><%= t('lotteries.drawn_tickets_count') %></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

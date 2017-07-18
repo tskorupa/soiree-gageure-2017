@@ -17,11 +17,7 @@ class LotteriesController < ApplicationController
 
   def show
     find_lottery
-    @total_num_tickets = @lottery.tickets.count
-    @num_unregistered_tickets = @lottery.tickets.where(registered: false).count
-    @num_tickets_in_circulation = @lottery.tickets.where(registered: true, dropped_off: false).count
-    @num_tickets_in_container = @lottery.tickets.where(dropped_off: true, drawn_position: nil).count
-    @num_drawn_tickets = @lottery.tickets.where.not(drawn_position: nil).count
+    @tickets_dashboard = TicketsDashboard.new(lottery: @lottery)
   end
 
   def edit

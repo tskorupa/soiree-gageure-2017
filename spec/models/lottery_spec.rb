@@ -7,6 +7,23 @@ RSpec.describe(Lottery, type: :model) do
     Lottery.create!(event_date: Time.zone.today)
   end
 
+  describe('#reserved_tickets') do
+    it('returns tickets with state == "reserved"') do
+      ticket = lottery.create_ticket(state: 'reserved')
+      expect(lottery.reserved_tickets).to eq([ticket])
+    end
+
+    it('does not return tickets with state == "authorized"') do
+      lottery.create_ticket(state: 'authorized')
+      expect(lottery.reserved_tickets).to be_empty
+    end
+
+    it('does not return tickets with state == "paid"') do
+      lottery.create_ticket(state: 'paid')
+      expect(lottery.reserved_tickets).to be_empty
+    end
+  end
+
   describe('#registerable_tickets') do
     it('does not return tickets when ticket#registered == true') do
       lottery.create_ticket(registered: true)
@@ -48,6 +65,28 @@ RSpec.describe(Lottery, type: :model) do
         state: 'paid',
       )
       expect(lottery.registerable_tickets).to be_empty
+    end
+  end
+
+  describe('#droppable_tickets') do
+    it('returns tickets with ticket#registered == true and ticket#dropped_off == false') do
+      ticket = lottery.create_ticket(registered: true, dropped_off: false)
+      expect(lottery.droppable_tickets).to eq([ticket])
+    end
+
+    it('does not return tickets with ticket#registered == false and ticket#dropped_off == false') do
+      lottery.create_ticket(registered: false, dropped_off: false)
+      expect(lottery.droppable_tickets).to be_empty
+    end
+
+    it('does not return tickets with ticket#registered == true and ticket#dropped_off == true') do
+      lottery.create_ticket(registered: true, dropped_off: true)
+      expect(lottery.droppable_tickets).to be_empty
+    end
+
+    it('does not return tickets with ticket#registered == false and ticket#dropped_off == true') do
+      lottery.create_ticket(registered: false, dropped_off: true)
+      expect(lottery.droppable_tickets).to be_empty
     end
   end
 

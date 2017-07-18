@@ -6,60 +6,9 @@
 <dl class='dl-horizontal'>
   <dt><strong><%= t('column_names.lottery.event_date') %>:</strong></dt>
   <dd><%= @lottery.event_date %></dd>
-  <dt><strong><%= t('lotteries.total_num_tickets') %>:</strong></dt>
-  <dd><%= @total_num_tickets %></dd>
 </dl>
 
-<div class="row">
-  <div class="col-md-3">
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-        <div class="row">
-          <div class="text-center">
-            <div><h3><%= @num_unregistered_tickets %></h3></div>
-            <div><%= t('lotteries.num_unregistered_tickets') %></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-        <div class="row">
-          <div class="text-center">
-            <div><h3><%= @num_tickets_in_circulation %></h3></div>
-            <div><%= t('lotteries.num_tickets_in_circulation') %></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-        <div class="row">
-          <div class="text-center">
-            <div><h3><%= @num_tickets_in_container %></h3></div>
-            <div><%= t('lotteries.num_tickets_in_container') %></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-        <div class="row">
-          <div class="text-center">
-            <div><h3><%= @num_drawn_tickets %></h3></div>
-            <div><%= t('lotteries.num_drawn_tickets') %></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<%= render partial: 'tickets_dashboards/tickets_dashboard' %>
 
 <%= link_to(
   t('.back', default: t('helpers.links.back')),
