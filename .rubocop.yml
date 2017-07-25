@@ -6,6 +6,8 @@ AllCops:
 
 Lint/EndAlignment:
   EnforcedStyleAlignWith: 'variable'
+Layout/EmptyLineAfterMagicComment:
+  Enabled: false
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: 'indented'
 Lint/RequireParentheses:
@@ -29,6 +31,9 @@ Rails/Date:
   EnforcedStyle: 'strict'
 Rails/SkipsModelValidations:
   Enabled: false
+Style/CaseIndentation:
+  EnforcedStyle: 'end'
+  IndentOneStep: false
 Style/Documentation:
   Enabled: false
 Style/ModuleFunction:

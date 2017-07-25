@@ -107,30 +107,45 @@ RSpec.describe(TicketsController, type: :controller) do
     end
 
     describe('GET #index') do
-      it('returns all tickets ordered by :number') do
-        ticket_1 = Ticket.create!(
-          lottery: lottery,
-          number: 3,
-          state: 'reserved',
-          ticket_type: 'meal_and_lottery',
-        )
-        ticket_2 = Ticket.create!(
-          lottery: lottery,
-          number: 1,
-          state: 'reserved',
-          ticket_type: 'meal_and_lottery',
-        )
-        ticket_3 = Ticket.create!(
-          lottery: lottery,
-          number: 2,
-          state: 'reserved',
-          ticket_type: 'meal_and_lottery',
-        )
-
+      let(:get_index) do
         get(:index, params: { locale: I18n.locale, lottery_id: lottery.id })
+      end
+
+      it('responds with success') do
+        get_index
         expect(response).to have_http_status(:success)
-        expect(assigns(:tickets)).to eq([ticket_2, ticket_3, ticket_1])
+      end
+
+      it('assigns an instance of Lottery to @lottery') do
+        get_index
+        expect(assigns(:lottery)).to be_an_instance_of(Lottery)
+      end
+
+      it('assigns an instance of TicketListing to @ticket_listing') do
+        get_index
+        expect(assigns(:ticket_listing)).to be_an_instance_of(TicketListing)
+      end
+
+      it('renders "lotteries/lottery_child_index"') do
+        get_index
         expect(response).to render_template('lotteries/lottery_child_index')
+      end
+
+      it('renders "ticket_listing_header"') do
+        get_index
+        expect(response).to render_template('_ticket_listing_header')
+      end
+
+      it('renders "tickets/_ticket_listing" when @ticket_listing#tickets_to_display? is true') do
+        expect_any_instance_of(TicketListing).to receive(:tickets_to_display?).and_return(true)
+        get_index
+        expect(response).to render_template('tickets/_ticket_listing')
+      end
+
+      it('renders "tickets/_empty_ticket_listing" when @ticket_listing#tickets_to_display? is false') do
+        expect_any_instance_of(TicketListing).to receive(:tickets_to_display?).and_return(false)
+        get_index
+        expect(response).to render_template('tickets/_empty_ticket_listing')
       end
     end
 
