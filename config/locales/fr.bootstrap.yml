@@ -64,7 +64,7 @@ fr:
       no_prizes: "Il n'existe aucun prix."
   tickets:
     index:
-      no_tickets_for_query: "Il n'y a aucun billet qui correspond à '%{query}'."
+      no_tickets_with_number: "Il n'y a aucun billet qui correspond au numéro '%{number_filter}'."
       no_tickets: "Il n'existe aucun billet."
   ticket_registrations:
     index:

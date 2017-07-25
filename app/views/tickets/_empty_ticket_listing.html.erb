@@ -1,0 +1,6 @@
+<%= render 'ticket_listing_header' %>
+<% if @ticket_listing.number_filter.present? %>
+  <div class='row-fluid'><%= t('tickets.index.no_tickets_with_number', number_filter: @ticket_listing.number_filter) %></div>
+<% else %>
+  <div class='row-fluid'><%= t('tickets.index.no_tickets') %></div>
+<% end %>

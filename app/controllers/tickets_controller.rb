@@ -1,16 +1,22 @@
 # frozen_string_literal: true
-
 class TicketsController < ApplicationController
   include LotteryLookup
 
   def index
-    @q = params[:q]
-    @tickets = @lottery.tickets.includes(:seller, :guest, :sponsor, :table).order(:number)
-    @tickets = @tickets.where(id: @q) if @q.present?
+    @ticket_listing = TicketListing.new(
+      lottery: @lottery,
+      number_filter: params[:number_filter],
+    )
+
+    main_partial = if @ticket_listing.tickets_to_display?
+      'tickets/ticket_listing'
+    else
+      'tickets/empty_ticket_listing'
+    end
 
     render(
       'lotteries/lottery_child_index',
-      locals: { main_partial: 'tickets/index' },
+      locals: { main_partial: main_partial },
     )
   end
 

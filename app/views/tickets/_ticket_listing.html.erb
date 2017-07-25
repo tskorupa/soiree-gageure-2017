@@ -1,0 +1,39 @@
+<%= render 'ticket_listing_header' %>
+<table class='table table-striped'>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th><%= t('column_names.number') %></th>
+      <th><%= Seller.model_name.human %></th>
+      <th><%= Guest.model_name.human %></th>
+      <th><%= Sponsor.model_name.human %></th>
+      <th><%= t('column_names.ticket.stage') %></th>
+      <th><%= t('column_names.ticket.ticket_type') %></th>
+      <th class='text-center'><%= t('column_names.table.number') %></th>
+      <th><%= t('column_names.ticket.registration_step') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @ticket_listing.each do |ticket| %>
+      <tr>
+        <td><%= ticket.row_number %></td>
+        <td><%= ticket.number %></td>
+        <td><%= ticket.seller_name %></td>
+        <td><%= ticket.guest_name %></td>
+        <td><%= ticket.sponsor_name %></td>
+        <td><%= ticket.state %></td>
+        <td><%= ticket.ticket_type %></td>
+        <td class='text-center'><%= ticket.table_number %></td>
+        <td><%= content_tag(:span, ticket.registration_step, class: ticket.registration_label_class) %></td>
+        <td>
+          <%= link_to(
+            t('.edit', default: t('helpers.links.edit')),
+            edit_lottery_ticket_path(@lottery, ticket),
+            class: 'btn btn-default btn-xs',
+          ) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 ruby '> 2.3.0'
 
 gem 'devise'
+gem 'memoist'
 gem 'prawn'
 gem 'raygun4ruby'
 gem 'scenic'
