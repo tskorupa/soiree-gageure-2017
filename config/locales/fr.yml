@@ -72,11 +72,12 @@ fr:
       meal_voucher_price: "Prix d'un billet souper"
       ticket_price: "Prix d'un billet tirage"
   lotteries:
-    total_num_tickets: 'Nombre total de billets'
-    num_unregistered_tickets: 'billets à enregistrer'
-    num_tickets_in_circulation: 'billets à mettre en boulier'
-    num_tickets_in_container: 'billets non-tirés'
-    num_drawn_tickets: 'billets tirés'
+    total_tickets_count: 'billets total'
+    reserved_tickets_count: 'billets réservés'
+    registerable_tickets_count: 'billets non-enregistrés'
+    droppable_tickets_count: 'billets non en boulier'
+    drawable_tickets_count: 'billets à tirer'
+    drawn_tickets_count: 'billets tirés'
   activerecord:
     errors:
       messages:
