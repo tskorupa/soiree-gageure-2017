@@ -1,0 +1,39 @@
+<% if @lottery.locked? %>
+  <div class="alert alert-info" data-instructions>
+    <strong><%= t('info_notice') %></strong> <%= t('ticket_draws.info.instructions') %>
+  </div>
+<% else %>
+  <div class="alert alert-warning">
+    <strong><%= t('warning_notice') %></strong> <%= t('ticket_draws.warning.lottery_is_unlocked') %>
+  </div>
+<% end %>
+<table class='table table-striped'>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th><%= t('column_names.number') %></th>
+      <th><%= Guest.model_name.human %></th>
+      <th><%= t('column_names.ticket.ticket_type') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @ticket_listing.each do |ticket_row| %>
+      <tr>
+        <td><%= ticket_row.row_number %></td>
+        <td><%= ticket_row.number %></td>
+        <td><%= ticket_row.guest_name %></td>
+        <td><%= ticket_row.ticket_type %></td>
+        <td>
+          <%= link_to(
+            t('helpers.submit.ticket_draws.update'),
+            lottery_ticket_draw_path(@lottery, ticket_row),
+            method: :patch,
+            class: 'btn btn-xs btn-primary',
+            'data-update-ticket-id' => ticket_row.ticket_id,
+          ) if @lottery.locked? %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

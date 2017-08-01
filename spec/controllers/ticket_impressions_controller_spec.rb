@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 require 'rails_helper'
 
 RSpec.describe(TicketImpressionsController, type: :controller) do
@@ -118,108 +117,56 @@ RSpec.describe(TicketImpressionsController, type: :controller) do
     end
 
     describe('GET #index') do
-      before(:each) do
-        @ticket_1 = Ticket.create!(
-          lottery: lottery,
-          number: 3,
-          state: 'reserved',
-          ticket_type: 'meal_and_lottery',
-          registered: false,
-          dropped_off: false,
-        )
-        @ticket_2 = Ticket.create!(
-          lottery: lottery,
-          number: 1,
-          guest: guest,
-          state: 'paid',
-          ticket_type: 'meal_and_lottery',
-          registered: true,
-          dropped_off: false,
-        )
-        @ticket_3 = Ticket.create!(
-          lottery: lottery,
-          number: 2,
-          guest: guest,
-          state: 'paid',
-          ticket_type: 'meal_and_lottery',
-          registered: true,
-          dropped_off: true,
-        )
-        @ticket_4 = Ticket.create!(
-          lottery: lottery,
-          number: 4,
-          guest: guest,
-          state: 'paid',
-          ticket_type: 'meal_and_lottery',
-          registered: true,
-          dropped_off: false,
-        )
+      let(:get_index) do
+        get(:index, params: { locale: I18n.locale, lottery_id: lottery.id })
       end
 
-      context('when not specifying :number in the params') do
-        before(:each) do
-          get(:index, params: { locale: I18n.locale, lottery_id: lottery.id })
-        end
-
-        it('returns an http :success status') do
-          expect(response).to have_http_status(:success)
-        end
-
-        it('returns all tickets that are registered and are of type meal_and_lottery ordered by :number') do
-          expect(assigns(:tickets)).to eq([@ticket_2, @ticket_3, @ticket_4])
-        end
-
-        it('renders the template lotteries/lottery_child_index') do
-          expect(response).to render_template('lotteries/lottery_child_index')
-        end
-
-        it('renders the template ticket_impressions/index') do
-          expect(response).to render_template('ticket_impressions/_index')
-        end
+      it('scopes tickets to lottery#printable_tickets') do
+        expect_any_instance_of(Lottery).to receive(:printable_tickets).and_return(lottery.printable_tickets)
+        get_index
       end
 
-      context('when specyfying the :number of a registered but not dropped off ticket in the params') do
-        before(:each) do
-          get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number: 4 })
-        end
-
-        it('returns an http :success status') do
-          expect(response).to have_http_status(:success)
-        end
-
-        it('returns the ticket#number = params[:number]') do
-          expect(assigns(:tickets)).to eq([@ticket_4])
-        end
-
-        it('renders the template lotteries/lottery_child_index') do
-          expect(response).to render_template('lotteries/lottery_child_index')
-        end
-
-        it('renders the template ticket_impressions/index') do
-          expect(response).to render_template('ticket_impressions/_index')
-        end
+      it('assigns an instance of Lottery to @lottery') do
+        get_index
+        expect(assigns(:lottery)).to be_an_instance_of(Lottery)
       end
 
-      context('when specyfying the :number of a ticket that is not printable') do
-        before(:each) do
-          get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number: 3 })
-        end
+      it('assigns an instance of TicketListing to @ticket_listing') do
+        get_index
+        expect(assigns(:ticket_listing)).to be_an_instance_of(TicketListing)
+      end
 
-        it('returns an http :success status') do
-          expect(response).to have_http_status(:success)
-        end
+      it('returns an http :success status') do
+        get_index
+        expect(response).to have_http_status(:success)
+      end
 
-        it('returns the ticket#number = params[:number]') do
-          expect(assigns(:tickets)).to be_empty
-        end
+      it('renders lotteries/lottery_child_index') do
+        get_index
+        expect(response).to render_template('lotteries/lottery_child_index')
+      end
 
-        it('renders the template lotteries/lottery_child_index') do
-          expect(response).to render_template('lotteries/lottery_child_index')
-        end
+      it('renders "tickets/ticket_listing_header"') do
+        get_index
+        expect(response).to render_template('tickets/_ticket_listing_header')
+      end
 
-        it('renders the template ticket_impressions/index') do
-          expect(response).to render_template('ticket_impressions/_index')
-        end
+      it('renders "tickets/_ticket_listing" when @ticket_listing#tickets_to_display? is true') do
+        expect_any_instance_of(TicketListing).to receive(:tickets_to_display?)
+          .at_least(:once)
+          .and_return(true)
+
+        get_index
+        expect(response).to render_template('ticket_impressions/_ticket_listing')
+      end
+
+      it('renders "tickets/_empty_ticket_listing" when @ticket_listing#tickets_to_display? is false') do
+        expect_any_instance_of(TicketListing).to receive(:tickets_to_display?)
+          .at_least(:once)
+          .and_return(false)
+
+        get_index
+        expect(response).to render_template('tickets/_empty_ticket_listing')
       end
     end
 

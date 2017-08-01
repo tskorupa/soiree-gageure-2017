@@ -1,16 +1,19 @@
 # frozen_string_literal: true
 class TicketListing
   extend Memoist
+  include Enumerable
+
   attr_reader :number_filter
 
-  def initialize(lottery:, **options)
-    @lottery = lottery
+  def initialize(ticket_scope:, **options)
+    @ticket_scope = ticket_scope
     @number_filter = options.fetch(:number_filter, nil)
   end
 
   def tickets_to_display?
     tickets.any?
   end
+  memoize :tickets_to_display?
 
   def each
     tickets.each_with_index do |ticket, index|
@@ -21,12 +24,12 @@ class TicketListing
 
   private
 
-  attr_reader :lottery
+  attr_reader :ticket_scope
 
   def tickets
-    tickets = lottery.tickets.includes(:seller, :guest, :sponsor, :table).order(:number)
-    tickets = tickets.where(number: number_filter) if number_filter.present?
-    tickets
+    requested_tickets = ticket_scope.includes(:seller, :guest, :sponsor, :table).order(:number)
+    requested_tickets = requested_tickets.where(number: number_filter) if number_filter.present?
+    requested_tickets
   end
   memoize :tickets
 end

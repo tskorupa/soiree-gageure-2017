@@ -1,4 +1,3 @@
-<%= render(partial: 'index_header') %>
 <% @draw_results.each_with_index do |ticket, index| %>
   <% new_row = (index + 1) % 12 == 0 %>
   <% if new_row %>

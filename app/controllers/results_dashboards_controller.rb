@@ -3,6 +3,8 @@ class ResultsDashboardsController < ApplicationController
   include LotteryLookup
 
   def index
+    @title = set_title
+
     dropped_off_tickets = @lottery.tickets.where(dropped_off: true)
     return no_tickets_message if dropped_off_tickets.size.zero?
 
@@ -11,10 +13,14 @@ class ResultsDashboardsController < ApplicationController
       ticket.drawn_position ? ticket : nil
     end
 
-    @title = set_title
     render(
       'lotteries/lottery_child_index',
-      locals: { main_partial: 'results_dashboards/index' },
+      locals: {
+        main_header: 'results_dashboards/index_header',
+        main_header_locals: {},
+        main_partial: 'results_dashboards/index',
+        main_partial_locals: {},
+      },
     )
   end
 
@@ -23,7 +29,12 @@ class ResultsDashboardsController < ApplicationController
   def no_tickets_message
     render(
       'lotteries/lottery_child_index',
-      locals: { main_partial: 'results_dashboards/no_tickets_index' },
+      locals: {
+        main_header: 'results_dashboards/index_header',
+        main_header_locals: {},
+        main_partial: 'results_dashboards/no_tickets_index',
+        main_partial_locals: {},
+      },
     )
   end
 

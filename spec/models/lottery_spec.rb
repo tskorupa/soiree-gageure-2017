@@ -92,6 +92,48 @@ RSpec.describe(Lottery, type: :model) do
     end
   end
 
+  describe('#droppable_tickets') do
+    it('returns tickets when ticket#registered == true and ticket#dropped_off == false') do
+      ticket = lottery.create_ticket(
+        registered: true,
+        dropped_off: false,
+      )
+      expect(lottery.droppable_tickets).to eq([ticket])
+    end
+
+    it('does not return tickets when ticket#registered == false and ticket#dropped_off == false') do
+      lottery.create_ticket(
+        registered: false,
+        dropped_off: false,
+      )
+      expect(lottery.droppable_tickets).to be_empty
+    end
+
+    it('does not return tickets when ticket#registered == false and ticket#dropped_off == true') do
+      lottery.create_ticket(
+        registered: false,
+        dropped_off: true,
+      )
+      expect(lottery.droppable_tickets).to be_empty
+    end
+
+    it('does not return tickets when ticket#registered == true and ticket#dropped_off == true') do
+      lottery.create_ticket(
+        registered: true,
+        dropped_off: true,
+      )
+      expect(lottery.droppable_tickets).to be_empty
+    end
+
+    it('does not return tickets from another lottery when ticket#registered == true and ticket#dropped_off == false') do
+      Lottery.create!(event_date: Time.zone.tomorrow).create_ticket(
+        registered: true,
+        dropped_off: false,
+      )
+      expect(lottery.droppable_tickets).to be_empty
+    end
+  end
+
   describe('#create_ticket') do
     it('returns a persisted ticket') do
       expect(lottery.create_ticket).to be_persisted

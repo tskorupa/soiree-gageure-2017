@@ -69,25 +69,25 @@ fr:
   ticket_registrations:
     index:
       title: 'Enregistrement'
-      ticket_number_not_found: "Le billet no.%{number} ne peut pas être enregistré."
-      no_unregistered_tickets: "Il n'y a pas de billets non-enregistrés."
+      no_tickets_with_number: "Le billet no.%{number_filter} ne peut pas être enregistré."
+      no_tickets: "Il n'y a pas de billets à enregistrer."
     edit:
       title: 'Enregistrer le %{model}'
   ticket_impressions:
     index:
       title: 'Impression'
-      no_printable_tickets: "Il n'y a aucun billet de souper enregistré et prêt à être imprimé."
-      ticket_number_not_found: "Le billet no.%{number} n'est pas un billet de souper enregistré qui peut être imprimé."
+      no_tickets_with_number: "Le billet no.%{number_filter} n'est pas un billet de souper enregistré qui peut être imprimé."
+      no_tickets: "Il n'y a aucun billet de souper enregistré et prêt à être imprimé."
   ticket_drop_offs:
     index:
       title: 'Mise en boulier'
-      no_registered_tickets: "Il n'y a aucun billet enregistré et prêt à être mis en boulier."
-      ticket_number_not_found: "Le billet no.%{number} n'est pas un billet enregistré qui peut être mis en boulier."
+      no_tickets_with_number: "Le billet no.%{number_filter} n'est pas un billet enregistré qui peut être mis en boulier."
+      no_tickets: "Il n'y a aucun billet enregistré et prêt à être mis en boulier."
   ticket_draws:
     index:
       title: 'Billets en boulier'
-      ticket_number_not_found: "Le billet no.%{number} n'est pas dans le boulier."
-      no_tickets_to_draw: "Il n'y a aucun billet dans le boulier."
+      no_tickets_with_number: "Le billet no.%{number} n'est pas dans le boulier."
+      no_tickets: "Il n'y a aucun billet dans le boulier."
   drawn_tickets:
     index:
       title: 'Liste des résultats'

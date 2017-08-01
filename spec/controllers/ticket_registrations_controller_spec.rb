@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 require 'rails_helper'
 
 RSpec.describe(TicketRegistrationsController, type: :controller) do
@@ -75,58 +74,9 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
         get(:index, params: { locale: I18n.locale, lottery_id: lottery.id })
       end
 
-      it('assigns @number with the value of params[:number]') do
-        get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number: 1 })
-        expect(assigns(:number)).to eq('1')
-      end
-
-      it('assigns @tickets with empty when no ticket#registered == false exist') do
-        ticket.update!(registered: true)
+      it('scopes tickets to lottery#registerable_tickets') do
+        expect_any_instance_of(Lottery).to receive(:registerable_tickets).and_return(lottery.registerable_tickets)
         get_index
-        expect(assigns(:tickets)).to eq(Ticket.none)
-      end
-
-      it('assigns @tickets with empty when ticket#state == "reserved" exist') do
-        ticket.update!(state: 'reserved')
-        get_index
-        expect(assigns(:tickets)).to eq(Ticket.none)
-      end
-
-      it('assigns @tickets with non-empty when ticket#state == "paid" exist') do
-        ticket.update!(state: 'paid')
-        get_index
-        expect(assigns(:tickets)).to eq([ticket])
-      end
-
-      it('assigns @tickets with non-empty when ticket#state == "authorized" exist') do
-        ticket.update!(state: 'authorized')
-        get_index
-        expect(assigns(:tickets)).to eq([ticket])
-      end
-
-      it('orders @tickets by ticket#number') do
-        ticket_1 = Ticket.create!(
-          lottery: lottery,
-          number: 9,
-          state: 'paid',
-          ticket_type: 'meal_and_lottery',
-        )
-        ticket_2 = Ticket.create!(
-          lottery: lottery,
-          number: 3,
-          state: 'paid',
-          ticket_type: 'meal_and_lottery',
-        )
-        get_index
-        expect(assigns(:tickets)).to eq([ticket_2, ticket_1])
-      end
-
-      it('scopes @tickets to ticket#number == params[:number]') do
-        get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number: ticket.number })
-        expect(assigns(:tickets)).to eq([ticket])
-
-        get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number: 2 })
-        expect(assigns(:tickets)).to eq(Ticket.none)
       end
 
       it('returns an http :success status') do
@@ -134,14 +84,42 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
         expect(response).to have_http_status(:success)
       end
 
+      it('assigns an instance of Lottery to @lottery') do
+        get_index
+        expect(assigns(:lottery)).to be_an_instance_of(Lottery)
+      end
+
+      it('assigns an instance of TicketListing to @ticket_listing') do
+        get_index
+        expect(assigns(:ticket_listing)).to be_an_instance_of(TicketListing)
+      end
+
       it('renders lotteries/lottery_child_index') do
         get_index
         expect(response).to render_template('lotteries/lottery_child_index')
       end
 
-      it('renders ticket_registrations/index') do
+      it('renders "tickets/ticket_listing_header"') do
         get_index
-        expect(response).to render_template('ticket_registrations/_index')
+        expect(response).to render_template('tickets/_ticket_listing_header')
+      end
+
+      it('renders "tickets/_ticket_listing" when @ticket_listing#tickets_to_display? is true') do
+        expect_any_instance_of(TicketListing).to receive(:tickets_to_display?)
+          .at_least(:once)
+          .and_return(true)
+
+        get_index
+        expect(response).to render_template('ticket_registrations/_ticket_listing')
+      end
+
+      it('renders "tickets/_empty_ticket_listing" when @ticket_listing#tickets_to_display? is false') do
+        expect_any_instance_of(TicketListing).to receive(:tickets_to_display?)
+          .at_least(:once)
+          .and_return(false)
+
+        get_index
+        expect(response).to render_template('tickets/_empty_ticket_listing')
       end
     end
 

@@ -177,35 +177,48 @@ RSpec.describe(ResultsDashboardsController, type: :controller) do
       context('when no dropped off tickets exist') do
         before(:each) do
           Ticket.update_all(dropped_off: false)
-          get_index
         end
 
         it('returns an http :success status') do
+          get_index
           expect(response).to have_http_status(:success)
         end
 
         it('does not assign @drawn_results') do
+          get_index
           expect(assigns(:drawn_results)).to be_nil
         end
 
         it('renders the template lotteries/lottery_child_index') do
+          get_index
           expect(response).to render_template('lotteries/lottery_child_index')
         end
 
         it('renders the partial results/fullscreen') do
+          get_index
           expect(response).to render_template('results/_fullscreen')
         end
 
         it('renders the partial results_dashboards/no_tickets_index') do
+          get_index
           expect(response).to render_template('results_dashboards/_no_tickets_index')
         end
 
         it('renders the partial results/index_header') do
+          get_index
           expect(response).to render_template('results_dashboards/_index_header')
         end
 
-        it('does not assign @title') do
-          expect(assigns(:title)).to be_nil
+        it('assigns @title when I18n.locale == :en') do
+          get_index
+          expect(assigns(:title)).to eq('Results dashboard (ordered by drawn position)')
+        end
+
+        it('assigns @title when I18n.locale == :fr') do
+          with_locale(:fr) do
+            get_index
+            expect(assigns(:title)).to eq('Tableau des résultats (par ordre de pige)')
+          end
         end
       end
     end
