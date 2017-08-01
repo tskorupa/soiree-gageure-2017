@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 class Lottery < ApplicationRecord
   has_many :prizes
   has_many :tables
@@ -26,6 +25,13 @@ class Lottery < ApplicationRecord
   def registerable_tickets
     tickets.where(registered: false)
       .where.not(state: 'reserved')
+  end
+
+  def printable_tickets
+    tickets.where(
+      ticket_type: 'meal_and_lottery',
+      registered: true,
+    )
   end
 
   def drawable_tickets

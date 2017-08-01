@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 require 'rails_helper'
 
 RSpec.describe(Lottery, type: :model) do
@@ -48,6 +47,48 @@ RSpec.describe(Lottery, type: :model) do
         state: 'paid',
       )
       expect(lottery.registerable_tickets).to be_empty
+    end
+  end
+
+  describe('#printable_tickets') do
+    it('returns tickets when ticket#ticket_type == "meal_and_lottery" and ticket#registered == true') do
+      ticket = lottery.create_ticket(
+        ticket_type: 'meal_and_lottery',
+        registered: true,
+      )
+      expect(lottery.printable_tickets).to eq([ticket])
+    end
+
+    it('does not return tickets from another lottery when ticket#ticket_type == "meal_and_lottery" and ticket#registered == true') do
+      Lottery.create!(event_date: Time.zone.tomorrow).create_ticket(
+        ticket_type: 'meal_and_lottery',
+        registered: true,
+      )
+      expect(lottery.printable_tickets).to be_empty
+    end
+
+    it('does not return tickets when ticket#ticket_type == "lottery_only" and ticket#registered == true') do
+      lottery.create_ticket(
+        ticket_type: 'lottery_only',
+        registered: true,
+      )
+      expect(lottery.printable_tickets).to be_empty
+    end
+
+    it('does not return tickets when ticket#ticket_type == "lottery_only" and ticket#registered == false') do
+      lottery.create_ticket(
+        ticket_type: 'lottery_only',
+        registered: false,
+      )
+      expect(lottery.printable_tickets).to be_empty
+    end
+
+    it('does not return tickets when ticket#ticket_type == "meal_and_lottery" and ticket#registered == false') do
+      lottery.create_ticket(
+        ticket_type: 'meal_and_lottery',
+        registered: false,
+      )
+      expect(lottery.printable_tickets).to be_empty
     end
   end
 
