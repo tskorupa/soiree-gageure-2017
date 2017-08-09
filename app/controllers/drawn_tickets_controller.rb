@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 class DrawnTicketsController < ApplicationController
   include LotteryLookup
 
@@ -14,7 +13,12 @@ class DrawnTicketsController < ApplicationController
     )
     render(
       'lotteries/lottery_child_index',
-      locals: { main_partial: 'drawn_tickets/index' },
+      locals: {
+        main_header: 'drawn_tickets/listing_header',
+        main_header_locals: {},
+        main_partial: 'drawn_tickets/index',
+        main_partial_locals: {},
+      },
     )
   end
 
@@ -28,7 +32,12 @@ class DrawnTicketsController < ApplicationController
   def no_tickets_message
     render(
       'lotteries/lottery_child_index',
-      locals: { main_partial: 'drawn_tickets/no_tickets_index' },
+      locals: {
+        main_header: 'drawn_tickets/listing_header',
+        main_header_locals: {},
+        main_partial: 'drawn_tickets/no_tickets_index',
+        main_partial_locals: {},
+      },
     )
   end
 end

@@ -106,6 +106,10 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
           expect(response).to render_template('lotteries/lottery_child_index')
         end
 
+        it('renders the partial drawn_tickets/listing_header') do
+          expect(response).to render_template('drawn_tickets/_listing_header')
+        end
+
         it('renders the partial drawn_tickets/no_tickets_index') do
           expect(response).to render_template('drawn_tickets/_no_tickets_index')
         end
@@ -129,6 +133,10 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
           expect(response).to render_template('lotteries/lottery_child_index')
         end
 
+        it('renders the partial drawn_tickets/listing_header') do
+          expect(response).to render_template('drawn_tickets/_listing_header')
+        end
+
         it('renders the partial drawn_tickets/index') do
           expect(response).to render_template('drawn_tickets/_index')
         end
@@ -150,6 +158,10 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
 
         it('renders the template lotteries/lottery_child_index') do
           expect(response).to render_template('lotteries/lottery_child_index')
+        end
+
+        it('renders the partial drawn_tickets/listing_header') do
+          expect(response).to render_template('drawn_tickets/_listing_header')
         end
 
         it('renders the partial drawn_tickets/index') do

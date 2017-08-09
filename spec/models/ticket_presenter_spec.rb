@@ -28,6 +28,13 @@ RSpec.describe(TicketPresenter, type: :model) do
     )
   end
 
+  describe('#ticket_id') do
+    it('returns the ticket#id') do
+      @ticket = lottery.create_ticket
+      expect(ticket_presenter.ticket_id).to eq(@ticket.id)
+    end
+  end
+
   describe('#number') do
     it('returns a padded ticket number') do
       @ticket = Ticket.new(number: 3)

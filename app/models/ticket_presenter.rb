@@ -8,6 +8,8 @@ class TicketPresenter
     @row_number = row_number
   end
 
+  delegate :id, to: :ticket, prefix: :ticket
+
   def number
     PaddedNumber.pad_number(ticket.number)
   end

@@ -1,12 +1,9 @@
 <div class='page-header'>
   <div class='row-fluid'>
     <h1>
-      <%= t(
-        '.title',
-        default: Ticket.model_name.human.pluralize.titleize,
-      ) %>
+      <%= title %>
       <div class='pull-right text-right'>
-        <form accept-charset='UTF-8' action='<%= lottery_tickets_path(@lottery) %>' method='get'>
+        <form accept-charset='UTF-8' action='<%= path_to_listing %>' method='get'>
           <%= text_field_tag(
             :number_filter, @ticket_listing.number_filter,
             class: 'form-control span2',
@@ -15,15 +12,13 @@
             onfocus: 'this.select();',
           ) %>
         </form>
-        <%= link_to(
-          t(
-            'ticket.new.title',
-            default: [:'helpers.titles.new', 'New %{model}'],
-            model: Ticket.model_name.human.downcase,
-          ),
-          new_lottery_ticket_path(@lottery),
-          class: 'btn btn-primary',
-        ) %>
+        <% if can_build_new %>
+          <%= link_to(
+            t('helpers.titles.new', model: Ticket.model_name.human.downcase),
+            new_lottery_ticket_path(@lottery),
+            class: 'btn btn-primary',
+          ) %>
+        <% end %>
       </div>
     </h1>
   </div>

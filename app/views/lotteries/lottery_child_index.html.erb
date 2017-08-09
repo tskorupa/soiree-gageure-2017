@@ -39,6 +39,7 @@
     </ul>
   </div>
   <div class='col-sm-10 col-sm-offset-2 main'>
-    <%= render(main_partial) %>
+    <%= render main_header, **main_header_locals %>
+    <%= render main_partial, **main_partial_locals %>
   </div>
 </div>
