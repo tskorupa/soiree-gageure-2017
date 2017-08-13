@@ -9,19 +9,19 @@
     </tr>
   </thead>
   <tbody>
-    <% @draw_results.each do |(position, ticket, prize)| %>
-      <tr class='<%= prize ? "success" : "" %>'>
-        <td><%= position %></td>
-        <td><%= PaddedNumber.pad_number(ticket.number) if ticket&.number %></td>
-        <td><%= ticket&.guest&.full_name %></td>
-        <td><%= number_to_currency(prize) if prize %></td>
+    <% @results_listing.each do |result_row| %>
+      <tr class='<%= result_row.prize_amount ? "success" : "" %>'>
+        <td><%= result_row.position %></td>
+        <td><%= result_row.ticket_number %></td>
+        <td><%= result_row.guest_name %></td>
+        <td><%= number_to_currency(result_row.prize_amount) %></td>
         <td><%= link_to(
           t('helpers.submit.drawn_tickets.update'),
-          lottery_drawn_ticket_path(@lottery, ticket),
+          lottery_drawn_ticket_path(@lottery, result_row),
           method: :patch,
           class: 'btn btn-xs btn-primary',
-          'data-drawn-position' => position,
-        ) if ticket %></td>
+          'data-drawn-position' => result_row.position,
+        ) if result_row.ticket_to_display? %></td>
       </tr>
     <% end %>
   </tbody>

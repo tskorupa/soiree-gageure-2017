@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 class TicketPresenter
   extend Memoist
-  attr_reader :row_number
 
   def initialize(ticket:, row_number:)
     @ticket = ticket
     @row_number = row_number
   end
 
+  attr_reader :row_number
   delegate :id, to: :ticket, prefix: :ticket
 
   def number
@@ -69,7 +69,6 @@ class TicketPresenter
   def to_param
     ticket.id
   end
-  memoize :to_param
 
   private
 

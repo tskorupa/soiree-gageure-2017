@@ -361,8 +361,7 @@ RSpec.describe(TicketPresenter, type: :model) do
   describe('#model_name') do
     it('delegates #model_name to the ticket') do
       @ticket = Ticket.new
-      expect(@ticket).to respond_to(:model_name)
-      ticket_presenter.model_name
+      expect(ticket_presenter.model_name).to eq('Ticket')
     end
   end
 

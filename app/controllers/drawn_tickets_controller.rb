@@ -3,20 +3,20 @@ class DrawnTicketsController < ApplicationController
   include LotteryLookup
 
   def index
-    dropped_off_tickets_count = @lottery.tickets.where(dropped_off: true).count
-    return no_tickets_message if dropped_off_tickets_count.zero?
+    @results_listing = ResultsListing.new(lottery: @lottery)
 
-    @draw_results = DrawResultsListing.draw_results(
-      drawn_tickets: @lottery.drawn_tickets.includes(:guest),
-      prizes: @lottery.prizes,
-      dropped_off_tickets_count: dropped_off_tickets_count,
-    )
+    main_partial = if @results_listing.tickets_to_display?
+      'drawn_tickets/index'
+    else
+      'drawn_tickets/no_tickets_index'
+    end
+
     render(
       'lotteries/lottery_child_index',
       locals: {
         main_header: 'drawn_tickets/listing_header',
         main_header_locals: {},
-        main_partial: 'drawn_tickets/index',
+        main_partial: main_partial,
         main_partial_locals: {},
       },
     )
@@ -25,19 +25,5 @@ class DrawnTicketsController < ApplicationController
   def update
     @lottery.return_last_drawn_ticket
     redirect_to(lottery_drawn_tickets_path(@lottery))
-  end
-
-  private
-
-  def no_tickets_message
-    render(
-      'lotteries/lottery_child_index',
-      locals: {
-        main_header: 'drawn_tickets/listing_header',
-        main_header_locals: {},
-        main_partial: 'drawn_tickets/no_tickets_index',
-        main_partial_locals: {},
-      },
-    )
   end
 end
