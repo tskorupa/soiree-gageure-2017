@@ -1,9 +1,8 @@
 # frozen_string_literal: true
-
 require 'rails_helper'
 
 RSpec.describe(ResultsDashboardsController, type: :controller) do
-  include I18nHelper
+  include I18nSpecHelper
   render_views
 
   let(:lottery) do

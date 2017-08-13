@@ -1,6 +1,5 @@
 # frozen_string_literal: true
-
-module I18nHelper
+module I18nSpecHelper
   private
 
   def with_locale(locale)

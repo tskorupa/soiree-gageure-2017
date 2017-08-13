@@ -1,9 +1,8 @@
 # frozen_string_literal: true
-
 require 'rails_helper'
 
 RSpec.describe('number_to_currency', type: :helper) do
-  include I18nHelper
+  include I18nSpecHelper
 
   it('returns $123,456,789 when locale is :en') do
     expect(number_to_currency(123_456_789.00)).to eq('$123,456,789')
