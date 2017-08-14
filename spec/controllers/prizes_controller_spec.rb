@@ -1,8 +1,9 @@
 # frozen_string_literal: true
-
 require 'rails_helper'
 
 RSpec.describe(PrizesController, type: :controller) do
+  render_views
+
   let(:lottery) do
     Lottery.create!(event_date: Time.zone.today)
   end
@@ -105,6 +106,8 @@ RSpec.describe(PrizesController, type: :controller) do
         expect(response).to have_http_status(:success)
         expect(assigns(:prizes)).to eq([prize_2, prize_3, prize_1])
         expect(response).to render_template('lotteries/lottery_child_index')
+        expect(response).to render_template('prizes/_index_header')
+        expect(response).to render_template('prizes/_index')
       end
     end
 

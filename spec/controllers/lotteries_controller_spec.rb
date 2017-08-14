@@ -1,8 +1,9 @@
 # frozen_string_literal: true
-
 require 'rails_helper'
 
 RSpec.describe(LotteriesController, type: :controller) do
+  render_views
+
   let(:lottery) do
     Lottery.create!(event_date: Time.zone.today)
   end

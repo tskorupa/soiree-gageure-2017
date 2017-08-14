@@ -1,8 +1,9 @@
 # frozen_string_literal: true
-
 require 'rails_helper'
 
 RSpec.describe(GuestsController, type: :controller) do
+  render_views
+
   let(:guest) do
     Guest.create!(full_name: 'Bubbles')
   end

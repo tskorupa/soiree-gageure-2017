@@ -1,8 +1,9 @@
 # frozen_string_literal: true
-
 require 'rails_helper'
 
 RSpec.describe(UsersController, type: :controller) do
+  render_views
+
   let(:user) do
     User.create!(
       email: 'abc@def.com',

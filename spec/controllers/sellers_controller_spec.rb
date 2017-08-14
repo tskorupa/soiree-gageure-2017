@@ -1,8 +1,9 @@
 # frozen_string_literal: true
-
 require 'rails_helper'
 
 RSpec.describe(SellersController, type: :controller) do
+  render_views
+
   let(:seller) do
     Seller.create!(full_name: 'Gonzo')
   end

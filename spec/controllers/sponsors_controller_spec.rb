@@ -1,8 +1,9 @@
 # frozen_string_literal: true
-
 require 'rails_helper'
 
 RSpec.describe(SponsorsController, type: :controller) do
+  render_views
+
   let(:sponsor) do
     Sponsor.create!(full_name: 'Clyde')
   end

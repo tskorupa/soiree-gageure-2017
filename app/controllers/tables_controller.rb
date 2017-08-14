@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 class TablesController < ApplicationController
   include LotteryLookup
 
@@ -7,7 +6,12 @@ class TablesController < ApplicationController
     @tables = @lottery.tables.order(:number)
     render(
       'lotteries/lottery_child_index',
-      locals: { main_partial: 'tables/index' },
+      locals: {
+        main_header: 'tables/index_header',
+        main_header_locals: {},
+        main_partial: 'tables/index',
+        main_partial_locals: {},
+      },
     )
   end
 

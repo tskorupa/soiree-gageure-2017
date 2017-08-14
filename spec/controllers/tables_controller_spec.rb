@@ -1,8 +1,9 @@
 # frozen_string_literal: true
-
 require 'rails_helper'
 
 RSpec.describe(TablesController, type: :controller) do
+  render_views
+
   let(:lottery) do
     Lottery.create!(event_date: Time.zone.today)
   end
@@ -114,6 +115,8 @@ RSpec.describe(TablesController, type: :controller) do
         expect(response).to have_http_status(:success)
         expect(assigns(:tables)).to eq([table_2, table_3, table_1])
         expect(response).to render_template('lotteries/lottery_child_index')
+        expect(response).to render_template('tables/_index_header')
+        expect(response).to render_template('tables/_index')
       end
     end
 
