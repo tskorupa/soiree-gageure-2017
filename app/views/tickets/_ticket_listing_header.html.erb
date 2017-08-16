@@ -18,6 +18,12 @@
             new_lottery_ticket_path(@lottery),
             class: 'btn btn-primary',
           ) %>
+          <%= link_to(
+            '.xlsx'.html_safe,
+            lottery_tickets_path(@lottery, format: :xlsx),
+            target: :_self,
+            class: 'btn btn-default'
+          ) %>
         <% end %>
       </div>
     </h1>

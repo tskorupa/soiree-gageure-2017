@@ -8,19 +8,10 @@ class TicketsController < ApplicationController
       number_filter: params[:number_filter],
     )
 
-    render(
-      'lotteries/lottery_child_index',
-      locals: {
-        main_header: 'tickets/ticket_listing_header',
-        main_header_locals: {
-          title: Ticket.model_name.human.pluralize.titleize,
-          path_to_listing: lottery_tickets_path(@lottery),
-          can_build_new: true,
-        },
-        main_partial: main_partial,
-        main_partial_locals: { message: main_partial_message },
-      },
-    )
+    respond_to do |format|
+      format.html { render_html_index }
+      format.xlsx { render_xlsx_index }
+    end
   end
 
   def new
@@ -85,5 +76,26 @@ class TicketsController < ApplicationController
 
   def no_tickets_to_display_for_number?
     !@ticket_listing.tickets_to_display? && @ticket_listing.number_filter.present?
+  end
+
+  def render_html_index
+    render(
+      'lotteries/lottery_child_index',
+      locals: {
+        main_header: 'tickets/ticket_listing_header',
+        main_header_locals: {
+          title: Ticket.model_name.human.pluralize.titleize,
+          path_to_listing: lottery_tickets_path(@lottery),
+          can_build_new: true,
+        },
+        main_partial: main_partial,
+        main_partial_locals: { message: main_partial_message },
+      },
+    )
+  end
+
+  def render_xlsx_index
+    filename = format('%s.xlsx', Ticket.model_name.human.pluralize.downcase)
+    render xlsx: 'ticket_listing', filename: filename
   end
 end

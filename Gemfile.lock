@@ -40,6 +40,13 @@ GEM
       tzinfo (~> 1.1)
     arel (8.0.0)
     ast (2.3.0)
+    axlsx (2.0.1)
+      htmlentities (~> 4.3.1)
+      nokogiri (>= 1.4.1)
+      rubyzip (~> 1.0.0)
+    axlsx_rails (0.5.1)
+      actionpack (>= 3.1)
+      axlsx (>= 2.0.1)
     bcrypt (3.1.11)
     bindex (0.5.0)
     builder (3.2.3)
@@ -66,6 +73,7 @@ GEM
     ffi (1.9.18)
     globalid (0.4.0)
       activesupport (>= 4.2.0)
+    htmlentities (4.3.4)
     httparty (0.15.5)
       multi_xml (>= 0.5.2)
     i18n (0.8.4)
@@ -191,6 +199,7 @@ GEM
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-progressbar (1.8.1)
+    rubyzip (1.0.0)
     sass (3.4.24)
     sass-rails (5.0.6)
       railties (>= 4.0.0, < 6)
@@ -247,6 +256,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  axlsx_rails
   coffee-rails (~> 4.2)
   devise
   jbuilder (~> 2.5)

@@ -1,0 +1,26 @@
+wb = xlsx_package.workbook
+wb.add_worksheet(name: Ticket.model_name.human.pluralize.titleize) do |sheet|
+  sheet.add_row [
+    t('column_names.number'),
+    Seller.model_name.human,
+    Guest.model_name.human,
+    Sponsor.model_name.human,
+    t('column_names.ticket.state'),
+    t('column_names.ticket.ticket_type'),
+    t('column_names.table.number'),
+    t('column_names.ticket.registration_step'),
+  ]
+
+  @ticket_listing.each do |ticket_row|
+    sheet.add_row [
+      ticket_row.number,
+      ticket_row.seller_name,
+      ticket_row.guest_name,
+      ticket_row.sponsor_name,
+      ticket_row.state,
+      ticket_row.ticket_type,
+      ticket_row.table_number,
+      ticket_row.registration_step,
+    ]
+  end
+end
