@@ -35,10 +35,12 @@ en:
     warning:
       lottery_is_unlocked: 'Tickets may be drawn when the lottery is locked'
   column_names:
+    number: 'Number'
     draw_order: 'Draw order'
     table_number: 'Table number'
     ticket:
       ticket_type: 'Ticket type'
+      state: 'State'
       registration_step: 'Registration'
     table:
       number: 'Table number'
