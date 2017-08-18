@@ -70,14 +70,28 @@ RSpec.describe(UsersController, type: :controller) do
     end
 
     describe('GET #index') do
-      it('returns all users ordered by LOWER(email)') do
-        user_1 = User.create!(email: '1@a.com', password: 'foo')
-        user_2 = User.create!(email: 'def@a.com', password: 'foo')
-
+      before(:each) do
         get(:index, params: { locale: I18n.locale })
+      end
+
+      it('assigns @users') do
+        expect(assigns(:users)).to eq([user])
+      end
+
+      it('renders the template "users/index"') do
+        expect(response).to render_template('users/index')
+      end
+
+      it('renders the partial "users/_index_header"') do
+        expect(response).to render_template('users/_index_header')
+      end
+
+      it('renders the partial "users/_index_listing"') do
+        expect(response).to render_template('users/_index_listing')
+      end
+
+      it('returns an HTTP success') do
         expect(response).to have_http_status(:success)
-        expect(assigns(:users)).to eq([user_1, user, user_2])
-        expect(response).to render_template(:index)
       end
     end
 

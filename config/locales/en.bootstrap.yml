@@ -31,9 +31,6 @@ en:
         update:
           lock: 'Lock registration'
           unlock: 'Unlock registration'
-  users:
-    index:
-      no_users: 'No users exist.'
   sponsors:
     index:
       no_sponsors: 'No sponsors exist.'

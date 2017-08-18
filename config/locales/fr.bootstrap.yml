@@ -53,8 +53,6 @@ fr:
     edit:
       title: 'Modifier la %{model}'
   users:
-    index:
-      no_users: "Il n'existe aucun utilisateur."
     new:
       title: 'Nouvel %{model}'
     edit:
