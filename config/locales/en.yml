@@ -57,6 +57,8 @@ en:
       full_name: 'Guest name'
     sponsor:
       full_name: 'Sponsor name'
+    user:
+      email: 'Email address'
     lottery:
       event_date: 'Event date'
       meal_voucher_price: 'Meal voucher price'

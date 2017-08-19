@@ -74,8 +74,8 @@ RSpec.describe(UsersController, type: :controller) do
         get(:index, params: { locale: I18n.locale })
       end
 
-      it('assigns @users') do
-        expect(assigns(:users)).to eq([user])
+      it('assigns @users_listing to be an instance of UsersListing') do
+        expect(assigns(:users_listing)).to be_an_instance_of(UsersListing)
       end
 
       it('renders the template "users/index"') do

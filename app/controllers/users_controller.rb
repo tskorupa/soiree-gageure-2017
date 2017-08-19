@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class UsersController < ApplicationController
   def index
-    @users = User.order('LOWER(email) ASC')
+    @users_listing = UsersListing.new
   end
 
   def new

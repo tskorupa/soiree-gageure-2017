@@ -1,10 +1,10 @@
 <div class='page-header'>
   <div class='row-fluid'>
     <h1>
-      <%= t(User.model_name.human.pluralize.titleize) %>
+      <%= @users_listing.title %>
       <div class='pull-right'>
         <%= link_to(
-          t(:'users.new.title', default: :'helpers.titles.new', model: User.model_name.human.downcase),
+          @users_listing.new_user_button_name,
           new_user_path,
           class: 'btn btn-primary',
         ) %>
