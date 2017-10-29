@@ -2,6 +2,7 @@
 source 'https://rubygems.org'
 ruby '2.4.1'
 
+gem 'active_model_serializers'
 gem 'axlsx_rails'
 gem 'devise'
 gem 'memoist'

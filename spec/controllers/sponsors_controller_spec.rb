@@ -4,10 +4,6 @@ require 'rails_helper'
 RSpec.describe(SponsorsController, type: :controller) do
   render_views
 
-  let(:sponsor) do
-    Sponsor.create!(full_name: 'Clyde')
-  end
-
   let(:user) do
     User.create!(
       email: 'abc@def.com',
@@ -46,6 +42,7 @@ RSpec.describe(SponsorsController, type: :controller) do
 
     describe('GET #show') do
       it('raises a "No route matches" error') do
+        sponsor = create_sponsor
         expect do
           get(:show, params: { locale: I18n.locale, id: sponsor.id })
         end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
@@ -54,6 +51,7 @@ RSpec.describe(SponsorsController, type: :controller) do
 
     describe('GET #edit') do
       it('redirects to the user log in') do
+        sponsor = create_sponsor
         get(:edit, params: { locale: I18n.locale, id: sponsor.id })
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -61,6 +59,7 @@ RSpec.describe(SponsorsController, type: :controller) do
 
     describe('PATCH #update') do
       it('redirects to the user log in') do
+        sponsor = create_sponsor
         patch(:update, params: { locale: I18n.locale, id: sponsor.id, sponsor: { full_name: 'Mighty' } })
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -68,6 +67,7 @@ RSpec.describe(SponsorsController, type: :controller) do
 
     describe('DELETE #destroy') do
       it('raises a "No route matches" error') do
+        sponsor = create_sponsor
         expect do
           delete(:destroy, params: { locale: I18n.locale, id: sponsor.id })
         end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
@@ -80,29 +80,51 @@ RSpec.describe(SponsorsController, type: :controller) do
       sign_in(user)
     end
 
-    describe('GET #index') do
-      it('returns all sponsors ordered by LOWER(full_name)') do
-        sponsor_1 = Sponsor.create!(full_name: 'z')
-        sponsor_2 = Sponsor.create!(full_name: 'a')
-        sponsor_3 = Sponsor.create!(full_name: '1')
-        sponsor_4 = Sponsor.create!(full_name: 'A')
-
+    describe('GET #index with format: :html') do
+      before(:each) do
         get(:index, params: { locale: I18n.locale })
+      end
+
+      it('assigns @sponsors_listing to be an instance of SponsorListing') do
+        expect(assigns(:sponsors_listing)).to be_an_instance_of(SponsorListing)
+      end
+
+      it('renders the template "sponsors/index"') do
+        expect(response).to render_template('sponsors/index')
+      end
+
+      it('renders the partial "sponsors/_index_header"') do
+        expect(response).to render_template('sponsors/_index_header')
+      end
+
+      it('renders the partial "sponsors/_index_listing"') do
+        expect(response).to render_template('sponsors/_index_listing')
+      end
+
+      it('returns an HTTP success') do
         expect(response).to have_http_status(:success)
-        expect(assigns(:sponsors)).to eq([sponsor_3, sponsor_2, sponsor_4, sponsor_1])
-        expect(response).to render_template(:index)
       end
     end
 
     describe('GET #index with format: :json') do
-      it('returns all sponsor full names') do
-        Sponsor.create!(full_name: 'Foo')
-        Sponsor.create!(full_name: 'Bar')
-        Sponsor.create!(full_name: 'Baz')
-
+      before(:each) do
+        create_sponsor
         get(:index, format: :json)
+      end
+
+      it('assigns @sponsors_listing to be an instance of SponsorListing') do
+        expect(assigns(:sponsors_listing)).to be_an_instance_of(SponsorListing)
+      end
+
+      it('returns a serialized list of sponsors') do
+        expected_body = SponsorListing.new.map do |sponsor_row|
+          SponsorRowSerializer.new(sponsor_row).as_json
+        end
+        expect(response.body).to eq(expected_body.to_json)
+      end
+
+      it('returns an HTTP success') do
         expect(response).to have_http_status(:success)
-        expect(ActiveSupport::JSON.decode(response.body)).to eq(%w(Bar Baz Foo))
       end
     end
 
@@ -133,6 +155,7 @@ RSpec.describe(SponsorsController, type: :controller) do
 
     describe('GET #show') do
       it('raises a "No route matches" error') do
+        sponsor = create_sponsor
         expect do
           get(:show, params: { locale: I18n.locale, id: sponsor.id })
         end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
@@ -141,6 +164,7 @@ RSpec.describe(SponsorsController, type: :controller) do
 
     describe('GET #edit') do
       it('returns the requested sponsor') do
+        sponsor = create_sponsor
         get(:edit, params: { locale: I18n.locale, id: sponsor.id })
         expect(response).to have_http_status(:success)
         expect(assigns(:sponsor)).to eq(sponsor)
@@ -150,12 +174,14 @@ RSpec.describe(SponsorsController, type: :controller) do
 
     describe('PATCH #update') do
       it('redirects to sponsors_path when :full_name is updated') do
+        sponsor = create_sponsor
         patch(:update, params: { locale: I18n.locale, id: sponsor.id, sponsor: { full_name: 'Mighty' } })
         expect(sponsor.reload.full_name).to eq('Mighty')
         expect(response).to redirect_to(sponsors_path)
       end
 
       it('renders :edit when the sponsor could not be updated') do
+        sponsor = create_sponsor
         patch(:update, params: { locale: I18n.locale, id: sponsor.id, sponsor: { full_name: nil } })
         expect(response).to have_http_status(:success)
         expect(assigns(:sponsor).full_name).to be_blank
@@ -166,10 +192,17 @@ RSpec.describe(SponsorsController, type: :controller) do
 
     describe('DELETE #destroy') do
       it('raises a "No route matches" error') do
+        sponsor = create_sponsor
         expect do
           delete(:destroy, params: { locale: I18n.locale, id: sponsor.id })
         end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
       end
     end
+  end
+
+  private
+
+  def create_sponsor
+    Sponsor.create! full_name: 'Clyde'
   end
 end

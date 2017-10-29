@@ -1,0 +1,24 @@
+<table class='table table-striped'>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th><%= @sponsors_listing.sponsor_full_name_colum_name %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @sponsors_listing.each do |sponsor_row| %>
+      <tr>
+        <td><%= sponsor_row.row_number %></td>
+        <td><%= sponsor_row.sponsor_full_name %></td>
+        <td>
+          <%= link_to(
+            sponsor_row.edit_sponsor_button_name,
+            edit_sponsor_path(sponsor_row),
+            class: 'btn btn-default btn-xs',
+          ) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,14 @@
+<div class='page-header'>
+  <div class='row-fluid'>
+    <h1>
+      <%= @sponsors_listing.title %>
+      <div class='pull-right'>
+        <%= link_to(
+          @sponsors_listing.new_sponsor_button_name,
+          new_sponsor_path,
+          class: 'btn btn-primary',
+        ) %>
+      </div>
+    </h1>
+  </div>
+</div>
