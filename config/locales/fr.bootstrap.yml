@@ -32,9 +32,6 @@ fr:
         update:
           lock: "Fermer l'enregistrement"
           unlock: "Réouvrir l'enregistrement"
-  sponsors:
-    index:
-      no_sponsors: "Il n'existe aucun commenditaire."
   sellers:
     index:
       no_sellers: "Il n'existe aucun vendeur."
