@@ -1,0 +1,24 @@
+<table class='table table-striped'>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th><%= @guests_listing.guest_full_name_column_name %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @guests_listing.each do |guest_row| %>
+      <tr>
+        <td><%= guest_row.row_number %></td>
+        <td><%= guest_row.guest_full_name %></td>
+        <td>
+          <%= link_to(
+            guest_row.edit_guest_button_name,
+            edit_guest_path(guest_row),
+            class: 'btn btn-default btn-xs',
+          ) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

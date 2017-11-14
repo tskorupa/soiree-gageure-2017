@@ -31,9 +31,6 @@ en:
         update:
           lock: 'Lock registration'
           unlock: 'Unlock registration'
-  guests:
-    index:
-      no_guests: 'No guests exist.'
   sellers:
     index:
       no_sellers: 'No sellers exist.'

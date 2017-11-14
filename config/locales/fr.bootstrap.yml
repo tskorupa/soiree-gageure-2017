@@ -36,8 +36,6 @@ fr:
     index:
       no_sellers: "Il n'existe aucun vendeur."
   guests:
-    index:
-      no_guests: "Il n'existe aucun invité."
     new:
       title: 'Nouvel %{model}'
     edit:

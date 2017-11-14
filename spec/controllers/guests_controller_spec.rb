@@ -4,10 +4,6 @@ require 'rails_helper'
 RSpec.describe(GuestsController, type: :controller) do
   render_views
 
-  let(:guest) do
-    Guest.create!(full_name: 'Bubbles')
-  end
-
   let(:user) do
     User.create!(
       email: 'abc@def.com',
@@ -46,6 +42,7 @@ RSpec.describe(GuestsController, type: :controller) do
 
     describe('GET #show') do
       it('raises a "No route matches" error') do
+        guest = create_guest
         expect do
           get(:show, params: { locale: I18n.locale, id: guest.id })
         end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
@@ -54,6 +51,7 @@ RSpec.describe(GuestsController, type: :controller) do
 
     describe('GET #edit') do
       it('redirects to the user log in') do
+        guest = create_guest
         get(:edit, params: { locale: I18n.locale, id: guest.id })
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -61,6 +59,7 @@ RSpec.describe(GuestsController, type: :controller) do
 
     describe('PATCH #update') do
       it('redirects to the user log in') do
+        guest = create_guest
         patch(:update, params: { locale: I18n.locale, id: guest.id, guest: { full_name: 'Koko' } })
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -68,6 +67,7 @@ RSpec.describe(GuestsController, type: :controller) do
 
     describe('DELETE #destroy') do
       it('raises a "No route matches" error') do
+        guest = create_guest
         expect do
           delete(:destroy, params: { locale: I18n.locale, id: guest.id })
         end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
@@ -80,29 +80,51 @@ RSpec.describe(GuestsController, type: :controller) do
       sign_in(user)
     end
 
-    describe('GET #index') do
-      it('returns all guests ordered by LOWER(full_name)') do
-        guest_1 = Guest.create!(full_name: 'z')
-        guest_2 = Guest.create!(full_name: 'a')
-        guest_3 = Guest.create!(full_name: '1')
-        guest_4 = Guest.create!(full_name: 'A')
-
+    describe('GET #index with format: :html') do
+      before(:each) do
         get(:index, params: { locale: I18n.locale })
+      end
+
+      it('assigns @guests_listing to be an instance of GuestsListing') do
+        expect(assigns(:guests_listing)).to be_an_instance_of(GuestsListing)
+      end
+
+      it('renders the template "guests/index"') do
+        expect(response).to render_template('guests/index')
+      end
+
+      it('renders the partial "guests/_index_header"') do
+        expect(response).to render_template('guests/_index_header')
+      end
+
+      it('renders the partial "guests/_index_listing"') do
+        expect(response).to render_template('guests/_index_listing')
+      end
+
+      it('returns an HTTP success') do
         expect(response).to have_http_status(:success)
-        expect(assigns(:guests)).to eq([guest_3, guest_2, guest_4, guest_1])
-        expect(response).to render_template(:index)
       end
     end
 
     describe('GET #index with format: :json') do
-      it('returns all guest full names') do
-        Guest.create!(full_name: 'Foo')
-        Guest.create!(full_name: 'Bar')
-        Guest.create!(full_name: 'Baz')
-
+      before(:each) do
+        create_guest
         get(:index, format: :json)
+      end
+
+      it('assigns @guests_listing to be an instance of GuestsListing') do
+        expect(assigns(:guests_listing)).to be_an_instance_of(GuestsListing)
+      end
+
+      it('returns a serialized list of guests') do
+        expected_body = GuestsListing.new.map do |guest_row|
+          GuestRowSerializer.new(guest_row).as_json
+        end
+        expect(response.body).to eq(expected_body.to_json)
+      end
+
+      it('returns an HTTP success') do
         expect(response).to have_http_status(:success)
-        expect(ActiveSupport::JSON.decode(response.body)).to eq(%w(Bar Baz Foo))
       end
     end
 
@@ -133,6 +155,7 @@ RSpec.describe(GuestsController, type: :controller) do
 
     describe('GET #show') do
       it('raises a "No route matches" error') do
+        guest = create_guest
         expect do
           get(:show, params: { locale: I18n.locale, id: guest.id })
         end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
@@ -141,6 +164,7 @@ RSpec.describe(GuestsController, type: :controller) do
 
     describe('GET #edit') do
       it('returns the requested guest') do
+        guest = create_guest
         get(:edit, params: { locale: I18n.locale, id: guest.id })
         expect(response).to have_http_status(:success)
         expect(assigns(:guest)).to eq(guest)
@@ -150,12 +174,14 @@ RSpec.describe(GuestsController, type: :controller) do
 
     describe('PATCH #update') do
       it('redirects to guests_path when :full_name is updated') do
+        guest = create_guest
         patch(:update, params: { locale: I18n.locale, id: guest.id, guest: { full_name: 'Koko' } })
         expect(guest.reload.full_name).to eq('Koko')
         expect(response).to redirect_to(guests_path)
       end
 
       it('renders :edit when the guest could not be updated') do
+        guest = create_guest
         patch(:update, params: { locale: I18n.locale, id: guest.id, guest: { full_name: nil } })
         expect(response).to have_http_status(:success)
         expect(assigns(:guest).full_name).to be_blank
@@ -166,10 +192,17 @@ RSpec.describe(GuestsController, type: :controller) do
 
     describe('DELETE #destroy') do
       it('raises a "No route matches" error') do
+        guest = create_guest
         expect do
           delete(:destroy, params: { locale: I18n.locale, id: guest.id })
         end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
       end
     end
+  end
+
+  private
+
+  def create_guest
+    Guest.create! full_name: 'Bubbles'
   end
 end

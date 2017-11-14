@@ -1,12 +1,16 @@
 # frozen_string_literal: true
-
 class GuestsController < ApplicationController
   def index
-    @guests = Guest.order('LOWER(full_name) ASC')
+    @guests_listing = GuestsListing.new
 
     respond_to do |format|
       format.html
-      format.json { render(json: @guests.pluck(:full_name)) }
+      format.json do
+        render(
+          json: @guests_listing.to_a,
+          each_serializer: GuestRowSerializer,
+        )
+      end
     end
   end
 
