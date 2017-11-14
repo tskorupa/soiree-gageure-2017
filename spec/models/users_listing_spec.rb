@@ -36,16 +36,16 @@ RSpec.describe(UsersListing, type: :model) do
     end
   end
 
-  describe('#user_email_colum_name') do
+  describe('#user_email_column_name') do
     it('returns "Email address" when the locale is :en') do
       with_locale(:en) do
-        expect(users_listing.user_email_colum_name).to eq('Email address')
+        expect(users_listing.user_email_column_name).to eq('Email address')
       end
     end
 
     it('returns "Adresse courriel" when the locale is :fr') do
       with_locale(:fr) do
-        expect(users_listing.user_email_colum_name).to eq('Adresse courriel')
+        expect(users_listing.user_email_column_name).to eq('Adresse courriel')
       end
     end
   end

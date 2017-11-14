@@ -14,7 +14,7 @@ class UsersListing
     )
   end
 
-  def user_email_colum_name
+  def user_email_column_name
     I18n.t :'column_names.user.email'
   end
 
