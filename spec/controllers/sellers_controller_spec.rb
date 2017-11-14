@@ -82,6 +82,7 @@ RSpec.describe(SellersController, type: :controller) do
 
     describe('GET #index with format: :html') do
       before(:each) do
+        create_seller
         get(:index, params: { locale: I18n.locale })
       end
 
