@@ -14,7 +14,7 @@ class SponsorListing
     )
   end
 
-  def sponsor_full_name_colum_name
+  def sponsor_full_name_column_name
     I18n.t :'column_names.sponsor.full_name'
   end
 

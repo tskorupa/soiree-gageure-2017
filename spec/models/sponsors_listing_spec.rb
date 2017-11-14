@@ -39,13 +39,13 @@ RSpec.describe(SponsorListing, type: :model) do
   describe('#sponsor_full_name') do
     it('returns "Sponsor name" when the locale is :en') do
       with_locale(:en) do
-        expect(sponsor_listing.sponsor_full_name_colum_name).to eq('Sponsor name')
+        expect(sponsor_listing.sponsor_full_name_column_name).to eq('Sponsor name')
       end
     end
 
     it('returns "Nom du commanditaire" when the locale is :fr') do
       with_locale(:fr) do
-        expect(sponsor_listing.sponsor_full_name_colum_name).to eq('Nom du commanditaire')
+        expect(sponsor_listing.sponsor_full_name_column_name).to eq('Nom du commanditaire')
       end
     end
   end
