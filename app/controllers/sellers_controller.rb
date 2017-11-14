@@ -1,12 +1,16 @@
 # frozen_string_literal: true
-
 class SellersController < ApplicationController
   def index
-    @sellers = Seller.order('LOWER(full_name) ASC')
+    @sellers_listing = SellersListing.new
 
     respond_to do |format|
       format.html
-      format.json { render(json: @sellers.pluck(:full_name)) }
+      format.json do
+        render(
+          json: @sellers_listing.to_a,
+          each_serializer: SellerRowSerializer,
+        )
+      end
     end
   end
 

@@ -31,9 +31,6 @@ en:
         update:
           lock: 'Lock registration'
           unlock: 'Unlock registration'
-  sellers:
-    index:
-      no_sellers: 'No sellers exist.'
   prizes:
     index:
       no_prizes: 'No prizes exist.'

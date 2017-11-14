@@ -1,0 +1,14 @@
+<div class='page-header'>
+  <div class='row-fluid'>
+    <h1>
+      <%= @sellers_listing.title %>
+      <div class='pull-right'>
+        <%= link_to(
+          @sellers_listing.new_seller_button_name,
+          new_seller_path,
+          class: 'btn btn-primary',
+        ) %>
+      </div>
+    </h1>
+  </div>
+</div>

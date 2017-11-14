@@ -1,0 +1,24 @@
+<table class='table table-striped'>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th><%= @sellers_listing.seller_full_name_column_name %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @sellers_listing.each do |seller_row| %>
+      <tr>
+        <td><%= seller_row.row_number %></td>
+        <td><%= seller_row.seller_full_name %></td>
+        <td>
+          <%= link_to(
+            seller_row.edit_seller_button_name,
+            edit_seller_path(seller),
+            class: 'btn btn-default btn-xs',
+          ) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

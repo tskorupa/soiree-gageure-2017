@@ -4,10 +4,6 @@ require 'rails_helper'
 RSpec.describe(SellersController, type: :controller) do
   render_views
 
-  let(:seller) do
-    Seller.create!(full_name: 'Gonzo')
-  end
-
   let(:user) do
     User.create!(
       email: 'abc@def.com',
@@ -46,6 +42,7 @@ RSpec.describe(SellersController, type: :controller) do
 
     describe('GET #show') do
       it('raises a "No route matches" error') do
+        seller = create_seller
         expect do
           get(:show, params: { locale: I18n.locale, id: seller.id })
         end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
@@ -54,6 +51,7 @@ RSpec.describe(SellersController, type: :controller) do
 
     describe('GET #edit') do
       it('redirects to the user log in') do
+        seller = create_seller
         get(:edit, params: { locale: I18n.locale, id: seller.id })
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -61,6 +59,7 @@ RSpec.describe(SellersController, type: :controller) do
 
     describe('PATCH #update') do
       it('redirects to the user log in') do
+        seller = create_seller
         patch(:update, params: { locale: I18n.locale, id: seller.id, seller: { full_name: 'Koko' } })
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -68,6 +67,7 @@ RSpec.describe(SellersController, type: :controller) do
 
     describe('DELETE #destroy') do
       it('raises a "No route matches" error') do
+        seller = create_seller
         expect do
           delete(:destroy, params: { locale: I18n.locale, id: seller.id })
         end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
@@ -80,29 +80,51 @@ RSpec.describe(SellersController, type: :controller) do
       sign_in(user)
     end
 
-    describe('GET #index') do
-      it('returns all sellers ordered by LOWER(full_name)') do
-        seller_1 = Seller.create!(full_name: 'z')
-        seller_2 = Seller.create!(full_name: 'a')
-        seller_3 = Seller.create!(full_name: '1')
-        seller_4 = Seller.create!(full_name: 'A')
-
+    describe('GET #index with format: :html') do
+      before(:each) do
         get(:index, params: { locale: I18n.locale })
+      end
+
+      it('assigns @sellers_listing to be an instance of SellersListing') do
+        expect(assigns(:sellers_listing)).to be_an_instance_of(SellersListing)
+      end
+
+      it('renders the template "sellers/index"') do
+        expect(response).to render_template('sellers/index')
+      end
+
+      it('renders the partial "sellers/_index_header"') do
+        expect(response).to render_template('sellers/_index_header')
+      end
+
+      it('renders the partial "sellers/_index_listing"') do
+        expect(response).to render_template('sellers/_index_listing')
+      end
+
+      it('returns an HTTP success') do
         expect(response).to have_http_status(:success)
-        expect(assigns(:sellers)).to eq([seller_3, seller_2, seller_4, seller_1])
-        expect(response).to render_template(:index)
       end
     end
 
     describe('GET #index with format: :json') do
-      it('returns all seller full names') do
-        Seller.create!(full_name: 'Foo')
-        Seller.create!(full_name: 'Bar')
-        Seller.create!(full_name: 'Baz')
-
+      before(:each) do
+        create_seller
         get(:index, format: :json)
+      end
+
+      it('assigns @sellers_listing to be an instance of SellersListing') do
+        expect(assigns(:sellers_listing)).to be_an_instance_of(SellersListing)
+      end
+
+      it('returns a serialized list of sellers') do
+        expected_body = SellersListing.new.map do |seller_row|
+          SellerRowSerializer.new(seller_row).as_json
+        end
+        expect(response.body).to eq(expected_body.to_json)
+      end
+
+      it('returns an HTTP success') do
         expect(response).to have_http_status(:success)
-        expect(ActiveSupport::JSON.decode(response.body)).to eq(%w(Bar Baz Foo))
       end
     end
 
@@ -133,6 +155,7 @@ RSpec.describe(SellersController, type: :controller) do
 
     describe('GET #show') do
       it('raises a "No route matches" error') do
+        seller = create_seller
         expect do
           get(:show, params: { locale: I18n.locale, id: seller.id })
         end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
@@ -141,6 +164,7 @@ RSpec.describe(SellersController, type: :controller) do
 
     describe('GET #edit') do
       it('returns the requested seller') do
+        seller = create_seller
         get(:edit, params: { locale: I18n.locale, id: seller.id })
         expect(response).to have_http_status(:success)
         expect(assigns(:seller)).to eq(seller)
@@ -150,12 +174,14 @@ RSpec.describe(SellersController, type: :controller) do
 
     describe('PATCH #update') do
       it('redirects to sellers_path when :full_name is updated') do
+        seller = create_seller
         patch(:update, params: { locale: I18n.locale, id: seller.id, seller: { full_name: 'Koko' } })
         expect(seller.reload.full_name).to eq('Koko')
         expect(response).to redirect_to(sellers_path)
       end
 
       it('renders :edit when the seller could not be updated') do
+        seller = create_seller
         patch(:update, params: { locale: I18n.locale, id: seller.id, seller: { full_name: nil } })
         expect(response).to have_http_status(:success)
         expect(assigns(:seller).full_name).to be_blank
@@ -166,10 +192,17 @@ RSpec.describe(SellersController, type: :controller) do
 
     describe('DELETE #destroy') do
       it('raises a "No route matches" error') do
+        seller = create_seller
         expect do
           delete(:destroy, params: { locale: I18n.locale, id: seller.id })
         end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
       end
     end
+  end
+
+  private
+
+  def create_seller
+    Seller.create! full_name: 'Gonzo'
   end
 end

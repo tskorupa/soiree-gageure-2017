@@ -32,9 +32,6 @@ fr:
         update:
           lock: "Fermer l'enregistrement"
           unlock: "Réouvrir l'enregistrement"
-  sellers:
-    index:
-      no_sellers: "Il n'existe aucun vendeur."
   guests:
     new:
       title: 'Nouvel %{model}'
