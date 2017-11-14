@@ -76,7 +76,7 @@ fr:
   ticket_draws:
     index:
       title: 'Billets en boulier'
-      no_tickets_with_number: "Le billet no.%{number} n'est pas dans le boulier."
+      no_tickets_with_number: "Le billet no.%{number_filter} n'est pas dans le boulier."
       no_tickets: "Il n'y a aucun billet dans le boulier."
   drawn_tickets:
     index:

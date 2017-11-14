@@ -44,24 +44,24 @@ en:
   ticket_registrations:
     index:
       title: 'Registration'
-      no_tickets_with_number: "Ticket #%{number} can't be registered."
+      no_tickets_with_number: "Ticket #%{number_filter} can't be registered."
       no_tickets: 'There are no unregistered tickets.'
     edit:
       title: 'Register %{model}'
   ticket_impressions:
     index:
       title: 'Printing'
-      no_tickets_with_number: "Ticket #%{number} is not a registered meal ticket and can't be printed."
+      no_tickets_with_number: "Ticket #%{number_filter} is not a registered meal ticket and can't be printed."
       no_tickets: 'There are no registered meal tickets that can be printed.'
   ticket_drop_offs:
     index:
       title: 'Drop off'
-      no_tickets_with_number: "Ticket #%{number} is not a registered ticket that can be dropped off."
+      no_tickets_with_number: "Ticket #%{number_filter} is not a registered ticket that can be dropped off."
       no_tickets: 'There are no registered tickets ready to be dropped off.'
   ticket_draws:
     index:
       title: 'Tickets to draw'
-      no_tickets_with_number: 'Ticket #%{number} was not found.'
+      no_tickets_with_number: 'Ticket #%{number_filter} was not found.'
       no_tickets: 'There are no dropped tickets to draw.'
   drawn_tickets:
     index:
