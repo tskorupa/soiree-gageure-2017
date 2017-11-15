@@ -1,0 +1,37 @@
+<ul class='nav nav-sidebar'>
+  <%= menu_item(
+    t('results_dashboards.index.title.ordered_by_drawn_position'),
+    lottery_results_dashboards_path(@lottery, order_by: :drawn_position),
+  ) %>
+  <%= menu_item(
+    t('results_dashboards.index.title.ordered_by_number'),
+    lottery_results_dashboards_path(@lottery, order_by: :number),
+  ) %>
+  <%= menu_item(
+    t('results.index.title'),
+    lottery_results_path(@lottery),
+  ) %>
+  <%= menu_item(
+    t('drawn_tickets.index.title'),
+    lottery_drawn_tickets_path(@lottery),
+  ) %>
+  <%= menu_item(
+    t('ticket_draws.index.title'),
+    lottery_ticket_draws_path(@lottery),
+  ) %>
+  <%= menu_item(
+    t('ticket_drop_offs.index.title'),
+    lottery_ticket_drop_offs_path(@lottery),
+  ) %>
+  <%= menu_item(
+    t('ticket_impressions.index.title'),
+    lottery_ticket_impressions_path(@lottery),
+  ) %>
+  <%= menu_item(
+    t('ticket_registrations.index.title'),
+    lottery_ticket_registrations_path(@lottery),
+  ) %>
+  <%= menu_item(Ticket.model_name.human.pluralize, lottery_tickets_path(@lottery)) %>
+  <%= menu_item(Table.model_name.human.pluralize, lottery_tables_path(@lottery)) %>
+  <%= menu_item(Prize.model_name.human.pluralize(I18n.locale), lottery_prizes_path(@lottery)) %>
+</ul>

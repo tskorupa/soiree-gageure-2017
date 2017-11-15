@@ -1,0 +1,26 @@
+<% content_for(:content_adjacent_to_sidebar) do %>
+  <%= render(
+    'tickets/ticket_listing_header',
+    {
+      title: t('ticket_draws.index.title'),
+      path_to_listing: lottery_ticket_draws_path(@lottery),
+      can_build_new: false,
+    }
+  ) %>
+
+  <% if @ticket_listing.tickets_to_display? %>
+    <%= render 'ticket_draws/ticket_listing' %>
+  <% else %>
+    <%
+        message = if @ticket_listing.number_filter.present?
+          t(
+            'ticket_draws.index.no_tickets_with_number',
+            number_filter: @ticket_listing.number_filter,
+          )
+        else
+          t('ticket_draws.index.no_tickets')
+        end
+    %>
+    <%= render 'tickets/empty_ticket_listing', { message: message } %>
+  <% end %>
+<% end %>

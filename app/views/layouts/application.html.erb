@@ -16,7 +16,18 @@
   <body>
     <%= render('layouts/navigation') %>
     <div class='container-fluid'>
-      <%= yield %>
+      <% if content_for?(:content_adjacent_to_sidebar) %>
+        <div class='row'>
+          <div class='col-sm-2 sidebar'>
+            <%= render 'lotteries/sidebar' %>
+          </div>
+          <div class='col-sm-10 col-sm-offset-2 main'>
+            <%= yield :content_adjacent_to_sidebar %>
+          </div>
+        </div>
+      <% else %>
+        <%= yield %>
+      <% end %>
     </div>
   </body>
 </html>
