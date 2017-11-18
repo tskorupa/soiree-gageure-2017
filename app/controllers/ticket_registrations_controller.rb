@@ -7,20 +7,6 @@ class TicketRegistrationsController < ApplicationController
       ticket_scope: @lottery.registerable_tickets,
       number_filter: params[:number_filter],
     )
-
-    render(
-      'lotteries/lottery_child_index',
-      locals: {
-        main_header: 'tickets/ticket_listing_header',
-        main_header_locals: {
-          title: t('ticket_registrations.index.title'),
-          path_to_listing: lottery_ticket_registrations_path(@lottery),
-          can_build_new: false,
-        },
-        main_partial: main_partial,
-        main_partial_locals: { message: main_partial_message },
-      },
-    )
   end
 
   def edit
@@ -48,25 +34,5 @@ class TicketRegistrationsController < ApplicationController
       :guest_name,
       :table_number,
     )
-  end
-
-  def main_partial
-    return 'ticket_registrations/ticket_listing' if @ticket_listing.tickets_to_display?
-    'tickets/empty_ticket_listing'
-  end
-
-  def main_partial_message
-    if no_tickets_to_display_for_number?
-      t(
-        'ticket_registrations.index.no_tickets_with_number',
-        number_filter: @ticket_listing.number_filter,
-      )
-    else
-      t('ticket_registrations.index.no_tickets')
-    end
-  end
-
-  def no_tickets_to_display_for_number?
-    !@ticket_listing.tickets_to_display? && @ticket_listing.number_filter.present?
   end
 end
