@@ -1,0 +1,16 @@
+<% content_for(:content_adjacent_to_sidebar) do %>
+  <%= render(
+    'drawn_tickets/listing_header',
+    {
+      title: t('drawn_tickets.index.title'),
+      path_to_listing: lottery_drawn_tickets_path(@lottery),
+      can_build_new: false,
+    }
+  ) %>
+
+  <% if @results_listing.tickets_to_display? %>
+    <%= render 'drawn_tickets/results_listing' %>
+  <% else %>
+    <%= render 'drawn_tickets/empty_results_listing', { message: t('drawn_tickets.index.no_tickets') } %>
+  <% end %>
+<% end %>

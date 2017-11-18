@@ -14,7 +14,7 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
   end
 
   let(:ticket) do
-    lottery.create_ticket(dropped_off: true)
+    create_ticket
   end
 
   let(:user) do
@@ -69,37 +69,37 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
         expect(response).to have_http_status(:success)
       end
 
-      it('renders lotteries/lottery_child_index') do
+      it('renders "index"') do
         get_index
-        expect(response).to render_template('lotteries/lottery_child_index')
+        expect(response).to render_template('index')
       end
 
-      it('renders "drawn_tickets/_listing_header" when ResultsListing#tickets_to_display? is true') do
-        expect_any_instance_of(ResultsListing).to receive(:tickets_to_display?).and_return(true)
+      it('renders "lotteries/_sidebar"') do
+        get_index
+        expect(response).to render_template('lotteries/_sidebar')
+      end
 
+      it('renders "drawn_tickets/_listing_header"') do
         get_index
         expect(response).to render_template('drawn_tickets/_listing_header')
       end
 
-      it('renders "drawn_tickets/_index" when ResultsListing#tickets_to_display? is true') do
-        expect_any_instance_of(ResultsListing).to receive(:tickets_to_display?).and_return(true)
-
-        get_index
-        expect(response).to render_template('drawn_tickets/_index')
+      context('with no tickets to display') do
+        it('renders "drawn_tickets/_empty_results_listing"') do
+          get_index
+          expect(response).to render_template('drawn_tickets/_empty_results_listing')
+        end
       end
 
-      it('renders "drawn_tickets/_listing_header" when ResultsListing#tickets_to_display? is false') do
-        expect_any_instance_of(ResultsListing).to receive(:tickets_to_display?).and_return(false)
+      context('with tickets to display') do
+        before(:each) do
+          create_ticket
+        end
 
-        get_index
-        expect(response).to render_template('drawn_tickets/_listing_header')
-      end
-
-      it('renders "drawn_tickets/_no_tickets_index" when ResultsListing#tickets_to_display? is false') do
-        expect_any_instance_of(ResultsListing).to receive(:tickets_to_display?).and_return(false)
-
-        get_index
-        expect(response).to render_template('drawn_tickets/_no_tickets_index')
+        it('renders "darwn_tickets/_results_listing"') do
+          get_index
+          expect(response).to render_template('drawn_tickets/_results_listing')
+        end
       end
     end
 
@@ -134,5 +134,11 @@ RSpec.describe(DrawnTicketsController, type: :controller) do
         expect(response).to redirect_to(lottery_drawn_tickets_path(lottery))
       end
     end
+  end
+
+  private
+
+  def create_ticket
+    lottery.create_ticket(dropped_off: true)
   end
 end
