@@ -9,7 +9,7 @@ class TicketsController < ApplicationController
     )
 
     respond_to do |format|
-      format.html { render_html_index }
+      format.html
       format.xlsx { render_xlsx_index }
     end
   end
@@ -56,42 +56,6 @@ class TicketsController < ApplicationController
       :sponsor_name,
       :table_number,
     ).merge(ticket_params.to_h)
-  end
-
-  def main_partial
-    return 'tickets/ticket_listing' if @ticket_listing.tickets_to_display?
-    'tickets/empty_ticket_listing'
-  end
-
-  def main_partial_message
-    if no_tickets_to_display_for_number?
-      t(
-        'tickets.index.no_tickets_with_number',
-        number_filter: @ticket_listing.number_filter,
-      )
-    else
-      t('tickets.index.no_tickets')
-    end
-  end
-
-  def no_tickets_to_display_for_number?
-    !@ticket_listing.tickets_to_display? && @ticket_listing.number_filter.present?
-  end
-
-  def render_html_index
-    render(
-      'lotteries/lottery_child_index',
-      locals: {
-        main_header: 'tickets/ticket_listing_header',
-        main_header_locals: {
-          title: Ticket.model_name.human.pluralize.titleize,
-          path_to_listing: lottery_tickets_path(@lottery),
-          can_build_new: true,
-        },
-        main_partial: main_partial,
-        main_partial_locals: { message: main_partial_message },
-      },
-    )
   end
 
   def render_xlsx_index

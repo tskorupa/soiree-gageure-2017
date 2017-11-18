@@ -10,14 +10,7 @@ RSpec.describe(TicketDrawsController, type: :controller) do
   end
 
   let(:ticket) do
-    Ticket.create!(
-      lottery: lottery,
-      number: 1,
-      state: 'paid',
-      ticket_type: 'meal_and_lottery',
-      dropped_off: true,
-      drawn_position: nil,
-    )
+    create_ticket
   end
 
   let(:user) do
@@ -77,7 +70,7 @@ RSpec.describe(TicketDrawsController, type: :controller) do
         expect(response).to have_http_status(:success)
       end
 
-      it('renders index') do
+      it('renders "index"') do
         get_index
         expect(response).to render_template('index')
       end
