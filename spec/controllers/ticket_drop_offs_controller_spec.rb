@@ -13,15 +13,7 @@ RSpec.describe(TicketDropOffsController, type: :controller) do
   end
 
   let(:ticket) do
-    Ticket.create!(
-      lottery: lottery,
-      number: 1,
-      guest: guest,
-      state: 'paid',
-      ticket_type: 'meal_and_lottery',
-      registered: true,
-      dropped_off: false,
-    )
+    create_ticket
   end
 
   let(:user) do
@@ -132,9 +124,14 @@ RSpec.describe(TicketDropOffsController, type: :controller) do
         expect(response).to have_http_status(:success)
       end
 
-      it('renders lotteries/lottery_child_index') do
+      it('renders "index"') do
         get_index
-        expect(response).to render_template('lotteries/lottery_child_index')
+        expect(response).to render_template('index')
+      end
+
+      it('renders "lotteries/_sidebar"') do
+        get_index
+        expect(response).to render_template('lotteries/_sidebar')
       end
 
       it('renders "tickets/ticket_listing_header"') do
@@ -142,22 +139,40 @@ RSpec.describe(TicketDropOffsController, type: :controller) do
         expect(response).to render_template('tickets/_ticket_listing_header')
       end
 
-      it('renders "tickets/_ticket_listing" when @ticket_listing#tickets_to_display? is true') do
-        expect_any_instance_of(TicketListing).to receive(:tickets_to_display?)
-          .at_least(:once)
-          .and_return(true)
-
-        get_index
-        expect(response).to render_template('ticket_drop_offs/_ticket_listing')
+      context('with no tickets to display') do
+        it('renders "tickets/_empty_ticket_listing"') do
+          get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number_filter: '99' })
+          expect(response).to render_template('tickets/_empty_ticket_listing')
+        end
       end
 
-      it('renders "tickets/_empty_ticket_listing" when @ticket_listing#tickets_to_display? is false') do
-        expect_any_instance_of(TicketListing).to receive(:tickets_to_display?)
-          .at_least(:once)
-          .and_return(false)
+      context('with no tickets to display when a filter by ticket number was applied') do
+        it('renders "tickets/_empty_ticket_listing"') do
+          get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number_filter: '99' })
+          expect(response).to render_template('tickets/_empty_ticket_listing')
+        end
+      end
 
-        get_index
-        expect(response).to render_template('tickets/_empty_ticket_listing')
+      context('with tickets to display') do
+        before(:each) do
+          create_ticket
+        end
+
+        it('renders "tickets/_ticket_listing"') do
+          get_index
+          expect(response).to render_template('ticket_drop_offs/_ticket_listing')
+        end
+      end
+
+      context('with tickets to display when a filter by ticket number was applied') do
+        before(:each) do
+          create_ticket(number: 99)
+        end
+
+        it('renders "tickets/_ticket_listing"') do
+          get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number_filter: '99' })
+          expect(response).to render_template('ticket_drop_offs/_ticket_listing')
+        end
       end
     end
 
@@ -257,5 +272,20 @@ RSpec.describe(TicketDropOffsController, type: :controller) do
         end.to raise_error(ActionController::UrlGenerationError, /No route matches/)
       end
     end
+  end
+
+  private
+
+  def create_ticket(attributes = {})
+    Ticket.create!(
+      lottery: lottery,
+      number: 1,
+      guest: guest,
+      state: 'paid',
+      ticket_type: 'meal_and_lottery',
+      registered: true,
+      dropped_off: false,
+      **attributes,
+    )
   end
 end
