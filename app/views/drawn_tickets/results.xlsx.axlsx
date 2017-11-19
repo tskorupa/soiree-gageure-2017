@@ -1,0 +1,18 @@
+wb = xlsx_package.workbook
+wb.add_worksheet(name: t('drawn_tickets.index.title')) do |sheet|
+  sheet.add_row [
+    t('column_names.draw_order'),
+    t('column_names.number'),
+    Guest.model_name.human,
+    Prize.model_name.human,
+  ]
+
+  @results_listing.each do |result_row|
+    sheet.add_row [
+      result_row.position,
+      result_row.ticket_number,
+      result_row.guest_name,
+      number_to_currency(result_row.prize_amount),
+    ]
+  end
+end

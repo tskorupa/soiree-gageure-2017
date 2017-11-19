@@ -80,7 +80,7 @@ fr:
       no_tickets: "Il n'y a aucun billet dans le boulier."
   drawn_tickets:
     index:
-      title: 'Liste des résultats'
+      title: 'Résultats'
       no_tickets: "Il n'a a aucun billet dans le boulier. "
   results:
     index:

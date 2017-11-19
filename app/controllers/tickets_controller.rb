@@ -10,7 +10,7 @@ class TicketsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.xlsx { render_xlsx_index }
+      format.xlsx { render_xlsx }
     end
   end
 
@@ -58,7 +58,7 @@ class TicketsController < ApplicationController
     ).merge(ticket_params.to_h)
   end
 
-  def render_xlsx_index
+  def render_xlsx
     filename = format('%s.xlsx', Ticket.model_name.human.pluralize.downcase)
     render xlsx: 'ticket_listing', filename: filename
   end

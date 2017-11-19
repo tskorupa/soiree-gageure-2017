@@ -65,7 +65,7 @@ en:
       no_tickets: 'There are no dropped tickets to draw.'
   drawn_tickets:
     index:
-      title: 'Results list'
+      title: 'Results'
       no_tickets: 'There are no tickets in the draw.'
   results:
     index:

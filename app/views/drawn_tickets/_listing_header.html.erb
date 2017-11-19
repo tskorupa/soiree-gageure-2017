@@ -1,5 +1,13 @@
 <div class='page-header'>
   <div class='row-fluid'>
     <h1><%= title %></h1>
+    <div class='pull-right text-right'>
+      <%= link_to(
+        '.xlsx'.html_safe,
+        lottery_drawn_tickets_path(@lottery, format: :xlsx),
+        target: :_self,
+        class: 'btn btn-default'
+      ) %>
+    </div>
   </div>
 </div>
