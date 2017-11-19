@@ -9,7 +9,7 @@
   ) %>
 
   <% if @ticket_listing.tickets_to_display? %>
-    <%= render 'tickets/ticket_listing' %>
+    <%= render 'table' %>
   <% else %>
     <%
         message = if @ticket_listing.number_filter.present?

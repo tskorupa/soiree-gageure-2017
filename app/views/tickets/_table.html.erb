@@ -1,0 +1,23 @@
+<table class='table table-striped'>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th><%= t('column_names.number') %></th>
+      <th><%= Seller.model_name.human %></th>
+      <th><%= Guest.model_name.human %></th>
+      <th><%= Sponsor.model_name.human %></th>
+      <th><%= t('column_names.ticket.state') %></th>
+      <th><%= t('column_names.ticket.ticket_type') %></th>
+      <th class='text-center'><%= t('column_names.table.number') %></th>
+      <th><%= t('column_names.ticket.registration_step') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= render(
+      partial: 'table_row',
+      collection: @ticket_listing,
+      as: :ticket_row,
+    ) %>
+  </tbody>
+</table>

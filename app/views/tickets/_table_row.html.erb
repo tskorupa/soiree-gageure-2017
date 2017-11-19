@@ -1,0 +1,24 @@
+<tr>
+  <td><%= ticket_row.row_number %></td>
+  <td><%= ticket_row.number %></td>
+  <td><%= ticket_row.seller_name %></td>
+  <td><%= ticket_row.guest_name %></td>
+  <td><%= ticket_row.sponsor_name %></td>
+  <td><%= ticket_row.state %></td>
+  <td><%= ticket_row.ticket_type %></td>
+  <td class='text-center'><%= ticket_row.table_number %></td>
+  <td>
+    <%= content_tag(
+      :span,
+      ticket_row.registration_step,
+      class: ticket_row.registration_label_class,
+    ) %>
+  </td>
+  <td>
+    <%= link_to(
+      t('.edit', default: t('helpers.links.edit')),
+      edit_lottery_ticket_path(@lottery, ticket_row),
+      class: 'btn btn-default btn-xs',
+    ) %>
+  </td>
+</tr>

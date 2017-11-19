@@ -159,9 +159,14 @@ RSpec.describe(TicketsController, type: :controller) do
           create_ticket
         end
 
-        it('renders "tickets/_ticket_listing"') do
+        it('renders "tickets/_table"') do
           get_index
-          expect(response).to render_template('tickets/_ticket_listing')
+          expect(response).to render_template('tickets/_table')
+        end
+
+        it('renders "tickets/_table_row"') do
+          get_index
+          expect(response).to render_template('tickets/_table_row')
         end
       end
 
@@ -170,9 +175,14 @@ RSpec.describe(TicketsController, type: :controller) do
           create_ticket(number: 99)
         end
 
-        it('renders "tickets/_ticket_listing"') do
+        it('renders "tickets/_table"') do
           get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number_filter: '99' })
-          expect(response).to render_template('tickets/_ticket_listing')
+          expect(response).to render_template('tickets/_table')
+        end
+
+        it('renders "tickets/_table_row"') do
+          get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number_filter: '99' })
+          expect(response).to render_template('tickets/_table_row')
         end
       end
     end
