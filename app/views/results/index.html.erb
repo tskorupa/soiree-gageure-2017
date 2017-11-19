@@ -1,0 +1,9 @@
+<% content_for(:content_adjacent_to_sidebar) do %>
+  <%= render(partial: 'index_header') %>
+  <% if @ticket %>
+    <%= render(partial: 'drawn_ticket') %>
+  <% else %>
+    <%= render(partial: 'empty_index') %>
+  <% end %>
+  <%= render(partial: 'fullscreen' ) %>
+<% end %>

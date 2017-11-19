@@ -83,20 +83,24 @@ RSpec.describe(ResultsController, type: :controller) do
           expect(assigns(:ticket)).to eq(@ticket_4)
         end
 
-        it('renders the template lotteries/lottery_child_index') do
-          expect(response).to render_template('lotteries/lottery_child_index')
+        it('renders the template "lotteries/_sidebar"') do
+          expect(response).to render_template('lotteries/_sidebar')
         end
 
-        it('renders the partial results/index_header') do
+        it('renders the template "index"') do
+          expect(response).to render_template('index')
+        end
+
+        it('renders the partial "results/_index_header"') do
           expect(response).to render_template('results/_index_header')
         end
 
-        it('renders the partial results/fullscreen') do
-          expect(response).to render_template('results/_fullscreen')
+        it('renders the partial "results/_drawn_ticket"') do
+          expect(response).to render_template('results/_drawn_ticket')
         end
 
-        it('renders the partial results/index') do
-          expect(response).to render_template('results/_index')
+        it('renders the partial "results/_fullscreen"') do
+          expect(response).to render_template('results/_fullscreen')
         end
       end
 
@@ -114,20 +118,24 @@ RSpec.describe(ResultsController, type: :controller) do
           expect(assigns(:ticket)).to be_nil
         end
 
-        it('renders the template lotteries/lottery_child_index') do
-          expect(response).to render_template('lotteries/lottery_child_index')
+        it('renders the template "lotteries/_sidebar"') do
+          expect(response).to render_template('lotteries/_sidebar')
         end
 
-        it('renders the partial results/index_header') do
+        it('renders the template "index"') do
+          expect(response).to render_template('index')
+        end
+
+        it('renders the partial "results/_index_header"') do
           expect(response).to render_template('results/_index_header')
         end
 
-        it('renders the partial results/fullscreen') do
-          expect(response).to render_template('results/_fullscreen')
+        it('renders the partial "results/_empty_index"') do
+          expect(response).to render_template('results/_empty_index')
         end
 
-        it('renders the partial results/empty_index') do
-          expect(response).to render_template('results/_empty_index')
+        it('renders the partial "results/_fullscreen"') do
+          expect(response).to render_template('results/_fullscreen')
         end
       end
     end
