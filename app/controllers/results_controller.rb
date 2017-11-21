@@ -3,6 +3,7 @@ class ResultsController < ApplicationController
   include LotteryLookup
 
   def index
-    @ticket = @lottery.last_drawn_ticket
+    last_drawn_ticket = @lottery.last_drawn_ticket
+    @ticket = LastDrawnTicket.new(ticket: last_drawn_ticket) if last_drawn_ticket
   end
 end
