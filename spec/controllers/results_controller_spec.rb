@@ -69,10 +69,6 @@ RSpec.describe(ResultsController, type: :controller) do
           expect(response).to render_template('index')
         end
 
-        it('renders the partial "_index_header"') do
-          expect(response).to render_template('_index_header')
-        end
-
         it('renders the partial "_drawn_ticket"') do
           expect(response).to render_template('_drawn_ticket')
         end
@@ -109,10 +105,6 @@ RSpec.describe(ResultsController, type: :controller) do
           expect(response).to render_template('index')
         end
 
-        it('renders the partial "_index_header"') do
-          expect(response).to render_template('_index_header')
-        end
-
         it('renders the partial "_drawn_ticket"') do
           expect(response).to render_template('_drawn_ticket')
         end
@@ -145,10 +137,6 @@ RSpec.describe(ResultsController, type: :controller) do
 
         it('renders the template "index"') do
           expect(response).to render_template('index')
-        end
-
-        it('renders the partial "_index_header"') do
-          expect(response).to render_template('_index_header')
         end
 
         it('renders the partial "_no_drawn_tickets_message"') do

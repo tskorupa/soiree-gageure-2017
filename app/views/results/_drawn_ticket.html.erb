@@ -1,8 +1,10 @@
-<div id='drawn-ticket' data-lottery-id='<%= lottery_id %>'>
-  <% if local_assigns[:ticket] %>
-    <%= render('results/ticket', ticket: ticket) %>
-    <%= render('results/prize', amount: ticket.prize_amount) if ticket.prize_amount %>
+<div id='drawn-ticket' data-lottery-id='<%= results_index.lottery_id %>'>
+  <% if results_index.ticket_to_display? %>
+    <%= render('results/ticket', ticket: results_index.ticket) %>
   <% else %>
-    <%= render(partial: 'results/no_drawn_tickets_message') %>
+    <%= render(
+      'results/no_drawn_tickets_message',
+      message: results_index.no_ticket_message,
+    ) %>
   <% end %>
 </div>

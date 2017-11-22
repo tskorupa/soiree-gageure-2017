@@ -6,3 +6,6 @@
     <h3><%= ticket.table_number %></h3>
   </div>
 </div>
+<% if ticket.prize_to_display? %>
+  <%= render('results/prize', amount: ticket.prize_amount) %>
+<% end %>

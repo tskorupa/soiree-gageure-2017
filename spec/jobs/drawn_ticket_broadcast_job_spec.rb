@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 require 'rails_helper'
 
 RSpec.describe(DrawnTicketBroadcastJob, type: :job) do
@@ -24,16 +23,7 @@ RSpec.describe(DrawnTicketBroadcastJob, type: :job) do
     it('delegates to ActionCable.server.broadcast when the lottery has no drawn tickets') do
       lottery = create_lottery
 
-      channel = expected_broadcast_channel(lottery)
-      message = ApplicationController.renderer.render(
-        partial: 'results/drawn_ticket',
-        locals: {
-          lottery_id: lottery.id,
-        },
-      )
-      expect(ActionCable.server).to(receive(:broadcast))
-        .with(channel, message: message)
-
+      expect_action_cable_broadcast(lottery)
       DrawnTicketBroadcastJob.new.perform(lottery_id: lottery.id)
     end
 
@@ -42,24 +32,32 @@ RSpec.describe(DrawnTicketBroadcastJob, type: :job) do
       ticket = lottery.create_ticket
       lottery.draw(ticket: ticket)
 
-      channel = expected_broadcast_channel(lottery)
-      message = ApplicationController.renderer.render(
-        partial: 'results/drawn_ticket',
-        locals: {
-          lottery_id: lottery.id,
-          ticket: LastDrawnTicket.new(ticket: ticket),
-        },
-      )
-      expect(ActionCable.server).to(receive(:broadcast))
-        .with(channel, message: message)
-
+      expect_action_cable_broadcast(lottery)
       DrawnTicketBroadcastJob.new.perform(lottery_id: lottery.id)
     end
   end
 
   private
 
+  def expect_action_cable_broadcast(lottery)
+    channel = expected_broadcast_channel(lottery)
+    message = expected_broadcast_message(lottery)
+
+    expect(ActionCable.server)
+      .to(receive(:broadcast))
+      .with(channel, message: message)
+  end
+
   def expected_broadcast_channel(lottery)
     format('lottery_%i_drawn_ticket_channel', lottery.id)
+  end
+
+  def expected_broadcast_message(lottery)
+    results_index = ResultsIndex.new(lottery: lottery)
+
+    ApplicationController.renderer.render(
+      partial: 'results/drawn_ticket',
+      locals: { results_index: results_index },
+    )
   end
 end
