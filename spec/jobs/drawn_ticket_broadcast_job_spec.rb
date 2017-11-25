@@ -1,21 +1,11 @@
 # frozen_string_literal: true
-
 require 'rails_helper'
 
 RSpec.describe(DrawnTicketBroadcastJob, type: :job) do
   include ActiveJob::TestHelper
 
-  let(:lottery) do
+  let(:create_lottery) do
     Lottery.create!(event_date: Time.zone.today)
-  end
-
-  let(:ticket) do
-    Ticket.create!(
-      lottery: lottery,
-      number: 1,
-      state: 'paid',
-      ticket_type: 'meal_and_lottery',
-    )
   end
 
   describe('#queue_name') do
@@ -25,36 +15,49 @@ RSpec.describe(DrawnTicketBroadcastJob, type: :job) do
   end
 
   describe('#perform') do
-    let(:perform) do
+    it('raises an exception when the :lottery_id does not correspond to a Lottery') do
+      expect { DrawnTicketBroadcastJob.new.perform(lottery_id: 0) }
+        .to(raise_exception(ActiveRecord::RecordNotFound))
+    end
+
+    it('delegates to ActionCable.server.broadcast when the lottery has no drawn tickets') do
+      lottery = create_lottery
+
+      expect_action_cable_broadcast(lottery)
       DrawnTicketBroadcastJob.new.perform(lottery_id: lottery.id)
     end
 
-    it('raises an exception when the :lottery_id does not correspond to a Lottery') do
-      expect do
-        DrawnTicketBroadcastJob.new.perform(lottery_id: 0)
-      end.to raise_exception(ActiveRecord::RecordNotFound)
-    end
+    it('delegates to ActionCable.server.broadcast when the lottery has a drawn ticket') do
+      lottery = create_lottery
+      ticket = lottery.create_ticket
+      lottery.draw(ticket: ticket)
 
-    it('does not delegate to ActionCable.server.broadcast when lottery#last_drawn_ticket is nil') do
-      expect(ActionCable.server).not_to receive(:broadcast)
-      expect_any_instance_of(Lottery).to receive(:last_drawn_ticket)
-        .and_return(nil)
-      perform
+      expect_action_cable_broadcast(lottery)
+      DrawnTicketBroadcastJob.new.perform(lottery_id: lottery.id)
     end
+  end
 
-    it('delegates to ActionCable.server.broadcast when lottery#last_drawn_ticket == ticket') do
-      expected_partial = ApplicationController.renderer.render(
-        partial: 'results/drawn_ticket',
-        assigns: { ticket: ticket },
-      )
-      expect(ActionCable.server).to receive(:broadcast)
-        .with(
-          "lottery_#{lottery.id}_drawn_ticket_channel",
-          message: expected_partial,
-        )
-      expect_any_instance_of(Lottery).to receive(:last_drawn_ticket)
-        .and_return(ticket)
-      perform
-    end
+  private
+
+  def expect_action_cable_broadcast(lottery)
+    channel = expected_broadcast_channel(lottery)
+    message = expected_broadcast_message(lottery)
+
+    expect(ActionCable.server)
+      .to(receive(:broadcast))
+      .with(channel, message: message)
+  end
+
+  def expected_broadcast_channel(lottery)
+    format('lottery_%i_drawn_ticket_channel', lottery.id)
+  end
+
+  def expected_broadcast_message(lottery)
+    results_index = ResultsIndex.new(lottery: lottery)
+
+    ApplicationController.renderer.render(
+      partial: 'results/drawn_ticket',
+      locals: { results_index: results_index },
+    )
   end
 end
