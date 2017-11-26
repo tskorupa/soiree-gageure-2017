@@ -11,16 +11,9 @@
   <% if @ticket_listing.tickets_to_display? %>
     <%= render 'ticket_registrations/ticket_listing' %>
   <% else %>
-    <%
-        message = if @ticket_listing.number_filter.present?
-          t(
-            'ticket_registrations.index.no_tickets_with_number',
-            number_filter: @ticket_listing.number_filter,
-          )
-        else
-          t('ticket_registrations.index.no_tickets')
-        end
-    %>
-    <%= render 'tickets/empty_ticket_listing', { message: message } %>
+    <%= render(
+      'tickets/empty_ticket_listing',
+      message: @ticket_listing.no_tickets_message,
+    ) %>
   <% end %>
 <% end %>

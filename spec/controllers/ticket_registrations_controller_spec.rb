@@ -68,19 +68,9 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
         get(:index, params: { locale: I18n.locale, lottery_id: lottery.id })
       end
 
-      it('scopes tickets to lottery#registerable_tickets') do
-        expect_any_instance_of(Lottery).to receive(:registerable_tickets).and_return(lottery.registerable_tickets)
-        get_index
-      end
-
       it('assigns an instance of Lottery to @lottery') do
         get_index
         expect(assigns(:lottery)).to be_an_instance_of(Lottery)
-      end
-
-      it('assigns an instance of TicketListing to @ticket_listing') do
-        get_index
-        expect(assigns(:ticket_listing)).to be_an_instance_of(TicketListing)
       end
 
       it('returns an http :success status') do
@@ -103,7 +93,7 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
         expect(response).to render_template('tickets/_ticket_listing_header')
       end
 
-      context('with no tickets to display') do
+      context('when there are no registerable tickets present') do
         it('renders "tickets/_empty_ticket_listing"') do
           get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number_filter: '99' })
           expect(response).to render_template('tickets/_empty_ticket_listing')
@@ -117,7 +107,7 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
         end
       end
 
-      context('with tickets to display') do
+      context('when registerable tickets are present') do
         before(:each) do
           create_ticket
         end
