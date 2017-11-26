@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 class Ticket < ApplicationRecord
   STATES = %w(reserved authorized paid).freeze
   TICKET_TYPES = %w(meal_and_lottery lottery_only).freeze
@@ -27,6 +26,14 @@ class Ticket < ApplicationRecord
     uniqueness: { scope: :lottery_id },
     allow_blank: true,
   )
+  # TODO: Nullify #table_id when #ticket_type == 'lottery_only'
+
+  def guest_name
+    guest&.full_name
+  end
+
+  delegate :number, to: :table, prefix: true, allow_nil: true
+  delegate :amount, to: :prize, prefix: true, allow_nil: true
 
   def can_be_registered?
     validate_ticket_is_not_registered

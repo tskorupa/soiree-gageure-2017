@@ -1,9 +1,11 @@
 <% content_for(:content_adjacent_to_sidebar) do %>
-  <%= render(partial: 'index_header') %>
-  <% if @ticket %>
-    <%= render(partial: 'drawn_ticket') %>
-  <% else %>
-    <%= render(partial: 'empty_index') %>
-  <% end %>
-  <%= render(partial: 'fullscreen' ) %>
+  <div class='page-header'>
+    <div class='row-fluid'>
+      <h1><%= @results_index.title %></h1>
+    </div>
+  </div>
+
+  <%= render('results/drawn_ticket', results_index: @results_index) %>
+
+  <%= render(partial: 'results/fullscreen' ) %>
 <% end %>

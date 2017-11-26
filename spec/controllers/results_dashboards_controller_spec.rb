@@ -100,7 +100,7 @@ RSpec.describe(ResultsDashboardsController, type: :controller) do
           expect(response).to render_template('results_dashboards/_index')
         end
 
-        it('renders the partial results/index_header') do
+        it('renders the partial results_dashboards/index_header') do
           get_index
           expect(response).to render_template('results_dashboards/_index_header')
         end
@@ -155,7 +155,7 @@ RSpec.describe(ResultsDashboardsController, type: :controller) do
           expect(response).to render_template('results_dashboards/_index')
         end
 
-        it('renders the partial results/index_header') do
+        it('renders the partial results_dashboards/index_header') do
           get_index
           expect(response).to render_template('results_dashboards/_index_header')
         end
@@ -203,7 +203,7 @@ RSpec.describe(ResultsDashboardsController, type: :controller) do
           expect(response).to render_template('results_dashboards/_no_tickets_index')
         end
 
-        it('renders the partial results/index_header') do
+        it('renders the partial results_dashboards/index_header') do
           get_index
           expect(response).to render_template('results_dashboards/_index_header')
         end

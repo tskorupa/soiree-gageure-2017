@@ -153,6 +153,45 @@ RSpec.describe(Ticket, type: :model) do
     end
   end
 
+  describe('#guest_name') do
+    it('returns nil when ticket#guest is missing') do
+      expect(Ticket.new.guest_name).to be_nil
+    end
+
+    it('delegates to guest#full_name when ticket#guest is present') do
+      guest = Guest.new(full_name: 'foo')
+      ticket = Ticket.new(guest: guest)
+
+      expect(ticket.guest_name).to eq(guest.full_name)
+    end
+  end
+
+  describe('#table_number') do
+    it('returns nil when ticket#table is missing') do
+      expect(Ticket.new.table_number).to be_nil
+    end
+
+    it('delegates to table#number when ticket#table is present') do
+      table = Table.new(number: 123)
+      ticket = Ticket.new(table: table)
+
+      expect(ticket.table_number).to eq(table.number)
+    end
+  end
+
+  describe('#prize_amount') do
+    it('returns nil when ticket#prize is missing') do
+      expect(Ticket.new.prize_amount).to be_nil
+    end
+
+    it('delegates to prize#amount when ticket#prize is present') do
+      prize = Prize.new(amount: 13.99)
+      ticket = Ticket.new(prize: prize)
+
+      expect(ticket.prize_amount).to eq(prize.amount)
+    end
+  end
+
   describe('#can_be_registered?') do
     context('when ticket#registered? is false and ticket#guest is present and ticket#table is required but present') do
       let(:ticket) do
