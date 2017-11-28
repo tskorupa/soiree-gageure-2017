@@ -3,8 +3,10 @@ class TicketRegistrationsController < ApplicationController
   include LotteryLookup
 
   def index
-    tickets = @lottery.registerable_tickets
     number_filter = params[:number_filter]
+
+    tickets = @lottery.registerable_tickets.includes(:guest, :table)
+    tickets = tickets.where(number: number_filter) if number_filter.present?
 
     @ticket_listing = TicketRegistrationsIndex.new(
       tickets: tickets,

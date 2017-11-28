@@ -85,47 +85,57 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
 
       it('renders "lotteries/_sidebar"') do
         get_index
-        expect(response).to render_template('lotteries/_sidebar')
+        expect(response).to render_template(partial: 'lotteries/_sidebar')
       end
 
       it('renders "tickets/ticket_listing_header"') do
         get_index
-        expect(response).to render_template('tickets/_ticket_listing_header')
+        expect(response).to render_template(partial: 'tickets/_ticket_listing_header')
       end
 
       context('when there are no registerable tickets present') do
         it('renders "tickets/_empty_ticket_listing"') do
           get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number_filter: '99' })
-          expect(response).to render_template('tickets/_empty_ticket_listing')
+          expect(response).to render_template(partial: 'tickets/_empty_ticket_listing')
         end
       end
 
       context('with no tickets to display when a filter by ticket number was applied') do
         it('renders "tickets/_empty_ticket_listing"') do
           get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number_filter: '99' })
-          expect(response).to render_template('tickets/_empty_ticket_listing')
+          expect(response).to render_template(partial: 'tickets/_empty_ticket_listing')
         end
       end
 
       context('when registerable tickets are present') do
         before(:each) do
-          create_ticket
+          2.times { |i| create_ticket(number: i + 1) }
+          get_index
         end
 
         it('renders "tickets/_ticket_listing"') do
-          get_index
-          expect(response).to render_template('ticket_registrations/_ticket_listing')
+          expect(response).to render_template(partial: 'ticket_registrations/_ticket_listing')
+        end
+
+        it('renders "tickets/_ticket_row"') do
+          expect(response).to render_template(partial: 'ticket_registrations/_ticket_row', count: 2)
         end
       end
 
       context('with tickets to display when a filter by ticket number was applied') do
         before(:each) do
+          create_ticket
           create_ticket(number: 99)
+
+          get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number_filter: '99' })
         end
 
         it('renders "tickets/_ticket_listing"') do
-          get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number_filter: '99' })
-          expect(response).to render_template('ticket_registrations/_ticket_listing')
+          expect(response).to render_template(partial: 'ticket_registrations/_ticket_listing')
+        end
+
+        it('renders "tickets/_ticket_row"') do
+          expect(response).to render_template(partial: 'ticket_registrations/_ticket_row', count: 1)
         end
       end
     end

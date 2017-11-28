@@ -1,0 +1,14 @@
+<tr>
+  <td><%= ticket_row.row_number %></td>
+  <td><%= ticket_row.number %></td>
+  <td><%= ticket_row.guest_name %></td>
+  <td><%= ticket_row.ticket_type %></td>
+  <td><%= ticket_row.table_number %></td>
+  <td>
+    <%= link_to(
+      t('.edit', default: t('helpers.links.edit')),
+      edit_lottery_ticket_registration_path(@lottery, ticket_row),
+      class: 'btn btn-default btn-xs',
+    ) unless @lottery.locked? %>
+  </td>
+</tr>
