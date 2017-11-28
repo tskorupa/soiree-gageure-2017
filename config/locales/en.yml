@@ -15,6 +15,8 @@ en:
     errors:
       number: 'Ticket number is invalid'
   ticket_registrations:
+    warning:
+      message: 'Tickets may be registered when the lottery is unlocked'
     errors:
       table_number: 'Table number must be specified'
       already_registered: 'Ticket is already registered'

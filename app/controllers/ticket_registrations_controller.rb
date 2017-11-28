@@ -9,6 +9,7 @@ class TicketRegistrationsController < ApplicationController
     tickets = tickets.where(number: number_filter) if number_filter.present?
 
     @ticket_listing = TicketRegistrationsIndex.new(
+      lottery: @lottery,
       tickets: tickets,
       number_filter: number_filter,
     )

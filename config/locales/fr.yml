@@ -21,6 +21,8 @@ fr:
     errors:
       number: "Le numéro de table n'est pas valide"
   ticket_registrations:
+    warning:
+      message: 'Les billets peuvent être enregistrés lorsque le tirage est ouvert'
     errors:
       table_number: 'Le numéro de table doit être spécifié'
       already_registered: 'Le billet est déjà enregistré'

@@ -138,6 +138,30 @@ RSpec.describe(TicketRegistrationsController, type: :controller) do
           expect(response).to render_template(partial: 'ticket_registrations/_ticket_row', count: 1)
         end
       end
+
+      context('when the lottery is locked') do
+        before(:each) do
+          lottery.update!(locked: true)
+          create_ticket
+          get_index
+        end
+
+        it('renders "tickets/_warning_notice"') do
+          expect(response).to render_template(partial: 'tickets/_warning_notice')
+        end
+      end
+
+      context('when the lottery is unlocked') do
+        before(:each) do
+          lottery.update!(locked: false)
+          create_ticket
+          get_index
+        end
+
+        it('does not render "tickets/_warning_notice"') do
+          expect(response).not_to render_template(partial: 'tickets/_warning_notice')
+        end
+      end
     end
 
     describe('GET #edit') do

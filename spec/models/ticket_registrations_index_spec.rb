@@ -11,6 +11,84 @@ RSpec.describe(TicketRegistrationsIndex, type: :model) do
     end
   end
 
+  describe('#warn?') do
+    it('returns true when the lottery is locked') do
+      @lottery = double(locked?: true)
+      expect(index.warn?).to be(true)
+    end
+
+    it('returns false when the lottery is unlocked') do
+      @lottery = double(locked?: false)
+      expect(index.warn?).to be(false)
+    end
+  end
+
+  describe('#warning_notice') do
+    it('returns nil when the lottery is unlocked') do
+      @lottery = double(locked?: false)
+      expect(index.warning_notice).to be_nil
+    end
+
+    context('when the lottery is locked') do
+      before(:each) do
+        @lottery = double(locked?: true)
+      end
+
+      context('when the locale is :en') do
+        around(:each) do |example|
+          with_locale(:en) { example.run }
+        end
+
+        it('returns a notice') do
+          expect(index.warning_notice).to eq('Warning!')
+        end
+      end
+
+      context('when the locale is :fr') do
+        around(:each) do |example|
+          with_locale(:fr) { example.run }
+        end
+
+        it('returns a notice') do
+          expect(index.warning_notice).to eq('Attention!')
+        end
+      end
+    end
+  end
+
+  describe('#warning_message') do
+    it('returns nil when the lottery is unlocked') do
+      @lottery = double(locked?: false)
+      expect(index.warning_message).to be_nil
+    end
+
+    context('when the lottery is locked') do
+      before(:each) do
+        @lottery = double(locked?: true)
+      end
+
+      context('when the locale is :en') do
+        around(:each) do |example|
+          with_locale(:en) { example.run }
+        end
+
+        it('returns a notice') do
+          expect(index.warning_message).to eq('Tickets may be registered when the lottery is unlocked')
+        end
+      end
+
+      context('when the locale is :fr') do
+        around(:each) do |example|
+          with_locale(:fr) { example.run }
+        end
+
+        it('returns a notice') do
+          expect(index.warning_message).to eq('Les billets peuvent être enregistrés lorsque le tirage est ouvert')
+        end
+      end
+    end
+  end
+
   describe('#tickets_to_display?') do
     it('returns true when tickets are present') do
       @tickets = [double]
@@ -86,6 +164,7 @@ RSpec.describe(TicketRegistrationsIndex, type: :model) do
 
   def index
     TicketRegistrationsIndex.new(
+      lottery: @lottery,
       tickets: @tickets,
       number_filter: @number_filter,
     )

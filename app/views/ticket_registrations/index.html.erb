@@ -9,11 +9,23 @@
   ) %>
 
   <% if @ticket_listing.tickets_to_display? %>
+
+    <% if @ticket_listing.warn? %>
+      <%= render(
+        'tickets/warning_notice',
+        notice: @ticket_listing.warning_notice,
+        message: @ticket_listing.warning_message,
+      ) %>
+    <% end %>
+
     <%= render 'ticket_registrations/ticket_listing' %>
+
   <% else %>
+
     <%= render(
       'tickets/empty_ticket_listing',
       message: @ticket_listing.no_tickets_message,
     ) %>
+
   <% end %>
 <% end %>
