@@ -1,6 +1,13 @@
 # frozen_string_literal: true
-
 module TicketsHelper
+  def ticket_number_column_name
+    t('column_names.number')
+  end
+
+  def ticket_type_column_name
+    t('column_names.ticket.ticket_type')
+  end
+
   def table_number(ticket)
     ticket.table&.number
   end
