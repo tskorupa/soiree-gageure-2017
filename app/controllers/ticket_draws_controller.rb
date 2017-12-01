@@ -3,8 +3,8 @@ class TicketDrawsController < ApplicationController
   include LotteryLookup
 
   def index
-    @ticket_listing = TicketListing.new(
-      ticket_scope: @lottery.drawable_tickets,
+    @ticket_listing = TicketDrawsIndex.new(
+      lottery: @lottery,
       number_filter: params[:number_filter],
     )
   end

@@ -60,11 +60,6 @@ RSpec.describe(TicketDrawsController, type: :controller) do
         expect(assigns(:lottery)).to be_an_instance_of(Lottery)
       end
 
-      it('assigns an instance of TicketListing to @ticket_listing') do
-        get_index
-        expect(assigns(:ticket_listing)).to be_an_instance_of(TicketListing)
-      end
-
       it('returns an http :success status') do
         get_index
         expect(response).to have_http_status(:success)
@@ -108,6 +103,17 @@ RSpec.describe(TicketDrawsController, type: :controller) do
           get_index
           expect(response).to render_template('ticket_draws/_ticket_listing')
         end
+
+        it('renders "results/_prize" when the next drawn ticket merits a prize') do
+          Prize.create!(lottery: lottery, draw_order: 2, amount: 1)
+          get_index
+          expect(response).to render_template('results/_prize')
+        end
+
+        it('does not render "results/_prize" when the next drawn ticket merits no prize') do
+          get_index
+          expect(response).not_to render_template('results/_prize')
+        end
       end
 
       context('with tickets to display when a filter by ticket number was applied') do
@@ -118,6 +124,17 @@ RSpec.describe(TicketDrawsController, type: :controller) do
         it('renders "tickets/_ticket_listing"') do
           get(:index, params: { locale: I18n.locale, lottery_id: lottery.id, number_filter: '99' })
           expect(response).to render_template('ticket_draws/_ticket_listing')
+        end
+
+        it('renders "results/prize" when the next drawn ticket merits a prize') do
+          Prize.create!(lottery: lottery, draw_order: 2, amount: 1)
+          get_index
+          expect(response).to render_template('results/_prize')
+        end
+
+        it('does not render "results/prize" when the next drawn ticket merits no prize') do
+          get_index
+          expect(response).not_to render_template('results/_prize')
         end
       end
     end

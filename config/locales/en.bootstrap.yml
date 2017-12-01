@@ -63,6 +63,7 @@ en:
       title: 'Tickets to draw'
       no_tickets_with_number: 'Ticket #%{number_filter} was not found.'
       no_tickets: 'There are no dropped tickets to draw.'
+      prize_for_next_drawn_ticket: 'The next drawn ticket merits "%{amount}"'
   drawn_tickets:
     index:
       title: 'Results'

@@ -336,6 +336,17 @@ RSpec.describe(Lottery, type: :model) do
     end
   end
 
+  describe('#next_prize_amount') do
+    it('returns nil when there is no prize for the next drawn ticket') do
+      expect(lottery.next_prize_amount).to be_nil
+    end
+
+    it('returns the prize amount when there is a prize for the next drawn ticket') do
+      lottery.prizes.create!(nth_before_last: nil, amount: 13.99, draw_order: 1)
+      expect(lottery.next_prize_amount).to eq(13.99)
+    end
+  end
+
   describe('#return_last_drawn_ticket') do
     context('when ticket#last_drawn_ticket is nil') do
       it('raises an exception') do

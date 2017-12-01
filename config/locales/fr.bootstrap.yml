@@ -78,6 +78,7 @@ fr:
       title: 'Billets en boulier'
       no_tickets_with_number: "Le billet no.%{number_filter} n'est pas dans le boulier."
       no_tickets: "Il n'y a aucun billet dans le boulier."
+      prize_for_next_drawn_ticket: 'Le prochain billet tiré se méritera << %{amount} >>'
   drawn_tickets:
     index:
       title: 'Résultats'

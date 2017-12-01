@@ -9,7 +9,16 @@
   ) %>
 
   <% if @ticket_listing.tickets_to_display? %>
+
+    <% if @ticket_listing.prize_for_next_drawn_ticket? %>
+      <%= render(
+        'results/prize',
+        amount: @ticket_listing.prize_for_next_drawn_ticket,
+      ) %>
+    <% end %>
+
     <%= render 'ticket_draws/ticket_listing' %>
+
   <% else %>
     <%
         message = if @ticket_listing.number_filter.present?

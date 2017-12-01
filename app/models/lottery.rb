@@ -61,12 +61,17 @@ class Lottery < ApplicationRecord
 
     Ticket.transaction do
       drawn_position = next_drawn_position
-      pick_prize(drawn_position: drawn_position, ticket: ticket)
+      assign_prize_to_ticket(drawn_position: drawn_position, ticket: ticket)
       ticket.update!(drawn_position: drawn_position)
     end
     DrawnTicketBroadcastJob.perform_later(lottery_id: id)
 
     true
+  end
+
+  def next_prize_amount
+    next_prize = prize(next_drawn_position)
+    next_prize&.amount
   end
 
   def return_last_drawn_ticket
@@ -99,16 +104,20 @@ class Lottery < ApplicationRecord
     number + 1
   end
 
-  def pick_prize(drawn_position:, ticket:)
-    Prize.transaction do
-      nth_before_last = if drawn_position == 1
-        nil
-      else
-        tickets.where(dropped_off: true).count - drawn_position
-      end
+  def assign_prize_to_ticket(drawn_position:, ticket:)
+    selected_prize = prize(drawn_position)
+    return unless selected_prize
 
-      prize = prizes.find_by(nth_before_last: nth_before_last)
-      prize&.update!(ticket: ticket)
+    selected_prize.update!(ticket: ticket)
+  end
+
+  def prize(position)
+    nth_before_last = if position == 1
+      nil
+    else
+      tickets.where(dropped_off: true).count - position
     end
+
+    prizes.find_by(nth_before_last: nth_before_last)
   end
 end
